@@ -1,0 +1,125 @@
+\documentclass[12pt, a4paper, abstract=on]{scrartcl}
+
+\usepackage{enumitem}
+\usepackage{minted}
+\setminted{frame=lines,framesep=3mm,linenos}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{listings}
+\usepackage[utf8]{inputenc}
+\usepackage{multicol}
+\usepackage{amssymb}
+\usepackage{array,booktabs}
+\newcolumntype{C}{>{$\displaystyle}c<{$}}
+\renewcommand\arraystretch{1.5}
+\usepackage{tikz}
+\usepackage{diagbox}
+\usepackage{subfig}
+
+\usepackage[sc]{mathpazo}
+
+\usepackage[printonlyused]{acronym}
+
+% glossaries
+\usepackage[acronym]{glossaries}
+\input{glossary.tex}
+\makeglossaries
+
+\usepackage[subfigure]{tocloft}
+\setlength{\cfttabindent}{0cm}
+\setlength{\cftfigindent}{0cm} 
+\setlength{\cftfigindent}{0cm} 
+%\cftsetpnumwidth{3cm}
+
+
+\makeatletter
+  \newenvironment{chapquote}[2][2em]
+  {\setlength{\@tempdima}{#1}%
+   \def\chapquote@author{#2}%
+   \parshape 1 \@tempdima \dimexpr\textwidth-2\@tempdima\relax%
+   \itshape}
+  {\par\normalfont\hfill--\ \chapquote@author\hspace*{\@tempdima}\par\bigskip}
+\makeatother
+
+% don't indent paragraphs but insert newline
+\usepackage[parfill]{parskip}
+
+%% Numbering of figures, code, etc. in form chapter.figureNumber
+\usepackage{chngcntr}
+\AtBeginDocument{\counterwithin{listing}{section}}
+\AtBeginDocument{\counterwithin{figure}{section}}
+\AtBeginDocument{\counterwithin{equation}{section}}
+\AtBeginDocument{\counterwithin{table}{subsection}}
+
+% margins
+\usepackage{geometry}
+\geometry{left=3cm, top=2.5cm, right=2.5cm, bottom=2.5cm}
+
+% quoting
+\usepackage{csquotes}
+\MakeOuterQuote{"}
+% italic quote
+\usepackage{babel}
+\renewcommand{\abstractname}{Abstract}
+
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+\usepackage[style=numeric,sorting=none,backend=biber,natbib=true]{biblatex}
+\addbibresource{sources.bib}
+
+\DeclareMathSymbol{*}{\mathbin}{symbols}{"01}
+
+% Code listings
+\usepackage{xcolor}
+\colorlet{punct}{red!60!black}
+\definecolor{background}{HTML}{f7f7f7}
+\definecolor{delim}{RGB}{20,105,176}
+\colorlet{numb}{magenta!60!black}
+\makeatletter
+\renewcommand*{\l@lstlisting}{\@dottedtocline{1}{0em}{2.3em}}
+\makeatother
+
+\input{metadata}
+
+\usepackage[onehalfspacing]{setspace}
+
+%rename list of listings
+%\renewcommand{\listoflistingscaption}{Quellcodeverzeichnis}
+
+\begin{document}
+        \pagenumbering{roman}
+        \input{titlepage}
+        \input{declaration}
+        \clearpage
+        
+        \begin{abstract}
+          \input{abstract}
+        \end{abstract}
+        \clearpage
+        \tableofcontents
+        \clearpage
+
+        \input{acronyms}
+        \clearpage
+
+        \listoffigures
+        \clearpage
+        \listoftables
+        \clearpage
+        \listoflistings
+
+        \clearpage
+        \pagenumbering{arabic}
+
+        \input{chapters/introduction.tex}
+        
+        \clearpage
+        \pagenumbering{arabic}
+
+        \clearpage
+        \printbibliography
+        
+        \newpage
+        \printglossary
+\end{document}

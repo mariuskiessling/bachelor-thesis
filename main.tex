@@ -59,7 +59,7 @@
 \usepackage{csquotes}
 \MakeOuterQuote{"}
 % italic quote
-\usepackage{babel}
+\usepackage[british]{babel}
 \renewcommand{\abstractname}{Abstract}
 
 \usepackage{pgfplots}
@@ -112,7 +112,15 @@
         \clearpage
         \pagenumbering{arabic}
 
-        \input{chapters/introduction.tex}
+        \input{chapters/introduction/introduction.tex}
+        \clearpage
+        \input{chapters/background/background.tex}
+        \clearpage
+        \input{chapters/artifacts/versioning/versioning.tex}
+        \clearpage
+        \input{chapters/conclusion.tex}
+        \clearpage
+        \input{chapters/outlook.tex}
         
         \clearpage
         \pagenumbering{arabic}

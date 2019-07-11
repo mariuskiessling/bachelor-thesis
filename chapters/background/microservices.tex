@@ -52,12 +52,12 @@ requires the use of a distributed middleware or code changes \autocite[Ch.
 The \ac{SOA} solves a lot of the problems afflicting the monolithic
 architecture. Rather than providing all services as part of one application, in
 \ac{SOA} the application is split up into multiple small \textit{business
-applications}. Each business application is maintained by a specialised
-development team. The business applications also offer services to other
-services or directly to consumers through a set of protocols; the primarily
-used protocol is \ac{SOAP}. The operation of all business applications is
-handled by a separate operations teams \autocite[p.
-584]{VillamizarEvaluatingmonolithicmicroservice2015}.
+applications} that each offer only a small hand of services. Each business
+application is maintained by a specialised development team. The business
+applications offer their services to other services or directly to consumers
+through a set of protocols; the primarily used protocol is \ac{SOAP}. The
+operation of all business applications is handled by a separate operations
+teams \autocite[p.  584]{VillamizarEvaluatingmonolithicmicroservice2015}.
 
 Even though the \ac{SOA} approach does solve a lot of problems the monolithic
 architecture suffers from, several problems remain. Implementing the \ac{SOA}
@@ -65,3 +65,33 @@ into existing and new applications can be difficult resulting in hight costs.
 Additionally the technology that is needed to route the requests to the correct
 business application is not designed to run inside a modern cloud environment
 \autocite[p. 584]{VillamizarEvaluatingmonolithicmicroservice2015}.
+
+The goal of the microservice architecture is to adopt the advantages of the
+\ac{SOA} while solving the problems the monolith architecture suffers from
+\autocite[p. 584]{VillamizarEvaluatingmonolithicmicroservice2015}.
+
+\autocite{VillamizarEvaluatingmonolithicmicroservice2015} proposes the
+questions whether the microservice architecture is a new architectural style or
+simply another term for the already existing \ac{SOA}.
+\autocite{VillamizarEvaluatingmonolithicmicroservice2015} concludes that the
+microservice architecture can be viewed as a subset of the \ac{SOA}. Besides
+that it additionally focuses on greater agility. Altogether,
+\autocite{DragoniMicroservicesyesterdaytoday2016} defines the microservice
+architecture to be a distributed application which \textit{modules} are only
+microservices. The term \enquote{module} is synonymous with the term
+\enquote{service} used in the description of the monolithic architecture and
+\ac{SOA}.
+
+In summary it can be said that the microservice architecture constitutes the
+natural evolution of software architectural patterns.
+
+\subsubsection{A Practical Example}%
+\label{ssub:A_Practical_Example}
+
+\subsubsection{Deployment - A Software-based View}%
+\label{ssub:Deployment_-_A_Software-based_View}
+
+\subsubsection{Problems}%
+\label{ssub:Problems}
+
+

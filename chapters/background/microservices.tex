@@ -1,0 +1,67 @@
+%! TEX root = ../../main.tex
+
+\subsection{Microservices}%
+\label{sub:Microservices}
+
+There exist many different definitions of the term \textit{microservice}.
+\autocite{DragoniMicroservicesyesterdaytoday2016} defines a microservice to be
+a \enquote{cohesive, independent process interacting via messages}. The
+definition of \autocite{MikeAmundsenMicroserviceArchitecture2016} also takes
+the architectural aspect into account stating that a \textit{microservice
+architecture} is \enquote{style of engineering highly automated, evolvable
+software systems made up of capability-aligned microservices}. Regardless of
+the specific definition, one common concept becomes clear: A microservice
+should be a small independent piece of software that communicates using
+messages and can be deployed autonomously.
+
+This chapter will cover the origins of the microservice architecture, introduce
+a practical example of a microservice and outline the problems that need to be
+addressed when deploying a microservice.
+
+\subsubsection{History}%
+\label{ssub:History}
+
+When designing an application, one option is to use a monolithic architecture.
+A monolithic application is developed by one big group of developers and the
+source code is maintained inside a single repository. The monolithic
+application offers a number of functionalities (also called \textit{services})
+that can be consumed. A team of operators is responsible to deploy and manage
+the application so that it can be consumed \autocite[p.
+584]{VillamizarEvaluatingmonolithicmicroservice2015}. The services of a
+monolith can not be executed independently from one another. Hence, a monolith
+exists as a single executable artefact \autocite[p.
+1]{DragoniMicroservicesyesterdaytoday2016}.
+
+Monolithic applications are hard to deploy in a distributed system without
+introducing some kind of middleware that handles the way the monolith is
+distributed. In addition to this, monolithic application suffer additional
+drawbacks. Maintaining a monolith can pose a big problem due to its huge code
+base and many internal and external dependencies. Furthermore, deploying a new
+version can cause major downtimes since the whole application has to be
+(re)started. From a development standpoint, monoliths also pose the problem of
+restricting the technology stack once it has been defined. This can produce an
+environment that is now longer suitable for all new services added to the
+monolith. Lastly scaling a monolith is not possible indefinitely \autocite[p.
+2]{DragoniMicroservicesyesterdaytoday2016}. When scaling an application
+\textit{vertically}, resources (e.g.\ RAM) are added to the machine executing
+the application. Contrary to this approach, when scaling \textit{horizontally}
+the application gets distributed onto a number of machines. This however
+requires the use of a distributed middleware or code changes \autocite[Ch.
+1.1.1]{LuksaKubernetesAction2017}.
+
+The \ac{SOA} solves a lot of the problems afflicting the monolithic
+architecture. Rather than providing all services as part of one application, in
+\ac{SOA} the application is split up into multiple small \textit{business
+applications}. Each business application is maintained by a specialised
+development team. The business applications also offer services to other
+services or directly to consumers through a set of protocols; the primarily
+used protocol is \ac{SOAP}. The operation of all business applications is
+handled by a separate operations teams \autocite[p.
+584]{VillamizarEvaluatingmonolithicmicroservice2015}.
+
+Even though the \ac{SOA} approach does solve a lot of problems the monolithic
+architecture suffers from, several problems remain. Implementing the \ac{SOA}
+into existing and new applications can be difficult resulting in hight costs.
+Additionally the technology that is needed to route the requests to the correct
+business application is not designed to run inside a modern cloud environment
+\autocite[p. 584]{VillamizarEvaluatingmonolithicmicroservice2015}.

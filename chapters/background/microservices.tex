@@ -82,13 +82,64 @@ microservices. The term \enquote{module} is synonymous with the term
 \enquote{service} used in the description of the monolithic architecture and
 \ac{SOA}.
 
+% TODO: Maybe add API gateway description
+
 In summary it can be said that the microservice architecture constitutes the
-natural evolution of software architectural patterns.
+natural evolution of software architectural patterns in a distributed system.
 
 \subsubsection{A Practical Example}%
 \label{ssub:A_Practical_Example}
 
-\subsubsection{Deployment - A Software-based View}%
+The following example highlights the advantages of microservice in a practical
+environment. The example depicts an application that allows users to share
+pictures of their pets with other users; hereafter called \textit{PawPic}.
+It is a requirement that all users have to be authenticated using an external
+\textit{Active Directory} system in order to to view and post pictures.
+
+Following the concept of \textit{cohesion} \autocite[p.
+2]{DragoniMicroservicesyesterdaytoday2016}, any service only provides the
+functionality that is needed to solve the specific problem it is assigned to
+solve. Figure~\ref{fig:microservice_example} proposes a microservice
+architecture for the \textit{PawPic} application.
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[scale=0.7]{images/figures/microservice_example.pdf}
+\end{center}
+\caption{A basic microservice architecture example containing three internal
+service, one external service and an \acs{API} gateway.}
+\label{fig:microservice_example}
+\end{figure}
+
+The proposed architecture includes an \ac{API} gateway that handles all requests
+targeted at one of the internal services. This only applies to requests by a
+user and does not include requests an internal service performs towards an
+external service.
+
+The architecture further contains three internal services only two of which can
+be directly targeted by the user; the authentication and backend service. The
+authentication service's only purpose is to check the user's credentials.
+Besides that, the backend service provides the applications main functionality;
+to view and share pictures of pets. To fulfil this task, the backend uses a
+relational database. The database holds the picture's information and storage
+metadata. Both the backend and database are separate service though they are
+strongly dependent on one another. Using the storage metadata, the backend is
+able to fetch the actual images from the blob storage service and relay them to
+the user.
+
+With the introduction of new features it must be decided whether the new
+features still solve the problem of viewing and posting pictures of pets. If
+this is not the case, a new service must be introduced. This ensures that each
+service still follows the concept of cohesion.
+
+The service's technology stacks are fully independent from one another. The
+authentication service e.g.\ is written in Golang due to the high performance
+the language offers. The backend however is written in Python and runs on top
+of a NGINX server. This approach does not lock the developers in one technology
+stack that might not suite the problem's needs in the future. In addition,
+every service can be scaled independently from one another. 
+
+\subsubsection{Deployment -- A Software-based View}%
 \label{ssub:Deployment_-_A_Software-based_View}
 
 \subsubsection{Problems}%

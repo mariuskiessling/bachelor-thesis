@@ -82,7 +82,16 @@ microservices. The term \enquote{module} is synonymous with the term
 \enquote{service} used in the description of the monolithic architecture and
 \ac{SOA}.
 
-% TODO: Maybe add API gateway description
+Furthermore, the user does not contact any service directly. One or more
+gateways receives the user's requests and route them to the correct service.
+Depending on the type of user, the requested information are encoded
+appropriately by the gateway. An end user might receive a rendered website over
+\ac{HTTP} whereas an \ac{API} call has to be sent via \ac{REST} over \ac{HTTP}.
+The operation of said gateway is managed by an independent team \autocite[p.
+585]{VillamizarEvaluatingmonolithicmicroservice2015}. Two common approaches in
+this field are \ac{API} gateways and service meshes. Their properties and
+respective advantages are further discussed in
+\autocite{HariharaSubramanianHandsRESTfulAPI2019}.
 
 In summary it can be said that the microservice architecture constitutes the
 natural evolution of software architectural patterns in a distributed system.

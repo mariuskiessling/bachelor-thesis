@@ -151,6 +151,73 @@ every service can be scaled independently from one another.
 \subsubsection{Deployment -- A Software-based View}%
 \label{ssub:Deployment_-_A_Software-based_View}
 
+Given a fully developed microservice architecture, one question remains: How is
+it possible to deploy this bulk of microservices in an efficient way? In a
+world filles with monoliths, a speciliased operations team would be handed a
+piece of software. The operations team then prepares the environment to which
+the application should be deployed and test the release.
+\autocite{VillamizarEvaluatingmonolithicmicroservice2015}. This process takes a
+lot of time and effort and lacks agility; the property microservices strive
+for.
+
+The introduction of \acp{VM} helps to speed up the process. Instead of
+deploying the application directly to a server's hardware, the application is
+deployed within a \ac{VM}. Thanks to this concept, several application can now
+be run on the same hardware. The concept of \acs{VM} does not only benefinit
+monoliths but also translates to microservices. Instead of running
+microservices on multiple physical machines, they can be deyployed
+independently from one another on the same server.
+
+\acp{VM} introduce more flexibility however they do not constitute the perfect
+solution for running a microservice architecture. That is due to the hight
+ressource consumption of \acp{VM}.
+
+\begin{figure}[H]
+  \hspace*{\fill}%
+  \subfloat[Type2 hypervisor \label{subfig:microserviceType2Hypervisor}]{%
+    \includegraphics[scale=0.8]{images/figures/hypervisor_type2.pdf}
+  }
+  \qquad
+  \subfloat[(Docker) Container \label{subfig:microserviceContainer}]{%
+    \includegraphics[scale=0.8]{images/figures/container.pdf}
+  }
+  \hspace*{\fill}%
+
+  \caption[A visual representation of the application runtime models \textit{type2 hypervisor} and \textit{container}.]{A visual representation of the application runtime models \textit{type2 hypervisor} and \textit{container} \autocite[Fig. 1]{CombeDockerNotDocker2016}.}
+ \label{fig:hypervisorVsContainer}
+\end{figure}
+
+Figure~\ref{subfig:microserviceType2Hypervisor} shows the application runtime
+model of a type2 hypervisor. In addition to the host \ac{OS}, each \ac{VM}
+executes its own full guest \ac{OS}. If this runtime model is chosen to deploy
+a microservice architecture, the resource overhead for each microservice would
+be major.
+
+The goal is to define a runtime model that encapsulates every microservice as
+well as the \ac{VM} executed by a hypervisor does but much more light weight
+\autocite{SchenkerLearnDockerFundamentals2018}. The container model depicted in
+figure~\ref{subfig:microserviceContainer} fits that description. Rather than
+needing a full guest \ac{OS} for each application / microservice, each
+container only includes the application it is tasked to executed and any needed
+libraries. This approach reduces the overhead of each application to a bare
+minimum while gaining near bare-metal performance \autocite[Ch.
+1A]{CombeDockerNotDocker2016}. In case of the Docker architecture depicted in
+figure~\ref{subfig:microserviceContainer}, the \textit{Docker deamon} is
+responsible for managing all container instances. All of this is only possible
+as a result of a few Linux kernel features. \autocite{CombeDockerNotDocker2016}
+and \autocite[Ch. 1.2.1]{LuksaKubernetesAction2017} further highlight the
+security features needed to make the container runtime model work.
+
+At this point two distinctions have to be made: The term docker referrers to a
+whole system of functionality. It combines the actual container runtime along
+with a reproducible container build process, a central repository, called
+\textit{Docker Hub}, where container images can be stored, shared and pulled
+from \autocite[Ch. 1B]{CombeDockerNotDocker2016}. Besides that, Docker is not
+the only container runtime there is. Alternatives include \textit{LXC},
+\textit{LXD}, \textit{rkt}, \textit{Warden} and \textit{OpenVZ} \autocite[Tab.
+1]{CombeDockerNotDocker2016}. Nonetheless all references to the
+\textit{(container) runtime} are references to Docker.
+
 \subsubsection{Problems}%
 \label{ssub:Problems}
 

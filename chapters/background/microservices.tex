@@ -148,8 +148,8 @@ of a NGINX server. This approach does not lock the developers in one technology
 stack that might not suite the problem's needs in the future. In addition,
 every service can be scaled independently from one another.
 
-\subsubsection{Deployment -- A Software-based View}%
-\label{ssub:Deployment_-_A_Software-based_View}
+\subsubsection{Deployment -- Choosing the right runtime model}%
+\label{ssub:Deployment_Runtime_Model}
 
 Given a fully developed microservice architecture, one question remains: How is
 it possible to deploy this bulk of microservices in an efficient way? In a
@@ -215,10 +215,109 @@ with a reproducible container build process, a central repository, called
 from \autocite[Ch. 1B]{CombeDockerNotDocker2016}. Besides that, Docker is not
 the only container runtime there is. Alternatives include \textit{LXC},
 \textit{LXD}, \textit{rkt}, \textit{Warden} and \textit{OpenVZ} \autocite[Tab.
-1]{CombeDockerNotDocker2016}. Nonetheless all references to the
-\textit{(container) runtime} are references to Docker.
+1]{CombeDockerNotDocker2016}. Nonetheless all references to containers in this
+thesis are references to containers executed by the Docker engine.
 
-\subsubsection{Problems}%
-\label{ssub:Problems}
+\subsubsection{\textit{Dockerizing} a Microservice}%
+\label{ssub:Dockerizing_a_Microservice}
 
+Once the actual microservices have been developed, the question arises as to
+how they can be deployed with the help of containers. The goal is to execute
+one microservice inside at least one container. As already mentioned in chapter
+\ref{ssub:Deployment_Runtime_Model}, Docker is equipped with a reproducible
+build process for containers. The outcome of such a build process is a
+\textit{image}. An image is comprised of the whole file system containing both the
+application data as well as all needed libraries and binaries \autocite[Ch.
+1]{LuksaKubernetesAction2017}. A container is an instantiation of an image. A
+container is spawned based on one image; yet one image can be the base for
+multiple containers.
 
+In order to build an image, the developers of a microservice have to define a
+\textit{Dockerfile}. The Dockerfile contains all instructions that are needed
+by the Docker engine to produce an image. Multiple images built from the same
+Dockerfile \textit{should} always be identical because the build process is
+fully deterministic. The issues in respect to the deterministic build process
+will also be discussed in chapter TODO.
+
+\begin{listing}[H]
+\begin{minted}{Dockerfile}
+from busybox:1.31.0
+RUN echo 'echo "Hello world from BusyBox" \
+  $(/bin/busybox | head -1 | cut -d " " -f 2)' > /bin/hello-world
+RUN chmod +x /bin/hello-world
+ENTRYPOINT exec /bin/hello-world
+\end{minted}
+\caption{A Dockerfile for building a \textit{hello world} Docker image based on BusyBox.}
+\label{listing:dockerfile_example}
+\end{listing}
+
+Each image has to be built on top of a \textit{base image}. The example image
+in listing~\ref{listing:dockerfile_example} is built upon \textit{BusyBox}
+which is one of the smallest base images available. % TODO: Add citation!
+The instructions inside a Dockerfile are executed from top to bottom. Each
+\texttt{RUN} command creates a new \textit{layer} containing the changes from
+the executed command. The most common Dockerfile commands and the issues
+regarding layering are further examined in
+\autocite{DockerBestpracticeswriting}. The command that spans from line two to
+three in listing~\ref{listing:dockerfile_example} creates a bash file that
+produces the output \\
+\hspace{0.5em}\texttt{Hello from BusyBox \textbf{VERSION\textunderscore{}NUMBER}} \hspace{0.4em}.\\
+In line four of the same listing, the \texttt{chmod} utility is used to set the
+\textit{execution} permission of the newly created file. This allows the binary
+to be executed. The last line of listing~\ref{listing:dockerfile_example} specifies the
+\textit{entry point} of the image. The entry point is executed when a new
+container is spawned based on this image. The convoluted interrelations between
+the \texttt{ENTRYPOINT} and \texttt{CMD} instructions will not be further
+examined due to their low relevance to the subject at hand. Their
+interrelations are however fully contested in
+\autocite{DockerDockerfilereferenceEntrypoint}.
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[scale=0.7]{images/figures/docker_workflow.pdf}
+\end{center}
+\caption[The basic Docker development and deployment workflow.]{The basic Docker development and deployment workflow (adapted from \autocite[Fig. 1.6]{LuksaKubernetesAction2017}).}
+\label{fig:docker_workflow}
+\end{figure}
+
+All development (step 1 in~\ref{fig:docker_workflow}) and image building steps
+(step 2 in~\ref{fig:docker_workflow}) take place on the developer's machine.
+After a development cycle is completed, the developer pushes the newly built
+image(s) to a central image repository (step 3 and 4
+in~\ref{fig:docker_workflow}). Each microservice now exists as a separate image
+on the image repository. The production machine then has to be instructed to
+run the newly created image(s) (step 5 in~\ref{fig:docker_workflow}). This
+triggers the Docker daemon (step 6 in~\ref{fig:docker_workflow}) to pull the
+built images from the image repository (step 7 in~\ref{fig:docker_workflow}).
+Lastly, all pulled images are executed as a container (step 8
+in~\ref{fig:docker_workflow}).
+
+The result of this process is a complete microservice architecture running
+containerized on a production Docker machine. The process however also reveals
+a few problems:
+\begin{itemize}
+  \item The developer has to tell the production machine running Docker to run
+    a new image by hand.
+  \item The bigger the microservice architecture gets, the more effort is
+    required to run the images on the production machine. This is due to the
+    requirement that the developer has to run each image separately. Docker
+    provides a mechanism for deploying multiple images at once. The built-in
+    method however is not as flexible as the option proposed in the upcoming
+    chapter.
+  \item In order to distribute images across multiple production machines, some
+    \textit{container orchestration} solution is needed. Docker has a built-in
+    solution called \textit{Docker Swarm}. Compared to other orchestration
+    solutions it is the easiest to understand \autocite[p.
+    17]{FabrizioSoppelsaNativeDockerClustering2016}. Next to Docker Swarm, a
+    number of alternatives exist. However, all these solutions require a
+    separate configuration.
+  \item Each image has to be built by the developer on the developers machine.
+    The developer is fully responsible for pushing the image to a central image
+    repository. This further introduces a security risk because the production
+    authentication secrets of the image repository have to be distributed to
+    every developer.
+\end{itemize}
+
+All in all it can be said that running a containerized microservice
+architecture using Docker is a straight-forward process that fails to scale
+without further technological improvements.

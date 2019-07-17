@@ -24,23 +24,20 @@
     \vspace{1cm}
 
     \begin{minipage}[b]{0.35\linewidth}
-        \begin{flushleft}
-          Ratingen, \datumAbgabe \\
-          \rule{5.5cm}{0.2mm}
-          \vspace{-0.1cm}
-          \textit{Ort, Datum}
-        \end{flushleft}
+      \begin{tikzpicture}[line width=0.75pt,every node/.style={inner sep=0,outer sep=0}] 
+        \node[anchor=west] (field value) at (0,0.9) {Ratingen, \datumAbgabe};
+        \draw[-] (0,0.5) -- (6,0.5);
+        \node[anchor=west] (field title) at (0,0) {\textit{Ort, Datum}};
+      \end{tikzpicture}
     \end{minipage}
-    \hspace{2cm}
+    \hspace{2.5cm}
     \begin{minipage}[b]{0.35\linewidth}
-        \begin{flushleft}
-          \vspace{\baselineskip}
-          \rule{5.5cm}{0.2mm}
-          \vspace{-0.1cm}
-          \textit{Unterschrift (Marius Kießling)}
-        \end{flushleft}
+      \begin{tikzpicture}[line width=0.75pt,every node/.style={inner sep=0,outer sep=0}] 
+        \node[anchor=west] (field value) at (0,0.9) {};
+        \draw[-] (0,0.5) -- (6,0.5);
+        \node[anchor=west] (field title) at (0,0) {\textit{Unterschrift}};
+      \end{tikzpicture}
     \end{minipage}
-    
     \vspace{0.8cm}
   }
 }%

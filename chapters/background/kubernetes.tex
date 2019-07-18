@@ -44,3 +44,30 @@ Chapter~\ref{ssub:Deployment_Runtime_Model}, there are several runtime
 environments to chose from. Next to Docker, Kubernetes also directly supports
 \textit{containerd}, \textit{crio-o}, \textit{rktlet}
 \autocite{AuthorsKubernetesComponents2019}.
+
+\paragraph{Pods}%
+\label{par:Pods}
+Instead of directly deploying individual containers, Kubernetes introduces the
+concept of \textit{pods}. A pod is the smallest entity that can be executed on
+the cluster. It hosts at least one containers and automatically receives a
+\ac{IP} address that is unique inside Kubernetes. Kubernetes ensures that all
+containers of a pod are always executed in the same node.
+
+Yet this does not mean that a complete microservice architecture should be
+bundled into one pod.  The decision when to combines microservices into one pod
+and when to split them across multiple pods becomes clear in the following
+example. Given is an exemplary microservice architecture consisting of a basic
+web crawler that fetches all \textit{xkcd} comics from the xkcd archive and
+stores them in the file system, a frontend that displays the fetched comics and
+a backend that serves the fetches images to the frontend. Both the backend as
+well as the crawler have to access the same file system. Further, the backend
+would not be able to serve comics without the crawler hence it would fail to
+fulfil its task. Thus it can be said that these two services are
+\textit{tightly coupled} and are a dependent components. It can also be argued
+that the crawler only acts as a supporting component for the actual backend.
+Hence, the crawler and backend should be shipped inside the same pod. On the
+other hand the frontend is a fully independent system component. It can be
+scaled independently from the backend and crawler; it belongs into a separate
+pod.
+
+% TODO: Add figure displaying the two pods

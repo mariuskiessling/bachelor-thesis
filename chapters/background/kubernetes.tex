@@ -25,3 +25,22 @@ questions. If needed, The official Kubernetes documentation
 \autocite{AuthorsProductionGradeContainer}, which covers all system components
 in detail, can be used as a supplement to this thesis.
 
+\subsubsection{Concepts}%
+\label{ssub:Concepts}
+Kubernetes distinguishes between \textit{master} and \textit{node} components.
+The master components, also referred to as \textit{control plane}, are in
+charge of managing a cluster. The control plane hosts Kubernetes' API, manages
+the clusters configuration and schedules \textit{pods} to run on available
+nodes \autocite{AuthorsKubernetesComponents2019}. In general, the master
+components are responsible for keeping the cluster alive.
+
+The node components on the other hand are executed on every node of the
+cluster. Any node of a Kubernetes cluster runs an agent, \textit{kubelet}, that
+ensures that all containers of the node's assigned pods are executed. Further,
+a node always runs the network proxy \textit{kube-proxy} that enforces
+networking rules and manages the node's traffic. Lastly, a container runtime
+allows all of this to happen. As already mentioned in
+Chapter~\ref{ssub:Deployment_Runtime_Model}, there are several runtime
+environments to chose from. Next to Docker, Kubernetes also directly supports
+\textit{containerd}, \textit{crio-o}, \textit{rktlet}
+\autocite{AuthorsKubernetesComponents2019}.

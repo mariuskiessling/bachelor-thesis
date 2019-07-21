@@ -97,11 +97,57 @@ Simply using the Kubernetes concept of volumes however does pose two significant
   \item For most volume types, the volume has to be provisioned by hand before
     the container can allocate said volume.
   \item The volume is bound to the pods lifecycle. This means that whenever a
-    pod is deleted or e.g. dies due to a problem or scaling, the volume needs
+    pod is deleted or e.g.\ dies due to a problem or scaling, the volume needs
     to be recreated during the pod's next startup. This also means that volumes
     can not be defined without first defining a pod.
 \end{itemize}
 
 \paragraph{Persistent Volumes, Persistent Volume Claims and Storage Classes}%
 \label{par:Persistent_Volume_Claims_and_Storage_Classes}
+One way to solve these problems is to use \textit{\acfp{PV}}. A \ac{PV} can be
+defined without first having to define a pod. While it is possible to
+statically define a set of \acp{PV}, it is useful to let Kubernetes dynamically
+provision \acp{PV} when needed.
 
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[scale=0.5]{images/figures/pvs.pdf}
+\end{center}
+\caption{The process of dynamically provisioning a \acf{PV} using a \acf{PVC}.}%
+\label{fig:dynamic_pvs}
+\end{figure}
+
+Figure~\ref{fig:dynamic_pvs} shows the process of how Kubernetes dynamically
+provisions \acp{PV}. To understand this flow of actions, two terms have to be
+defined: \textit{\acf{PVC}} and \textit{storage classes}. 
+
+A \ac{PVC} is a request for an available \ac{PV}. It can specify, among other
+things, an access mode and resources. Contrary to pods which can request
+computing resources, \acp{PVC} request storage resources. Additionally, the
+\ac{PVC} can request a specific storage class and a selector that must match
+the \ac{PV}'s label. Only if the selector matches the \ac{PV}'s label, the
+\ac{PV} is capable of resolving the \ac{PVC}.
+
+A storage class abstracts the different options of storage available in a
+cluster. Any storage class is supported by a \textit{provisioner} that is
+responsible for handling the actual storage; e.g.\ CephFS handles storage
+differently from GlusterFS. Thus storage classes are the underlying foundation
+for all persistent volumes inside Kubernetes. A crucial property of storage
+classes are their \textit{reclaim policy}. The reclaim policy determines
+whether a \ac{PV} deployed on a storage class is \textit{deleted} or
+\textit{retained} once the \ac{PV}'s \ac{PVC} is released. Thus the reclaim
+policy ultimately defines the persistency of a \ac{PV} beyond the lifecycle of
+a \ac{PVC}. Additionally whenever a new \ac{PVC} is created that matches the
+originally described selector and storage class, a retained \ac{PV} can be
+reallocated by the \ac{PVC}.
+
+The behaviour in figure~\ref{fig:dynamic_pvs} should now become clear.
+Kubernetes tries to assign an available, non-bound \ac{PV} to the \ac{PVC}.
+The existing ones however do not match the requirements set by the \ac{PVC}. To
+solve this, a new \ac{PV} is automatically provisioned that fully complies with
+the requirements of the \ac{PVC}.
+
+To conclude this section, it can be said that \acp{PV} bring the ability of
+storage resource definition that is independent from a pod's lifecycle.
+\acp{PVC} can then be used to allocate the created \acp{PV} or dynamically
+create new ones by using the storage classes' provisioner.

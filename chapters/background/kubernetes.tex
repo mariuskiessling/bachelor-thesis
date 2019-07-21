@@ -54,20 +54,54 @@ the cluster. It hosts at least one containers and automatically receives a
 containers of a pod are always executed in the same node.
 
 Yet this does not mean that a complete microservice architecture should be
-bundled into one pod.  The decision when to combines microservices into one pod
+bundled into one pod. The decision when to combines microservices into one pod
 and when to split them across multiple pods becomes clear in the following
 example. Given is an exemplary microservice architecture consisting of a basic
 web crawler that fetches all \textit{xkcd} comics from the xkcd archive and
 stores them in the file system, a frontend that displays the fetched comics and
-a backend that serves the fetches images to the frontend. Both the backend as
-well as the crawler have to access the same file system. Further, the backend
-would not be able to serve comics without the crawler hence it would fail to
-fulfil its task. Thus it can be said that these two services are
-\textit{tightly coupled} and are a dependent components. It can also be argued
-that the crawler only acts as a supporting component for the actual backend.
-Hence, the crawler and backend should be shipped inside the same pod. On the
-other hand the frontend is a fully independent system component. It can be
-scaled independently from the backend and crawler; it belongs into a separate
-pod.
+a backend that serves the fetches images to the frontend. The architecture is
+also depicted in figure~\ref{fig:pods_example}. Both the backend as well as the
+crawler have to access the same file system. Further, the backend would not be
+able to serve comics without the crawler hence it would fail to fulfil its
+task. Thus it can be said that these two services are \textit{tightly coupled}
+and are a dependent components. It can also be argued that the crawler only
+acts as a supporting component for the actual backend. Hence, the crawler and
+backend should be shipped inside the same pod. On the other hand the frontend
+is a fully independent system component. It can be scaled independently from
+the backend and crawler. Hence it belongs in a separate pod. 
 
-% TODO: Add figure displaying the two pods
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[scale=0.7]{images/figures/pod_example.pdf}
+\end{center}
+\caption{Example microservice architecture displayed as pods, containers and a volume.}%
+\label{fig:pods_example}
+\end{figure}
+
+\paragraph{Volumes}%
+\label{par:Volumes}
+
+The example in figure~\ref{fig:pods_example} also introduces the concept of
+\textit{volumes}. Volumes bring the ability to store files \textit{outside} the
+context of the local file system of a container. A pod can specify that it
+needs one or more volumes. Each container inside a pod is able to mount these
+volumes in the same or a different. The backend from
+figure~\ref{fig:pods_example} might mount the volume to
+\texttt{/var/www/storage} whereas the crawler wants to mount the volume to
+\texttt{/mnt/comics}. Volumes are either local paths on the Kubernetes node or
+are maintained by a cloud provider's service like e.g. \textit{Microsoft Azure
+File Volumes}.
+
+Simply using the Kubernetes concept of volumes however does pose two significant problems:
+\begin{itemize}
+  \item For most volume types, the volume has to be provisioned by hand before
+    the container can allocate said volume.
+  \item The volume is bound to the pods lifecycle. This means that whenever a
+    pod is deleted or e.g. dies due to a problem or scaling, the volume needs
+    to be recreated during the pod's next startup. This also means that volumes
+    can not be defined without first defining a pod.
+\end{itemize}
+
+\paragraph{Persistent Volumes, Persistent Volume Claims and Storage Classes}%
+\label{par:Persistent_Volume_Claims_and_Storage_Classes}
+

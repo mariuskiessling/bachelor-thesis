@@ -197,26 +197,48 @@ applications. Each pod that is managed by either one of these controllers does
 not have an individual identity. Hence, it is not possible to identify a single
 managed pod; they all look and behave exactly the same. All pods also share the
 same persistent volume. The question arising from this is how a distributed
-application that needs distinct entities, i.e.\ a database system using the
-master/slave paradigm, can be hosted using Kubernetes. In the master/slave
-paradigm, the master nodes are responsible for managing the databases data. The
-slaves then replicate the data and can be used for i.e.\ reliably reading data
-and balancing the reading load. Yet, this scenario brings up three problems
-that can not be easily solved with a ReplicaSet or deployment:
+application that needs stateful and distinct entities, i.e.\ a database system
+using the master/slave paradigm, can be hosted using Kubernetes. In the
+master/slave paradigm, the master nodes are responsible for managing the
+databases data. The slaves then replicate the data and can be used for i.e.\
+reliably reading data and balancing the reading load. Yet, this scenario brings
+up three problems that can not be easily solved with a ReplicaSet or
+deployment. The problems are named $P_x$ for future reference.
 
 \begin{itemize}
-  \item Each pod needs its own storage volume to avoid lock problems.
-  \item Each pod needs to be addressed individually so that the master(s) are
+  \item \textbf{$P_1$}: Each pod needs its own storage volume to avoid lock problems.
+  \item \textbf{$P_2$}: Each pod needs to be addressed individually so that the master(s) are
     capable of syncing data to only selected slave(s).
-  \item After a pod dies, Kubernetes has to spawn a pod with the same identity.
-    This is the only way to guarantee that the master(s) get respawned with the
-    same data and that slave(s) do not have to rejoin the database cluster and
-    resync all data.
+  \item \textbf{$P_3$}: After a pod dies, Kubernetes has to spawn a pod with
+    the same identity. This is the only way to guarantee that the master(s)
+    get respawned with the same data and that slave(s) do not have to rejoin
+    the database cluster and resync all data.
 \end{itemize}
 
 Even though \autocite[Ch. 10]{LuksaKubernetesAction2017} lays out options to
 solve these problems using ReplicaSets, a new component is needed to solve them
-sustainably - entering StatefulSets.
+sustainably - entering StatefulSets. 
+
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[scale=0.7]{images/figures/statefulSets_vs_replicaSets.pdf}
+\end{center}
+\caption{A comparison of ReplicaSets and StatefulSets.}%
+\label{fig:statefulSetsVSReplicaSets}
+\end{figure}
+
+In a StatefulSet, each managed pod receives its own identity. Instead of
+randomly assigning names and \acp{IP} to pods, their names are numbered. A
+custom identity also means a seperate volume from the rest of the pods inside
+the StatefulSet. Whenever the StatefulSet needs to redeploy a pod (e.g.\ due to
+a node that went down or due to scaling) the respawned pods receive the same
+identity they had before. In figure~\ref{fig:statefulSetsVSReplicaSets} this
+would mean that if \texttt{backend-2} went offline due to a faulty host, the
+StatefulSet would spawn an exact copy of \texttt{backend-2} with the same
+identity (meaning name, \ac{IP} and volume). Hence, it can be argued that
+StatefulSets solve problems $P_1$-$P_3$ that could not be easily solved by
+ReplicaSets. They are the way to go when deploying stateful applications that
+may require unique pod identies.
 
 \paragraph{Services}%
 \label{par:Services}

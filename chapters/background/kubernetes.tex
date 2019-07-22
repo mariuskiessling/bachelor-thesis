@@ -151,3 +151,72 @@ To conclude this section, it can be said that \acp{PV} bring the ability of
 storage resource definition that is independent from a pod's lifecycle.
 \acp{PVC} can then be used to allocate the created \acp{PV} or dynamically
 create new ones by using the storage classes' provisioner.
+
+\paragraph{Controllers: StatefulSets, ReplicaSets and Deployments}%
+\label{par:Controllers}
+Pods, as they were introduced in the~\ref{par:Pods} section of this chapter,
+are fully unmanaged. The downside to this is that whenever a node dies, all
+pods running on this node also die without getting redeployed on a healthy
+node. Additionally, unmanaged pods can not be be scaled automatically by
+Kubernetes. It is also not possible to schedule unmanaged pods to run
+periodically \autocite[Ch. 4]{LuksaKubernetesAction2017}. Kubernetes solves
+these issues by introducing a new concept: controllers. Controllers are
+responsible for managing a set of Kubernetes resources and extend their
+original capabilities \autocite{AuthorsConcepts2019}. This sectional will
+briefly cover the controllers needed for this thesis. Next to the highlighted
+controllers, Kubernetes includes a number of other controllers that are listed
+in \autocite{AuthorsConcepts2019}.
+
+Instead of scaling pods manually to ensure the accessibility to a service, a
+ReplicaSet manages a set of pods and ensures that a specified number of
+replicas of these pods is always available. The discovery of pods that should
+be managed by a ReplicaSet is based on \textit{selectors}. If a ReplicaSet's
+selector matches the label of a pod and the pod is not already assigned to a
+different controller, the ReplicaSet takes ownership of said pod \autocite[Ch.
+4]{LuksaKubernetesAction2017}. Hence any pod that may not be managed by a
+ReplicaSet has to define another label in order not to be make subject to a
+ReplicaSet~\ref{AuthorsReplicaSet2019}. Additionally to owning pods that only
+match the ReplicaSet's selector, it is possible to directly specify pods that
+should be spawned whenever the ReplicaSet is loaded. This option is more common
+and directly highlights the pod's connection to the ReplicaSet
+\autocite{AuthorsReplicaSet2019}. In addition, \autocite{AuthorsReplicaSet2019}
+discourages from directly using ReplicaSets if the use case does not need a
+custom update logic. Instead, it is recommended to use \textit{deployments}.
+
+A deployment is a higher-level abstractional concept that itself manages
+ReplicaSets \autocite{AuthorsReplicaSet2019}. Contrary to the ReplicaSet, a
+deployment is able to update all its managed pods and roll back changes to a
+previous state. All changes can be performed declaratively without having to
+write any logic; this process is managed by Kubernetes \autocite[Ch.
+9]{LuksaKubernetesAction2017}.
+
+ % Add more information about the rolling update process.
+
+Both the ReplicaSet and deployment are meant to be used for stateless
+applications. Each pod that is managed by either one of these controllers does
+not have an individual identity. Hence, it is not possible to identify a single
+managed pod; they all look and behave exactly the same. All pods also share the
+same persistent volume. The question arising from this is how a distributed
+application that needs distinct entities, i.e.\ a database system using the
+master/slave paradigm, can be hosted using Kubernetes. In the master/slave
+paradigm, the master nodes are responsible for managing the databases data. The
+slaves then replicate the data and can be used for i.e.\ reliably reading data
+and balancing the reading load. Yet, this scenario brings up three problems
+that can not be easily solved with a ReplicaSet or deployment:
+
+\begin{itemize}
+  \item Each pod needs its own storage volume to avoid lock problems.
+  \item Each pod needs to be addressed individually so that the master(s) are
+    capable of syncing data to only selected slave(s).
+  \item After a pod dies, Kubernetes has to spawn a pod with the same identity.
+    This is the only way to guarantee that the master(s) get respawned with the
+    same data and that slave(s) do not have to rejoin the database cluster and
+    resync all data.
+\end{itemize}
+
+Even though \autocite[Ch. 10]{LuksaKubernetesAction2017} lays out options to
+solve these problems using ReplicaSets, a new component is needed to solve them
+sustainably - entering StatefulSets.
+
+\paragraph{Services}%
+\label{par:Services}

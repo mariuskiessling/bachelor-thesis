@@ -228,17 +228,23 @@ sustainably - entering StatefulSets.
 \end{figure}
 
 In a StatefulSet, each managed pod receives its own identity. Instead of
-randomly assigning names and \acp{IP} to pods, their names are numbered. A
-custom identity also means a seperate volume from the rest of the pods inside
-the StatefulSet. Whenever the StatefulSet needs to redeploy a pod (e.g.\ due to
-a node that went down or due to scaling) the respawned pods receive the same
-identity they had before. In figure~\ref{fig:statefulSetsVSReplicaSets} this
-would mean that if \texttt{backend-2} went offline due to a faulty host, the
-StatefulSet would spawn an exact copy of \texttt{backend-2} with the same
-identity (meaning name, \ac{IP} and volume). Hence, it can be argued that
-StatefulSets solve problems $P_1$-$P_3$ that could not be easily solved by
-ReplicaSets. They are the way to go when deploying stateful applications that
-may require unique pod identies.
+randomly assigning names and \ac{IP} addresses to pods, their names are
+numbered. A custom identity also means a seperate volume from the rest of the
+pods inside the StatefulSet. Whenever the StatefulSet needs to redeploy a pod
+(e.g.\ due to a node that went down or due to scaling) the respawned pods
+receive the same identity they had before. In
+figure~\ref{fig:statefulSetsVSReplicaSets} this would mean that if
+\texttt{backend-2} went offline due to a faulty host, the StatefulSet would
+spawn an exact copy of \texttt{backend-2} with the same identity (meaning name,
+\ac{IP} and volume). Hence, it can be argued that StatefulSets solve problems
+$P_1$-$P_3$ that could not be easily solved by ReplicaSets. They are the way to
+go when deploying stateful applications that may require unique pod identies.
 
 \paragraph{Services}%
 \label{par:Services}
+Regardless of the controller managing the replication of pods, a solution is
+needed to address any given set of pods. When e.g.\ scaling a set pods of
+ReplicaSet to 15 instances how should a user sent a request to either one of
+them without addressing each one individually. Services expose a set of pods to
+the network as an \ac{IP} address and name that can be resolved inside the
+cluster.

@@ -238,13 +238,39 @@ figure~\ref{fig:statefulSetsVSReplicaSets} this would mean that if
 spawn an exact copy of \texttt{backend-2} with the same identity (meaning name,
 \ac{IP} and volume). Hence, it can be argued that StatefulSets solve problems
 $P_1$-$P_3$ that could not be easily solved by ReplicaSets. They are the way to
-go when deploying stateful applications that may require unique pod identies.
+go when deploying stateful applications that may require unique pod identities.
 
 \paragraph{Services}%
 \label{par:Services}
 Regardless of the controller managing the replication of pods, a solution is
-needed to address any given set of pods. When e.g.\ scaling a set pods of
-ReplicaSet to 15 instances how should a user sent a request to either one of
+needed to address any given set of pods. When e.g.\ scaling a set pods of a
+ReplicaSet to 15 instances, how should a user sent a request to either one of
 them without addressing each one individually. Services expose a set of pods to
 the network as an \ac{IP} address and name that can be resolved inside the
-cluster.
+cluster. Using the service's name or \ac{IP} address other pods inside the
+cluster or, with a minor addition, even external users are able to access the
+service's pods. The user or pods do not have to know the pod's individual
+\ac{IP} addresses or names. The service proxies the request using different
+routing mechanism \autocite{AuthorsService2019} to the pods associated with the
+service.
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[scale=0.7]{images/figures/service_example.pdf}
+\end{center}
+\caption{Example services proxying requests to two different sets of pods.}%
+\label{fig:services_example}
+\end{figure}
+
+Figure~\ref{fig:services_example} shows two example services \texttt{frontend}
+and \texttt{backend}. Requests directed at these services are proxyed to the
+corresponding set of pods. In the case of the given example, each set of pods
+is managed by a ReplicaSet. This however does not have to be the case. Services
+do not depend on the management type of pods. They directly relay requests to
+pods without knowledge of a perhaps existing controller. This is due to the
+fact that a service's selector only selects \textit{pods} that match the
+selector's label. Services are reasons why requests in Kubernetes can be
+directed at one entity without having the knowledge of the underlying amount of
+pods. Without services, effective \textit{horizontal scaling}, meaning that in
+Kubernetes many pods can provide the same service, would not be possible
+\autocite[Ch. 5]{LuksaKubernetesAction2017}.

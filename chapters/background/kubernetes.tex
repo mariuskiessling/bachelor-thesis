@@ -221,7 +221,7 @@ sustainably - entering StatefulSets.
 
 \begin{figure}[H]
   \begin{center}
-  \includegraphics[scale=0.7]{images/figures/statefulSets_vs_replicaSets.pdf}
+  \includegraphics[scale=0.65]{images/figures/statefulSets_vs_replicaSets.pdf}
 \end{center}
 \caption{A comparison of ReplicaSets and StatefulSets.}%
 \label{fig:statefulSetsVSReplicaSets}
@@ -256,7 +256,7 @@ service.
 
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[scale=0.7]{images/figures/service_example.pdf}
+  \includegraphics[scale=0.55]{images/figures/service_example.pdf}
 \end{center}
 \caption{Example services proxying requests to two different sets of pods.}%
 \label{fig:services_example}
@@ -274,3 +274,70 @@ directed at one entity without having the knowledge of the underlying amount of
 pods. Without services, effective \textit{horizontal scaling}, meaning that in
 Kubernetes many pods can provide the same service, would not be possible
 \autocite[Ch. 5]{LuksaKubernetesAction2017}.
+
+\subsubsection{Manifests}%
+\label{ssub:Manifests}
+Manifest files are the place where the cluster's configurations are stored. Any
+Kubernetes object (e.g.\ a pod or Deployment) is defined inside a manifest
+configuration file. Manifest files can either be written in \textit{YAML} or
+\textit{JSON}. Both YAML and JSON can encode data in a form readable to humans
+and computers. Kubernetes manifests are mainly written in YAML though they are
+translated to JSON before being passed to the Kubernetes \ac{API}. Thus, this
+thesis will only display manifest files in YAML format.
+
+When describing an Kubernetes object, four keys are mandatory:
+\texttt{apiVersion} which specifies Kubernetes' \ac{API} version that will be
+used to create the object, \texttt{kind} which is object's type (e.g.\ Pod),
+\texttt{metadata} which is a property that e.g.\ specifies the object's name
+within Kubernetes and \texttt{spec} which always contains object type specific
+configuration properties \autocite{AuthorsUnderstandingKubernetesObjects2019}.
+
+\begin{listing}[H]
+  \begin{minted}{YAML}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend
+spec:
+  containers:
+  - name: backend
+    image: example/backend:v1
+    ports:
+    - containerPort: 3000
+  \end{minted}
+  \caption{An exemplary Kubernetes manifest defining a pod object.}%
+  \label{listing:manifest_example}
+\end{listing}
+
+In listing~\ref{listing:manifest_example} an exemplary pod object is defined.
+Defining pods does not require beta features. Thus \texttt{.apiVersion} is set
+to \texttt{v1}. When defining a pod, the objects \texttt{.spec} includes a list
+of \texttt{.spec.containers}. Each container gets a name, an image that can be
+executed by Docker and \texttt{.spec.containers[\textbf{n}].ports} that should
+be accessible from outside the container. The properties listed in
+listing~\ref{listing:manifest_example} are kept to a minimum. Hence a real
+object definition can consist of many more attributes.
+
+In \autocite{AuthorsConfigurationBestPractices2019}, the Kubernetes project
+also defines a set of guidelines for writing manifest files. It is discouraged
+to use unmanaged pods without any controller like a ReplicaSet. Kubernetes is
+unable to respawn unmanaged pods that are no longer available due to e.g.\ node
+failures. Additionally, multiple object definitions should not be split into
+multiple files whenever they serve a similar purpose. A backend that e.g.\
+needs a database cluster should be defined in the same configuration file. The
+different objects can be separated by inserting a line containing \texttt{---}.
+In addition, Services should always be defined before the pods they handle
+traffic for. Users are also advised to use semantic labelling for all objects
+in Kubernetes. Any object that follows this advice can be easily found by a
+user without having to specify the object's explicit type. E.g.\ a frontend's
+deployment could have the labels \texttt{app=frontend-web} and
+\texttt{stage=production}. A user can then specifically ask for all web
+frontends which are production-ready. The last best practice to be introduced
+here is to never use the \texttt{latest} tag when defining a container's image.
+This leads to confusion when trying to determine which version of a software is
+currently deployed in the cluster. Instead, a containers image version should
+be locked by specifying the exact version number. This can be achieved by
+referencing the images hash. These are just a select number of best practices
+that will guide this thesis. \autocite{AuthorsConfigurationBestPractices2019}
+offers a great deal of additional guidelines that exceed the scope of this
+thesis.

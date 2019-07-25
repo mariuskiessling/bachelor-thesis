@@ -63,3 +63,24 @@ project is no actual guarantee that said project follows the SemVer
 specification. \ac{API} backward-compatibility can not be determined by looking
 at a project's version number. This assessment disproves the main purpose the
 SemVer specification was created for.
+
+\subsubsection{Date Based Versioning}%
+\label{ssub:Date_Based_Versioning}
+Instead of assigning each release a semantic version number, it is also
+possible to assign them a date based one. This date based approach is not as
+standardised as the semantic versioning scheme.
+\autocite{HashemiCalendarVersioning2017} however collects the biggest projects
+using a date based versioning approach. Based on this case study,
+\autocite{HashemiCalendarVersioning2017} outlines the basic principles and
+advantages of favouring a date based versioning format. The proposed versioning
+schema is called \textit{CalVer}. It builds upon the same versioning segments
+as SemVer (\texttt{MAJOR}, \texttt{MINOR}, \texttt{PATCH} [also called
+\texttt{MICRO}] and additional pieces of data called \texttt{MODIFIERs})
+without enforcing an order or rules upon them. In addition to these basic
+building blocks, date based versioning segments are defined. They include
+\texttt{YYYY}, \texttt{YY}, \texttt{0Y}, \texttt{MM}, \texttt{0M}, \texttt{DD}
+and \texttt{0D}. Segments inclding a \texttt{0} prefix a 0 while the value is
+smaller ten. Only to name one example, Ubuntu, the leading open source server
+operating system for Swiss companies according to
+\autocite{SwissICTWelcheOpenSource2018}, utilises data based versioning. Their
+implementation follows the \texttt{YY.0M.PATCH} approach.

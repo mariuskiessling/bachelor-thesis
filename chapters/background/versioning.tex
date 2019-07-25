@@ -2,4 +2,64 @@
 
 \subsection{Versioning}%
 \label{sub:Versioning}
+The topic of versioning does not only come up in the context of microservices.
+In traditional software releases, e.g.\ of \textit{Microsoft Windows}, a number
+of different versioning schemes were used; from Version 1.0, 3.1, 95, 2000, XP
+and 8 up to 10. The number schemes changed without retaining a consistency. For
+programmers, a consistent versioning scheme is necessary in order to properly
+deal with dependencies \autocite{Preston-WernerSemanticVersioning2.0.0}. Thus
+this chapter will introduce two schemes software can be consistently versioned
+with. It will further introduce an approach of versioning \acp{API}.
 
+\subsubsection{SemVer}%
+\label{ssub:SemVer}
+The \textit{Sem}antic \textit{Ver}sioning scheme \textit{SumVer}
+\autocite{Preston-WernerSemanticVersioning2.0.0}, authored by Tom
+Preston-Werner, specifies eleven rules for how a version string should be
+structured. It further describes when which part of the version string may be
+incremented. Each version number consists of three parts:
+
+\begin{itemize}
+  \item \texttt{MAJOR}
+  \item \texttt{MINOR}
+  \item \texttt{PATCH} 
+\end{itemize}
+
+Together they form a version number in the format of
+\texttt{MAJOR.MINOR.PATCH}. The \texttt{PATCH} part must only be incremented
+whenever bug fixes are introduced that do not break the software's
+backward-compatibility. The \texttt{MINOR} part has to be incremented each
+time a release includes new features while still being backward-compatible.
+Lastly, an incremented \texttt{MAJOR} part indicates that the release breaks
+the backward-compatibility of the software's \ac{API}. In addition to these
+three main parts, SemVer also includes provisions for how to deal with
+pre-released software, e.g.\ an alpha version, and how to attach metadata to
+the version number. A pre-release version must be added as a postfix,
+separated by the \texttt{-} character. The postfix may only include
+alphanumeric characters (including \texttt{-}) and may consist of multiple
+parts separated by the \texttt{.} character. It may optionally end with a patch
+number of said pre-release. The patch number is separated by the \texttt{.}
+character. All in all a pre-released software version number may look like
+this: \texttt{2.0.0-alpha.public.4}. Any metadata is added at the end of the
+version number separated by the \texttt{+} character. The character
+requirements for the metadata part are identical to the ones of pre-release
+flag. The metadata also may consist of multiple parts that are separated by the
+\texttt{.} character. The metadata part is intended to include information
+about the build of a software. A full version number, according to SemVer, for
+an application that is currently in beta phase and is built on the first of
+September could look like this: \texttt{2.0.0-beta.12+2019-09-01}.
+
+These guidelines provide developers with an easy way to identify whether or not
+a dependency of their project may break its backward-compatibility when
+updating it to a newer version. This however is only possible if the dependency
+fully adheres to the SemVer specifications. In a study
+\autocite{RaemaekersSemanticVersioningversus2014} of 22,205 libraries published
+to the \textit{Maven Central Repository}, a place where Java developers can
+share programming artifacts, researchers examine whether version identifiers
+actually correspond with breaking changes. They conclude that breaking changes
+are introduces both in one third of major releases as well as in one third of
+minor releases. Hence they argue that the use of semantic versioning in a
+project is no actual guarantee that said project follows the SemVer
+specification. \ac{API} backward-compatibility can not be determined by looking
+at a project's version number. This assessment disproves the main purpose the
+SemVer specification was created for.

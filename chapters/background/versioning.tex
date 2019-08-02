@@ -22,7 +22,7 @@ incremented. Each version number consists of three parts:
 \begin{itemize}
   \item \texttt{MAJOR}
   \item \texttt{MINOR}
-  \item \texttt{PATCH} 
+  \item \texttt{PATCH}
 \end{itemize}
 
 Together they form a version number in the format of
@@ -91,3 +91,69 @@ support cycles and thus using a date based version number can aid to understand
 the product's support cycles. Additionally, any project which features lay
 inside a large or regularly changing scope can use a CalVer scheme. This also
 applies to Ubuntu.
+
+\subsubsection{REST API Versioning}%
+\label{ssub:API_Versioning}
+\ac{REST} \acp{API} are the most common interface through which information of
+microservices are exchanged. The intrinsic details of \ac{REST} \acp{API} will
+not be discussed in this thesis. However when it comes to deploying
+microservices that offer a \ac{REST} interface, it is necessary to know how to
+version the outward facing interface of these architectural components. In a
+way, \acp{API} behave like programming libraries. They can be consulted
+whenever a specific functionality is needed. When the \ac{API} introduces a new
+version that breaks its backward-compatibility, the consumer of said interface
+should be able to identify the breaking change based on the \ac{API}'s version
+number.
+
+One possibility is not to version the \ac{API} at all. This way, only
+non-breaking-changes may be introduced. As it can not be guaranteed that the
+\ac{API} and its consumers are updated at the same time, a time frame $\delta$
+is introduced in which all consumer requests implementing the old \ac{API}
+version fail.
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[scale=0.7]{images/figures/api_releases.pdf}
+\end{center}
+\caption{Introducing new non-backward-compatible \ac{API} versions without being able to direct requests at specific versions.}%
+\label{fig:api_releases}
+\end{figure}
+
+Figure~\ref{fig:api_releases} shows the process of releasing a new \ac{API} and
+consumer version. In this process all consumer requests targeted at the
+\ac{API} fail from the point at which the new \ac{API} version is deployed to
+the point where the new consumer version is deployed (marked as $\delta$).
+However the introduction of backward-compatible changes, like the extension of
+a resource schema, can be done without having to expect any downtime
+\autocite{MicrosoftAPIdesign2018}.
+
+Regardless of the versioning method discussed further along on this section,
+\ac{API} versions generally do not follow the SemVer or CalVer schemas.
+Instead, simple integers are used which, in some cases, are prefixed with the
+character \texttt{v}.
+
+The first and possibly easiest way to version an \ac{API} is to include the
+\ac{API}'s version number in the \ac{URI}. An \ac{API}'s \ac{URI} hence may
+look like this: \texttt{https://api.example.net/v1/users/1}. This way, whenever
+resources change in a compatibility-breaking form, the \ac{API}'s version
+number is incremented. \autocite[Ch. 6]{MasseRESTAPIDesign2011} however argues
+that a \ac{URI} based \ac{API} versioning should be avoided. According to
+\autocite{MasseRESTAPIDesign2011}, a resource in the context of \ac{REST}
+\acp{API} is a \enquote{semantic model, like a thought about a thing}.
+A resource only has one identity and a resource's identity
+is its full \ac{URI}. Thus a \ac{URI} based version number is part of a
+resource's identity. This would imply that different version numbers inside the
+\ac{URI} denote that the concept of the resource has multiple version
+\autocite[Ch. 6]{MasseRESTAPIDesign2011}. In addition to this,
+\autocite{MicrosoftAPIdesign2018} argues that resources that describe the same
+data simply should not be able to be addressed using different \acp{URI}.
+
+Instead of including the \ac{API} version number in the resource \ac{URI}, it
+is possible to include a custom header in the consumer's request. This way, the
+consumer can specify the \ac{API} version independently from the resource by
+e.g.\ supplying a header field \texttt{API-Version: v1}
+\autocite{MicrosoftAPIdesign2018}.
+
+These are the two most commonly used methods for supplying a version to an
+\ac{API}. For the purpose of this thesis, these two are sufficient. If
+required, \autocite{MicrosoftAPIdesign2018} outlines two additional methods.

@@ -5,9 +5,29 @@
 
 \subsection{The Need for Good Versioning Conventions}%
 \label{sub:The_Need_for_Good_Versioning_Conventions}
+Unlike in the monolithic architecture, a continuously deployed microservice
+architecture is comprised of many components that each have their own version.
+Hence it has to be decided case by case which versioning scheme best fits each
+microservice. Further, as many microservices provide some kind of \ac{API}
+(mostly \ac{REST}) some form of versioning has to be used. Without versioning,
+the application implementing the \ac{API} would always consume the latest
+version of the microservice. This implies that any non-backward-compatible
+update to the microservice would break all client implementations of the
+microservice's \ac{API}. Not only is the client able to pin its implementation
+to a specific \ac{API} version. The client is further able to select any
+version of a resource that best fits its implementation. In addition, a good
+versioning scheme allows developers to quickly assess whether a new version
+breaks the service's backward-compatibility. Lastly, microservice do not only
+provide services to other microservices. E.g.\ a \textit{frontend} microservice
+directly serves the end user. Hence the versioning scheme used in such a
+microservice also serves a communicative purpose.
 
 \subsection{Versioning in a Microservice Environment}%
 \label{sub:Versioning_in_a_Microservice_Environment}
+Chapter~\ref{sub:Versioning} already introduced the two main versioning schemes
+\textit{SemVer} and \textit{CalVer}. As microservices mostly provide their
+\ac{API} through the \ac{REST} paradigm, the chapter also presented the three
+main possibilities to version a \ac{REST} \ac{API}.
 
 \subsection{Evaluating XXX Versioning}%
 \label{sub:Evaluating_XXX_Versioning}

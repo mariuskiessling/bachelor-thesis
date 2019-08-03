@@ -175,10 +175,10 @@ selector matches the label of a pod and the pod is not already assigned to a
 different controller, the ReplicaSet takes ownership of said pod \autocite[Ch.
 4]{LuksaKubernetesAction2017}. Hence any pod that may not be managed by a
 ReplicaSet has to define another label in order not to be make subject to a
-ReplicaSet~\ref{AuthorsReplicaSet2019}. Additionally to owning pods that only
-match the ReplicaSet's selector, it is possible to directly specify pods that
-should be spawned whenever the ReplicaSet is loaded. This option is more common
-and directly highlights the pod's connection to the ReplicaSet
+ReplicaSet \autocite{AuthorsReplicaSet2019}. Additionally to owning pods that
+only match the ReplicaSet's selector, it is possible to directly specify pods
+that should be spawned whenever the ReplicaSet is loaded. This option is more
+common and directly highlights the pod's connection to the ReplicaSet
 \autocite{AuthorsReplicaSet2019}. In addition, \autocite{AuthorsReplicaSet2019}
 discourages from directly using ReplicaSets if the use case does not need a
 custom update logic. Instead, it is recommended to use \textit{deployments}.

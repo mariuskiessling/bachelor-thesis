@@ -150,9 +150,22 @@ In a monolithic architecture this approach might suffice. It, however, has to
 be adapted to also support a containerized microservice architecture. First of
 all, each time a container for a microservice is created, only a few layers on
 top of the stack are rebuilt. When e.g.\ deploying an application that depends
-on an \textit{NGINX} web server, the web server and any underlying layers can
+on a \textit{NGINX} web server, the web server and any underlying layers can
 be reused as part of a Docker base image. So only the layers on top of the web
-server have to be reapplied.
+server have to be reapplied. This process also ensures that the environment to
+which the software is deployed is clean while being more efficient
+than rebuilding each layer. In addition, the use of a container orchestration
+solution like Kubernetes has the advantage of defining the underlying
+infrastructure as code. \ac{IasC} allows the infrastructure to be defined
+inside a \enquote{single commonly available source of truth}, most frequently
+stored inside a \ac{VCS}, without the need for additional administrators
+\autocite{ArtacDevOpsIntroducingInfrastructure2017}. In Kubernetes,
+infrastructure changes can be performed by applying these configuration files.
+When realized correctly, the developer performing these changes does not have
+to worry about past infrastructure configurations remaining in the system.
+Kubernetes keeps track of old resources and manages them accordingly
+\autocite{AuthorsDeployments2019}. The \ac{IasC} paradigm further supports the
+aim of always producing a clean deployment environment.
 
 Given that these requirements are fulfilled, it is ensured that the automated
 build produces a working software that can be released at any time \autocite[p.

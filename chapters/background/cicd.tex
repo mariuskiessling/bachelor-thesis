@@ -38,7 +38,8 @@ above is called a \textit{build}. A build assembles the source code and makes
 sure that the software works as intended \autocite[p.
 4]{MatyasContinuousIntegration2007}. The \textit{integration} of software
 usually consists of the steps portrayed in
-figure~\ref{fig:ci_pipeline_classic}.
+figure~\ref{fig:ci_pipeline_classic}. The whole process is also often referred
+to as being a \textit{pipeline} .
 
 \begin{figure}[H]
 \begin{center}
@@ -49,6 +50,7 @@ software.]{The most common, abstracted \ac{CI} pipeline for a classic
 software (adapted from \autocite[Fig. 1-4]{MatyasContinuousIntegration2007}).}%
 \label{fig:ci_pipeline_classic}
 \end{figure}
+\todo{The order of steps may has to be adjusted (position of compilation).}
 
 In order for this pipeline to be implemented, a number of prerequisites exist.
 First, the project's source code has to be tracked in a \ac{VCS}. The \ac{VCS}
@@ -58,24 +60,12 @@ allows multiple developers to work on different tasks for the same project
 concurrently. The \ac{VCS} acts as the data foundation for the integration
 process.
 
-\begin{figure}[H]
-\begin{center}
-  \missingfigure{Add figure that shows a linear proceeding of all CI steps.}
-\end{center}
-\caption{The \ac{CI} pipeline in a containerized project.}%
-\todo{Add description of the term pipeline.}
-\label{fig:containerCIWorkflow}
-\end{figure}
-
-\todo{Add Docker mutli stage build process description.}
-
 Furthermore, the code produced by the developers has to be checked in the
 \ac{VCS} regularly. Only then may the \ac{CI} process detect problems early and
 inform the responsible developer of the breaking change. Code should be checked
 in more then a couple of times a day \autocite[p.
-59]{JezHumbleContinuousDelivery2010}.
-% TODO: Maybe add statement that states that CI is not compatible with
-% branching - Maybe refute?
+59]{JezHumbleContinuousDelivery2010}. \todo{Maybe add statement that states
+that CI is not compatible with branching; Maybe refute?}
 
 A requirement for successful continuous integration is an extensive test suite.
 When building software, a successful build does not necessarily imply that the
@@ -105,6 +95,24 @@ image and push it to a central image repository. The \ac{CI} artefact in a
 microservice project hence would be a runnable Docker image. That Docker image
 bundles the full runtime environment and thus does not need to include the
 installation instructions and scripts.
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[scale=0.7]{images/figures/ci_container.pdf}
+\end{center}
+\caption{The \ac{CI} pipeline for a containerized project.}%
+\label{fig:container_ci_pipeline}
+\end{figure}
+
+As shown in figure~\ref{fig:container_ci_pipeline}, the software is no longer
+compiled on the machine running the \ac{CI} pipeline. The compilation now takes
+place inside the Docker build process. The reasons for this are further
+outlined in the upcoming section~\ref{ssub:Continuous_Deployment}. Another
+distinction between the classic \ac{CI} pipeline from
+figure~\ref{fig:ci_pipeline_classic} to the dockerized model from
+figure~\ref{fig:container_ci_pipeline} is that the build artefact no longer
+only remains on the build machine. After an image was successfully constructed,
+it is pushed to a central image repository for further use.
 
 \subsubsection{Continuous Deployment}%
 \label{ssub:Continuous_Deployment}
@@ -204,18 +212,27 @@ produces the same result in the deployment environment. This is the reason why
 tests do not only have to be executed, all tests need to pass. Only then it can
 be guaranteed that the software is working as expected \autocite[p.
 196]{MatyasContinuousIntegration2007}. As already shown in
-figure~\ref{fig:containerCIWorkflow} the container is build in multiple stages.
-The tests can be executed a second time in an early build stage. The build then
-only proceeds if all tests pass a second time inside that early build stage.
+figure~\ref{fig:container_ci_pipeline} the source code is compiled inside a
+container. Docker has the option of multi-stage builds. In a multi-staged
+build, the container creation is split into multiple stages. Each stage has
+random access to the file system of any other stage. Using this approach it is
+e.g.\ possible to create a stage in which the software is built that has the
+needed compiler set up. An additional stage could then copy the compiled binary
+into an environment which has no compiler installed. As a result the final
+container image becomes smaller while only containing data for the execution of
+the software \autocite{IncUsemultistage2019}. The same thought can be applied
+to tests. Before compiling, a separate stage hold all test utilities needed to
+test the software. The tests are executed a second time and process only
+proceeds if all tests pass a second time inside that specialised early build
+stage.
 
 \begin{figure}[H]
 \begin{center}
-  \missingfigure{Add extended CI container build process figure that shows the
-  additional test stage inserted in the multi stage process.}
+  \includegraphics[scale=0.6]{images/figures/ci_container_extended.pdf}
 \end{center}
 \caption{Re-execution of the tests during the Docker build process in a
 containerized project.}%
-\label{fig:containerCIWorkflowExtended}
+\label{fig:container_ci_pipeline_extended}
 \end{figure}
 
 Regardless of the outcome of the build, a feedback report should be generated.
@@ -235,4 +252,3 @@ be temporarily resolved by simply rolling back to the previous version
 Given that these requirements are fulfilled, it is ensured that the automated
 build produces a working software that can be released at any time \autocite[p.
 200]{MatyasContinuousIntegration2007}.
-

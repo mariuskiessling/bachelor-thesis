@@ -20,7 +20,7 @@ solution \textit{Microsoft DevOps}.
 
 \subsubsection{Continuous Integration}%
 \label{ssub:Continuous_Integration}
-The basis for continuously deploying a software, in this case a microservice,
+The basis for continuously releasing a software, in this case a microservice,
 is a \ac{CI} concept. This concept spans a wide range of topics including the
 \begin{itemize}
   \item compilation of source code,
@@ -40,6 +40,17 @@ central place that can be accessed by all developers \autocite[Ch.
 1]{MatyasContinuousIntegration2007}. In addition, the \ac{VCS} allows multiple
 developers to work on different tasks for the same project concurrently. The
 \ac{VCS} acts as the data foundation for the integration process.
+
+\begin{figure}[H]
+\begin{center}
+  \missingfigure{Add figure that shows a linear proceeding of all CI steps.}
+\end{center}
+\caption{The \ac{CI} pipeline in a containerized project.}%
+\todo{Add description of the term pipeline.}
+\label{fig:containerCIWorkflow}
+\end{figure}
+
+\todo{Add Docker mutli stage build process description.}
 
 Furthermore, the code produced by the developers has to be checked in the
 \ac{VCS} regularly. Only then may the \ac{CI} process detect problems early and
@@ -167,6 +178,44 @@ Kubernetes keeps track of old resources and manages them accordingly
 \autocite{AuthorsDeployments2019}. The \ac{IasC} paradigm further supports the
 aim of always producing a clean deployment environment.
 
+It is a common approach to run tests locally before pushing code changes to the
+\ac{VCS}. The local environment however most often differs, even if only in
+minor details, from the actual environment the application will be deployed in.
+Hence it can not be guaranteed that a passing test on the local machine also
+produces the same result in the deployment environment. This is the reason why
+\textit{all} tests also have to be completed in the deployment environment. The
+tests do not only have to be executed, all tests need to pass. Only then it can
+be guaranteed that the software is working as expected \autocite[p.
+196]{MatyasContinuousIntegration2007}. As already shown in
+figure~\ref{fig:containerCIWorkflow} the container is build in multiple stages.
+The tests can be executed a second time in an early build stage. The build then
+only proceeds if all tests pass a second time inside that early build stage.
+
+\begin{figure}[H]
+\begin{center}
+  \missingfigure{Add extended CI container build process figure that shows the
+  additional test stage inserted in the multi stage process.}
+\end{center}
+\caption{Re-execution of the tests during the Docker build process in a
+containerized project.}%
+\label{fig:containerCIWorkflowExtended}
+\end{figure}
+
+Regardless of the outcome of the build, a feedback report should be generated.
+That report includes information about the changed files, new features and
+fixes. Any interested team member can then verify that the build contains the
+desired aspects \autocite[pp. 196-198]{MatyasContinuousIntegration2007}.
+
+Lastly the \textit{Cloudflare} outage in July 2019 showed the importance of
+having a working process in place to roll back any release. Even though
+Cloudflare had a rollback plan in place, they could not successfully execute
+it. This resulted in a unavailability of Cloudflare's global network for 27
+minutes \autocite{Graham-CummingDetailsCloudflareoutage2019}. The existence of
+a working and fast rollback process allows defects introduced by a release to
+be temporarily resolved by simply rolling back to the previous version
+\autocite[p. 199]{MatyasContinuousIntegration2007}.
+
 Given that these requirements are fulfilled, it is ensured that the automated
 build produces a working software that can be released at any time \autocite[p.
 200]{MatyasContinuousIntegration2007}.
+

@@ -36,11 +36,23 @@ deployment of software though this will be covered separately in
 chapter~\ref{ssub:Continuous_Deployment}. Each iteration of the steps listed
 above is called a \textit{build}. A build assembles the source code and makes
 sure that the software works as intended \autocite[p.
-4]{MatyasContinuousIntegration2007}.
+4]{MatyasContinuousIntegration2007}. The \textit{integration} of software
+usually consists of the steps portrayed in
+figure~\ref{fig:ci_pipeline_classic}.
 
-In order for this to implemented, a number of prerequisites exist. First, the
-project's source code has to be tracked in a \ac{VCS}. The \ac{VCS} holds the
-source code in a central place that can be accessed by all developers
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[scale=0.7]{images/figures/ci_classic.pdf}
+\end{center}
+\caption[The most common, abstracted \ac{CI} pipeline for a classic
+software.]{The most common, abstracted \ac{CI} pipeline for a classic
+software (adapted from \autocite[Fig. 1-4]{MatyasContinuousIntegration2007}).}%
+\label{fig:ci_pipeline_classic}
+\end{figure}
+
+In order for this pipeline to be implemented, a number of prerequisites exist.
+First, the project's source code has to be tracked in a \ac{VCS}. The \ac{VCS}
+holds the source code in a central place that can be accessed by all developers
 \autocite[Ch.  1]{MatyasContinuousIntegration2007}. In addition, the \ac{VCS}
 allows multiple developers to work on different tasks for the same project
 concurrently. The \ac{VCS} acts as the data foundation for the integration

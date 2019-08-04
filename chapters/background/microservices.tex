@@ -32,6 +32,15 @@ monolith can not be executed independently from one another. Hence, a monolith
 exists as a single executable artefact \autocite[p.
 1]{DragoniMicroservicesyesterdaytoday2016}.
 
+\begin{figure}[H]
+\begin{center}
+  \missingfigure{Add figure showing the differences of monolithic and microservice application.}
+  %\includegraphics[scale=]{Figures/}
+\end{center}
+\caption{}
+\label{fig:}
+\end{figure}
+
 Monolithic applications are hard to deploy in a distributed system without
 introducing some kind of middleware that handles the way the monolith is
 distributed. In addition to this, monolithic application suffer additional
@@ -77,13 +86,13 @@ simply another term for the already existing \ac{SOA}.
 microservice architecture can be viewed as a subset of the \ac{SOA}. Besides
 that it additionally focuses on greater agility. Altogether,
 \autocite{DragoniMicroservicesyesterdaytoday2016} defines the microservice
-architecture to be a distributed application which \textit{modules} are only
+architecture to be a distributed application which \textit{modules} are solely
 microservices. The term \enquote{module} is synonymous with the term
 \enquote{service} used in the description of the monolithic architecture and
 \ac{SOA}.
 
 Furthermore, the user does not contact any service directly. One or more
-gateways receives the user's requests and route them to the correct service.
+gateways receive the user's requests and route them to the correct service.
 Depending on the type of user, the requested information are encoded
 appropriately by the gateway. An end user might receive a rendered website over
 \ac{HTTP} whereas an \ac{API} call has to be sent via \ac{REST} over \ac{HTTP}.
@@ -99,7 +108,7 @@ natural evolution of software architectural patterns in a distributed system.
 \subsubsection{A Practical Example}%
 \label{ssub:A_Practical_Example}
 
-The following example highlights the advantages of microservice in a practical
+The following example highlights the advantages of microservices in a practical
 environment. The example depicts an application that allows users to share
 pictures of their pets with other users; hereafter called \textit{PawPic}.
 It is a requirement that all users have to be authenticated using an external
@@ -107,9 +116,9 @@ It is a requirement that all users have to be authenticated using an external
 
 Following the concept of \textit{cohesion} \autocite[p.
 2]{DragoniMicroservicesyesterdaytoday2016}, any service only provides the
-functionality that is needed to solve the specific problem it is assigned to
-solve. Figure~\ref{fig:microservice_example} proposes a microservice
-architecture for the \textit{PawPic} application.
+functionality that is needed to solve the specific problem it is assigned.
+Figure~\ref{fig:microservice_example} proposes a microservice architecture for
+the \textit{PawPic} application.
 
 \begin{figure}[H]
 \begin{center}
@@ -131,7 +140,7 @@ authentication service's only purpose is to check the user's credentials.
 Besides that, the backend service provides the applications main functionality;
 to view and share pictures of pets. To fulfil this task, the backend uses a
 relational database. The database holds the picture's information and storage
-metadata. Both the backend and database are separate service though they are
+metadata. Both the backend and database are separate services though they are
 strongly dependent on one another. Using the storage metadata, the backend is
 able to fetch the actual images from the blob storage service and relay them to
 the user.
@@ -153,24 +162,24 @@ every service can be scaled independently from one another.
 
 Given a fully developed microservice architecture, one question remains: How is
 it possible to deploy this bulk of microservices in an efficient way? In a
-world filles with monoliths, a speciliased operations team would be handed a
+world filled with monoliths, a specialised operations team would be handed a
 piece of software. The operations team then prepares the environment to which
-the application should be deployed and test the release.
+the application should be deployed and tests the release
 \autocite{VillamizarEvaluatingmonolithicmicroservice2015}. This process takes a
 lot of time and effort and lacks agility; the property microservices strive
 for.
 
 The introduction of \acp{VM} helps to speed up the process. Instead of
 deploying the application directly to a server's hardware, the application is
-deployed within a \ac{VM}. Thanks to this concept, several application can now
-be run on the same hardware. The concept of \acs{VM} does not only benefinit
+deployed within a \ac{VM}. Thanks to this concept, several applications can now
+be run on the same hardware. The concept of \acp{VM} does not only benefit
 monoliths but also translates to microservices. Instead of running
-microservices on multiple physical machines, they can be deyployed
+microservices on multiple physical machines, they can be deployed
 independently from one another on the same server.
 
 \acp{VM} introduce more flexibility however they do not constitute the perfect
-solution for running a microservice architecture. That is due to the hight
-ressource consumption of \acp{VM}.
+solution for running a microservice architecture. That is due to the high
+resource consumption of \acp{VM}.
 
 \begin{figure}[H]
   \hspace*{\fill}%
@@ -188,17 +197,17 @@ ressource consumption of \acp{VM}.
 \end{figure}
 
 Figure~\ref{subfig:microserviceType2Hypervisor} shows the application runtime
-model of a type2 hypervisor. In addition to the host \ac{OS}, each \ac{VM}
-executes its own full guest \ac{OS}. If this runtime model is chosen to deploy
-a microservice architecture, the resource overhead for each microservice would
-be major.
+model of a \textit{type2 hypervisor}. In addition to the host \ac{OS}, each
+\ac{VM} executes its own full guest \ac{OS}. If this runtime model is chosen to
+deploy a microservice architecture, the resource overhead for each microservice
+would be major.
 
 The goal is to define a runtime model that encapsulates every microservice as
-well as the \ac{VM} executed by a hypervisor does but much more light weight
+well as a \ac{VM} executed by a hypervisor does but much more light weight
 \autocite{SchenkerLearnDockerFundamentals2018}. The container model depicted in
 figure~\ref{subfig:microserviceContainer} fits that description. Rather than
-needing a full guest \ac{OS} for each application / microservice, each
-container only includes the application it is tasked to executed and any needed
+needing a full guest \ac{OS} for each application/microservice, each
+container only includes the application it is tasked to execute and any needed
 libraries. This approach reduces the overhead of each application to a bare
 minimum while gaining near bare-metal performance \autocite[Ch.
 1A]{CombeDockerNotDocker2016}. In case of the Docker architecture depicted in
@@ -208,13 +217,13 @@ as a result of a few Linux kernel features. \autocite{CombeDockerNotDocker2016}
 and \autocite[Ch. 1.2.1]{LuksaKubernetesAction2017} further highlight the
 security features needed to make the container runtime model work.
 
-At this point two distinctions have to be made: The term docker referrers to a
-whole system of functionality. It combines the actual container runtime along
-with a reproducible container build process, a central repository, called
+At this point a distinction has to be made: The term Docker refers to a whole
+system of functionality. It combines the actual container runtime along with a
+reproducible container build process and a central repository, called
 \textit{Docker Hub}, where container images can be stored, shared and pulled
 from \autocite[Ch. 1B]{CombeDockerNotDocker2016}. Besides that, Docker is not
-the only container runtime there is. Alternatives include \textit{LXC},
-\textit{LXD}, \textit{rkt}, \textit{Warden} and \textit{OpenVZ} \autocite[Tab.
+the only container runtime. Alternatives include \textit{LXC}, \textit{LXD},
+\textit{rkt}, \textit{Warden} and \textit{OpenVZ} \autocite[Tab.
 1]{CombeDockerNotDocker2016}. Nonetheless all references to containers in this
 thesis are references to containers executed by the Docker engine.
 
@@ -225,19 +234,19 @@ Once the actual microservices have been developed, the question arises as to
 how they can be deployed with the help of containers. The goal is to execute
 one microservice inside at least one container. As already mentioned in chapter
 \ref{ssub:Deployment_Runtime_Model}, Docker is equipped with a reproducible
-build process for containers. The outcome of such a build process is a
+build process for containers. The outcome of such a build process is an
 \textit{image}. An image is comprised of the whole file system containing both the
 application data as well as all needed libraries and binaries \autocite[Ch.
-1]{LuksaKubernetesAction2017}. A container is an instantiation of an image. A
-container is spawned based on one image; yet one image can be the base for
-multiple containers.
+1]{LuksaKubernetesAction2017}. A container is an instantiation of an image. It
+is spawned based on a single image; yet one image can be the base for multiple
+containers.
 
 In order to build an image, the developers of a microservice have to define a
 \textit{Dockerfile}. The Dockerfile contains all instructions that are needed
 by the Docker engine to produce an image. Multiple images built from the same
 Dockerfile \textit{should} always be identical because the build process is
-fully deterministic. The issues in respect to the deterministic build process
-will also be discussed in chapter TODO.
+deterministic. The issues in respect to the deterministic build process will
+also be discussed in chapter \todo{Add correct chapter reference.} TODO.
 
 \begin{listing}[H]
 \begin{minted}{Dockerfile}
@@ -260,8 +269,8 @@ the executed command. The most common Dockerfile commands and the issues
 regarding layering are further examined in
 \autocite{DockerBestpracticeswriting}. The command that spans from line two to
 three in listing~\ref{listing:dockerfile_example} creates a bash file that
-produces the output \\
-\hspace{0.5em}\texttt{Hello from BusyBox \textbf{VERSION\textunderscore{}NUMBER}} \hspace{0.4em}.\\
+produces this output: \\
+\texttt{Hello from BusyBox \textbf{VERSION\textunderscore{}NUMBER}}\\
 In line four of the same listing, the \texttt{chmod} utility is used to set the
 \textit{execution} permission of the newly created file. This allows the binary
 to be executed. The last line of listing~\ref{listing:dockerfile_example} specifies the
@@ -269,7 +278,7 @@ to be executed. The last line of listing~\ref{listing:dockerfile_example} specif
 container is spawned based on this image. The convoluted interrelations between
 the \texttt{ENTRYPOINT} and \texttt{CMD} instructions will not be further
 examined due to their low relevance to the subject at hand. Their
-interrelations are however fully contested in
+interrelations are however fully contrasted in
 \autocite{DockerDockerfilereferenceEntrypoint}.
 
 \begin{figure}[H]
@@ -296,8 +305,8 @@ The result of this process is a complete microservice architecture running
 containerized on a production Docker machine. The process however also reveals
 a few problems:
 \begin{itemize}
-  \item The developer has to tell the production machine running Docker to run
-    a new image by hand.
+  \item The developer has to tell the production machine that runs the Docker
+    engine to execute a new image by hand.
   \item The bigger the microservice architecture gets, the more effort is
     required to run the images on the production machine. This is due to the
     requirement that the developer has to run each image separately. Docker

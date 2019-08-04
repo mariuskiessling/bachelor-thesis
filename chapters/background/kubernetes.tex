@@ -21,7 +21,7 @@ services \autocite{LuksaKubernetesAction2017}.
 
 This chapter will shortly introduce the main concepts of Kubernetes and give an
 overview of the Kubernetes components that are relevant to the research
-questions. If needed, The official Kubernetes documentation
+questions. If needed, the official Kubernetes documentation
 \autocite{AuthorsProductionGradeContainer}, which covers all system components
 in detail, can be used as a supplement to this thesis.
 
@@ -51,24 +51,25 @@ Instead of directly deploying individual containers, Kubernetes introduces the
 concept of \textit{pods}. A pod is the smallest entity that can be executed on
 the cluster. It hosts at least one containers and automatically receives a
 \ac{IP} address that is unique inside Kubernetes. Kubernetes ensures that all
-containers of a pod are always executed in the same node.
+containers of a pod are always executed on the same node.
 
-Yet this does not mean that a complete microservice architecture should be
-bundled into one pod. The decision when to combines microservices into one pod
-and when to split them across multiple pods becomes clear in the following
-example. Given is an exemplary microservice architecture consisting of a basic
-web crawler that fetches all \textit{xkcd} comics from the xkcd archive and
-stores them in the file system, a frontend that displays the fetched comics and
-a backend that serves the fetches images to the frontend. The architecture is
-also depicted in figure~\ref{fig:pods_example}. Both the backend as well as the
-crawler have to access the same file system. Further, the backend would not be
-able to serve comics without the crawler hence it would fail to fulfil its
-task. Thus it can be said that these two services are \textit{tightly coupled}
-and are a dependent components. It can also be argued that the crawler only
-acts as a supporting component for the actual backend. Hence, the crawler and
-backend should be shipped inside the same pod. On the other hand the frontend
-is a fully independent system component. It can be scaled independently from
-the backend and crawler. Hence it belongs in a separate pod. 
+Yet, this does not mean that a complete microservice architecture should be
+bundled into a single pod. The decision when to combines microservices into a
+single pod and when to split them across multiple pods becomes clear in the
+following example. Given is an exemplary microservice architecture consisting
+of a basic web crawler that fetches all \textit{xkcd} comics from the xkcd
+archive and stores them in the file system, a frontend that displays the
+fetched comics and a backend that serves the fetches images to the frontend.
+The architecture is also depicted in figure~\ref{fig:pods_example}. Both the
+backend as well as the crawler have to access the same file system. Further,
+the backend would not be able to serve comics without the crawler hence it
+would fail to fulfil its task. Thus it can be said that these two services are
+\textit{tightly coupled} and are a dependent components. It can also be argued
+that the crawler only acts as a supporting component for the actual backend.
+Hence, the crawler and backend should be shipped inside the same pod. On the
+other hand the frontend is a fully independent system component. It can be
+scaled independently from the backend and crawler. Hence it belongs in a
+separate pod. 
 
 \begin{figure}[H]
 \begin{center}
@@ -85,7 +86,7 @@ The example in figure~\ref{fig:pods_example} also introduces the concept of
 \textit{volumes}. Volumes bring the ability to store files \textit{outside} the
 context of the local file system of a container. A pod can specify that it
 needs one or more volumes. Each container inside a pod is able to mount these
-volumes in the same or a different. The backend from
+volumes in the same or a different path. The backend from
 figure~\ref{fig:pods_example} might mount the volume to
 \texttt{/var/www/storage} whereas the crawler wants to mount the volume to
 \texttt{/mnt/comics}. Volumes are either local paths on the Kubernetes node or
@@ -97,7 +98,7 @@ Simply using the Kubernetes concept of volumes however does pose two significant
   \item For most volume types, the volume has to be provisioned by hand before
     the container can allocate said volume.
   \item The volume is bound to the pods lifecycle. This means that whenever a
-    pod is deleted or e.g.\ dies due to a problem or scaling, the volume needs
+    pod is deleted or dies due to a problem or scaling, the volume needs
     to be recreated during the pod's next startup. This also means that volumes
     can not be defined without first defining a pod.
 \end{itemize}
@@ -147,8 +148,8 @@ The existing ones however do not match the requirements set by the \ac{PVC}. To
 solve this, a new \ac{PV} is automatically provisioned that fully complies with
 the requirements of the \ac{PVC}.
 
-To conclude this section, it can be said that \acp{PV} bring the ability of
-storage resource definition that is independent from a pod's lifecycle.
+To conclude this section, it can be said that \acp{PV} bring the ability to
+define storage resources that are independent from a pod's lifecycle.
 \acp{PVC} can then be used to allocate the created \acp{PV} or dynamically
 create new ones by using the storage classes' provisioner.
 
@@ -280,7 +281,7 @@ Kubernetes many pods can provide the same service, would not be possible
 Manifest files are the place where the cluster's configurations are stored. Any
 Kubernetes object (e.g.\ a pod or Deployment) is defined inside a manifest
 configuration file. Manifest files can either be written in \textit{YAML} or
-\textit{JSON}. Both YAML and JSON can encode data in a form readable to humans
+\textit{JSON}. Both YAML and JSON can encode data in a form readable for humans
 and computers. Kubernetes manifests are mainly written in YAML though they are
 translated to JSON before being passed to the Kubernetes \ac{API}. Thus, this
 thesis will only display manifest files in YAML format.
@@ -326,7 +327,7 @@ failures. Additionally, multiple object definitions should not be split into
 multiple files whenever they serve a similar purpose. A backend that e.g.\
 needs a database cluster should be defined in the same configuration file. The
 different objects can be separated by inserting a line containing \texttt{---}.
-In addition, Services should always be defined before the pods they handle
+In addition, Services should always be defined prior to the pods they handle
 traffic for. Users are also advised to use semantic labelling for all objects
 in Kubernetes. Any object that follows this advice can be easily found by a
 user without having to specify the object's explicit type. E.g.\ a frontend's

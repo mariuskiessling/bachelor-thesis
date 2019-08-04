@@ -263,3 +263,13 @@ temporarily resolved by simply rolling back to the previous version
 Given that these requirements are fulfilled, it is ensured that the automated
 build produces a working software that can be released at any time \autocite[p.
 200]{MatyasContinuousIntegration2007}.
+
+\subsubsection{Azure DevOps}%
+\label{ssub:Azure_DevOps}
+Now that the foundation for the understanding of how microservices can be
+continuously integrated and deployed is laid, the explored principles can be
+put into practise. Previously, chapter~\ref{ssub:Continuous_Integration}
+and~\ref{ssub:Continuous_Deployment} already mentioned a \textit{machine} on
+which a build is executed. A machine however is not sufficient for implementing
+a \ac{CI}/\ac{CD} pipeline. An additional piece of software is needed that
+knows how to run the pipeline and its various steps.

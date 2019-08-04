@@ -4,17 +4,17 @@
 \label{sub:Automatic_a_Microservices_Deployment}
 So far this thesis already introduced the concept of microservices and how they
 can be deployed using a container orchestration solution; in this case
-Kubernetes. Yet the deployment options offered in chapter~\ref{sub:Kubernetes}
+Kubernetes. Yet, the deployment options offered in chapter~\ref{sub:Kubernetes}
 all have to executed by hand. Additionally chapter~\ref{sub:Kubernetes}
 presupposes that the container's image is already available on a central image
 repository. The basic Docker development workflow in
-figure~\ref{fig:docker_workflow} also assumes that developers manually builds
+figure~\ref{fig:docker_workflow} also assumes that developers manually build
 the service's image on their local machine and push them to the central
 repository. While this is still a valid possibility, the process consumes a lot
 of extra time spent by the developer and is error prone. Furthermore, in such a
 manual process no central quality control can force policies upon the source
 code of each service. These problems can be solved by introducing an additional
-automation component: A \ac{CI} and \ac{CD} server. This section will outline
+automation component: A \acf{CI} and \ac{CD} server. This section will outline
 the basic principles of such a server and apply them to an exemplary \ac{SaaS}
 solution \textit{Microsoft DevOps}.
 
@@ -53,6 +53,16 @@ software (adapted from \autocite[Fig. 1-4]{MatyasContinuousIntegration2007}).}%
 \todo{The order of steps may has to be adjusted (position of compilation).}
 
 In order for this pipeline to be implemented, a number of prerequisites exist.
+\autocite{MatyasContinuousIntegration2007} and
+\autocite{JezHumbleContinuousDelivery2010} outline that
+
+\begin{itemize}
+  \item all code has to be tracked in a central \ac{VCS},
+  \item changes have to be checked in regularly,
+  \item an extensive, automated test suite has to be in place and
+  \item the software has to be buildable testable in any environment.
+\end{itemize}
+
 First, the project's source code has to be tracked in a \ac{VCS}. The \ac{VCS}
 holds the source code in a central place that can be accessed by all developers
 \autocite[Ch.  1]{MatyasContinuousIntegration2007}. In addition, the \ac{VCS}
@@ -83,18 +93,18 @@ on a developer's machine.
 
 As long as all these requirements are fulfilled, a \ac{CI} process can be
 successfully used. Though when applying \ac{CI} to microservice architectures,
-an additional remarks needs to be made. The traditional \ac{CI} process does
+an additional remark needs to be made. The traditional \ac{CI} process does
 not specify how the software should be build \autocite[p.
 18]{MatyasContinuousIntegration2007}. In a monolithic project, a usual outcome
 of the \ac{CI} process is a bundle of the built software that also includes all
 database schemas and installation scripts. This piece of data is also referred
-to as an \textit{artefact}. As outlined in
-chapter~\ref{ssub:Dockerizing_a_Microservice}, microservices are shipped as
-Docker images. Thus a successful build process always has to produce a Docker
-image and push it to a central image repository. The \ac{CI} artefact in a
-microservice project hence would be a runnable Docker image. That Docker image
-bundles the full runtime environment and thus does not need to include the
-installation instructions and scripts.
+to as an \textit{artefact} \autocite[p. 18]{MatyasContinuousIntegration2007}.
+As outlined in chapter~\ref{ssub:Dockerizing_a_Microservice}, microservices are
+shipped as Docker images. Thus a successful build process always has to produce
+a Docker image and push it to a central image repository. The \ac{CI} artefact
+in a microservice project hence would be a runnable Docker image. That Docker
+image bundles the full runtime environment and thus does not need to include
+the installation instructions and scripts.
 
 \begin{figure}[H]
 \begin{center}
@@ -122,19 +132,19 @@ artefact is deployed can be freely chosen. However the most typical
 environments a software lives in are outlined in the upcoming
 chapter~\ref{sub:Deployment_Environments}. In general \ac{CD} is a set of
 methods and steps that deploys software scheduled to an end user. A software
-that is not successfully deployed does not exist. \ac{CD} helps developers to
-overcome this problem by giving them a framework for automating this process.
-\autocite[pp.  190]{MatyasContinuousIntegration2007}.
+that is not successfully deployed does not exist for the end user. \ac{CD}
+helps developers to overcome this problem by giving them a framework for
+automating this process \autocite[pp. 190]{MatyasContinuousIntegration2007}.
 
 The need for automating the deployment process becomes clear when taking a look
 at Amazon. Amazon deploys its software approx.\ every 11.6 seconds. This
 statistic only includes deployments to production and does not cover Amazon's
 other deployment environments like development
 \autocite{JenkinsVelocityCulture2011}. When encompassing this sheer amount of
-releases and such short release cycles it becomes clear that a deployments have
+releases and such short release cycles it becomes clear that deployments have
 to be automated.
 
-To successfully implement \ac{CD} a number of requirements have to be
+To successfully implement \ac{CD}, a number of requirements have to be
 fulfilled: \todo[color=green!50]{Such a list should also be added to the CI section for future reference.}
 \begin{itemize}
   \item Labels have to be applied to the files inside the \ac{VCS}
@@ -153,7 +163,7 @@ fulfilled: \todo[color=green!50]{Such a list should also be added to the CI sect
 
 Labels should be applied to both files stored inside the \ac{VCS} as well as
 the outcome of each build. Files with the same label can be considered to be a
-group. Further in the worst case, labels allow software to be rolled back
+group. Further, in the worst case, labels allow software to be rolled back
 easily without having to track the files of a release individually. A new
 release from the same files can be created with ease when all files are tracked
 with a label \autocite[pp. 191-194]{MatyasContinuousIntegration2007}.
@@ -169,7 +179,7 @@ labels it would not be possible to e.g.\ pin issues to an explicit release
 \autocite[pp. 195f.]{MatyasContinuousIntegration2007}.
 
 In addition, a \textit{clean} environment has to be provided for each
-deployment. That means that no leftover files from other deployment are still
+deployment. That means that no leftover files from other deployments are still
 present on a machine when the next deployment is applied. Any leftover files
 may distort the execution of the software and thus may mask or provoke unwanted
 behaviour. \autocite{ArtacDevOpsIntroducingInfrastructure2017} offers a
@@ -206,7 +216,7 @@ aim of always producing a clean deployment environment.
 It is a common approach to run tests locally before pushing code changes to the
 \ac{VCS}. The local environment however most often differs, even if only in
 minor details, from the actual environment the application will be deployed in.
-Hence it can not be guaranteed that a passing test on the local machine also
+Hence, it can not be guaranteed that a passing test on the local machine also
 produces the same result in the deployment environment. This is the reason why
 \textit{all} tests also have to be completed in the deployment environment. The
 tests do not only have to be executed, all tests need to pass. Only then it can
@@ -221,10 +231,10 @@ needed compiler set up. An additional stage could then copy the compiled binary
 into an environment which has no compiler installed. As a result the final
 container image becomes smaller while only containing data for the execution of
 the software \autocite{IncUsemultistage2019}. The same thought can be applied
-to tests. Before compiling, a separate stage hold all test utilities needed to
-test the software. The tests are executed a second time and process only
-proceeds if all tests pass a second time inside that specialised early build
-stage.
+to tests. Before compiling, a separate stage holds all test utilities needed to
+test the software. The tests are executed a second time and the build pipeline
+only proceeds if all tests pass a second time inside that specialised early
+build stage.
 
 \begin{figure}[H]
 \begin{center}
@@ -237,16 +247,17 @@ containerized project.}%
 
 Regardless of the outcome of the build, a feedback report should be generated.
 That report includes information about the changed files, new features and
-fixes. Any interested team member can then verify that the build contains the
-desired aspects \autocite[pp. 196-198]{MatyasContinuousIntegration2007}.
+fixes. Any interested team member can then verify whether the build contains
+the desired aspects \autocite[pp. 196-198]{MatyasContinuousIntegration2007}.
 
 Lastly the \textit{Cloudflare} outage in July 2019 showed the importance of
 having a working process in place to roll back any release. Even though
 Cloudflare had a rollback plan in place, they could not successfully execute
 it. This resulted in a unavailability of Cloudflare's global network for 27
-minutes \autocite{Graham-CummingDetailsCloudflareoutage2019}. The existence of
-a working and fast rollback process allows defects introduced by a release to
-be temporarily resolved by simply rolling back to the previous version
+minutes standing nearly all of their customers
+\autocite{Graham-CummingDetailsCloudflareoutage2019}. The existence of a
+working and fast rollback process allows defects introduced by a release to be
+temporarily resolved by simply rolling back to the previous version
 \autocite[p. 199]{MatyasContinuousIntegration2007}.
 
 Given that these requirements are fulfilled, it is ensured that the automated

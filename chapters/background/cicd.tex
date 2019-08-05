@@ -272,4 +272,25 @@ put into practise. Previously, chapter~\ref{ssub:Continuous_Integration}
 and~\ref{ssub:Continuous_Deployment} already mentioned a \textit{machine} on
 which a build is executed. A machine however is not sufficient for implementing
 a \ac{CI}/\ac{CD} pipeline. An additional piece of software is needed that
-knows how to run the pipeline and its various steps.
+knows how to run the pipeline and its various steps. One of these solutions is
+called \textit{Microsoft Azure DevOps}. This section will outline how Azure
+DevOps implements the previously explored features of \ac{CI}/\ac{CD}.
+
+To understand the upcoming solution by Microsoft, a short definition of the
+term \textit{DevOps} might be beneficial. For a long time, the tasks of
+developing and operating an application was clearly segregated. A development
+team implemented an application and an operations team operated the application
+and the underlying infrastructure. DevOps aims to reduce the distance between
+these two practises. It defines a number of socio-technical and organizational
+methods which bit by bit reduce that distance. This means that development
+teams are encouraged to engage with the operational aspects of their
+application until ultimately the development and operation teams blend
+together. This is supported by DevOps tools that are shared between the
+development and operation teams (e.g.\ a common documentation) in order to
+avoid knowledge gaps \autocite{ArtacDevOpsIntroducingInfrastructure2017}.
+
+With Azure DevOps, Microsoft introduced a solution that equips teams following
+the DevOps methodology with various tools. The tools included with Azure DevOps
+are listed in table~\ref{tab:azure_devops}.
+
+\LTXtable{\textwidth}{tables/azure_devops.tex}

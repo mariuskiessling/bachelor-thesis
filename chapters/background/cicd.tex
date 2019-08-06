@@ -3,20 +3,20 @@
 \subsection{Automating a Microservice's Deployment}%
 \label{sub:Automatic_a_Microservices_Deployment}
 So far this thesis already introduced the concept of microservices and how they
-can be deployed using a container orchestration solution; in this case
-Kubernetes. Yet, the deployment options offered in chapter~\ref{sub:Kubernetes}
-all have to executed by hand. Additionally chapter~\ref{sub:Kubernetes}
-presupposes that the container's image is already available on a central image
-repository. The basic Docker development workflow in
-figure~\ref{fig:docker_workflow} also assumes that developers manually build
-the service's image on their local machine and push them to the central
-repository. While this is still a valid possibility, the process consumes a lot
-of extra time spent by the developer and is error prone. Furthermore, in such a
-manual process no central quality control can force policies upon the source
-code of each service. These problems can be solved by introducing an additional
-automation component: A \acf{CI} and \ac{CD} server. This section will outline
-the basic principles of such a server and apply them to an exemplary \ac{SaaS}
-solution \textit{Microsoft DevOps}.
+can be deployed using a container orchestration solution; in the case of this
+thesis Kubernetes. Yet, the deployment options offered in
+chapter~\ref{sub:Kubernetes} all have to executed by hand. Additionally
+chapter~\ref{sub:Kubernetes} presupposes that the container's image is already
+available on a central image repository. The basic Docker development workflow
+as shown in figure~\ref{fig:docker_workflow} also assumes that developers
+manually build the service's image on their local machine and push them to the
+central repository. While this is still a valid possibility, the process
+consumes a lot of extra time spent by the developer and is error prone.
+Furthermore, in such a manual process no central quality control can force
+policies upon the source code of each service. These problems can be solved by
+introducing an additional automation component: A \acf{CI} and \ac{CD} server.
+This section will outline the basic principles of such a server and apply them
+to the exemplary \ac{SaaS} solution \textit{Microsoft DevOps}.
 
 \subsubsection{Continuous Integration}%
 \label{ssub:Continuous_Integration}
@@ -32,14 +32,14 @@ is a \ac{CI} concept. This concept spans a wide range of topics including the
 \end{itemize}
 
 \autocite{MatyasContinuousIntegration2007} also includes the continuous
-deployment of software though this will be covered separately in
-chapter~\ref{ssub:Continuous_Deployment}. Each iteration of the steps listed
-above is called a \textit{build}. A build assembles the source code and makes
-sure that the software works as intended \autocite[p.
+deployment of software though this will be covered separately in the next
+passage, chapter~\ref{ssub:Continuous_Deployment}. Each iteration of the steps
+listed above is called a \textit{build}. A build assembles the source code and
+makes sure that the software works as intended \autocite[p.
 4]{MatyasContinuousIntegration2007}. The \textit{integration} of software
 usually consists of the steps portrayed in
 figure~\ref{fig:ci_pipeline_classic}. The whole process is also often referred
-to as being a \textit{pipeline} .
+to as being a \textit{pipeline}.
 
 \begin{figure}[H]
 \begin{center}
@@ -73,7 +73,7 @@ process.
 Furthermore, the code produced by the developers has to be checked in the
 \ac{VCS} regularly. Only then may the \ac{CI} process detect problems early and
 inform the responsible developer of the breaking change. Code should be checked
-in more then a couple of times a day \autocite[p.
+in more than a couple of times a day \autocite[p.
 59]{JezHumbleContinuousDelivery2010}. \todo{Maybe add statement that states
 that CI is not compatible with branching; Maybe refute?}
 

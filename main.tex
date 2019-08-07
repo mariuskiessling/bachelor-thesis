@@ -90,6 +90,10 @@
 \renewcommand*{\l@lstlisting}{\@dottedtocline{1}{0em}{2.3em}}
 \makeatother
 
+\definecolor{yedYellow}{RGB}{255,204,0}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+  \node[shape=circle,draw,inner sep=2pt,fill=yedYellow] (char) {\small #1};}}
+
 \input{metadata}
 
 \usepackage[onehalfspacing]{setspace}

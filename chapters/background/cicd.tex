@@ -308,4 +308,63 @@ steps in a central place. This can be helpful if the same set of steps is
 required in multiple build pipelines (e.g.\ a Node.js application always needs
 to install its dependencies first and then build the code). Lastly,
 \textit{Deployment groups} can be used to configure groups of machines, e.g.\ a
-development cluster, to which a release can be deployed.
+development cluster, to which a release can be deployed. As the Library, Task
+Groups and Deployment Groups features only contribute advanced capabilities for
+the Build and Releases features, they will not be explored further at this
+point.
+
+Pipelines are made up of one or more \textit{Stages}. Each stage can contain
+two types of tasks: \textit{Jobs} and \textit{Deployments}. Even though it is
+possible to realise deployment tasks using a Job, Microsoft discourages this
+behaviour and recommends the use of Deployments instead. Deployments e.g.
+preserve a history of Deployments that would not be collected when using Jobs.
+Further, it possible to define one or more Jobs and Deployments per Stage. Both
+Jobs and Deployments can contain multiple steps. DevOps treats different types
+of Steps differently. The types \texttt{script}, \texttt{bash}, \texttt{pwsh}
+and \texttt{powershell} each run commands a respective shell whereas
+\texttt{checkout}, \texttt{task} and \texttt{templateReference} perform
+additional pipeline and repository related actions. Jobs and Deployments may
+require that preconditions be fulfilled before running. This allows developers
+to e.g.\ integrate manual reviews into a pipeline \autocite{MicrosoftJobs2019}.
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[scale=0.6]{images/figures/azure_devops_build_pipeline.png}
+\end{center}
+\caption{A build pipeline in Microsoft Azure DevOps.}%
+\label{fig:build_pipeline_azure}
+\end{figure}
+
+Traditionally, build pipelines could only be created and modified in a visual
+editor. Figure~\ref{fig:build_pipeline_azure} shows an exemplary Azure DevOps
+pipeline that consists of the two Jobs \texttt{Build and Test} and
+\texttt{Deploy to Development}. The first Job has five Steps and the second Job
+one Step.
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[scale=0.7]{images/figures/azure_devops_release_pipeline_base.pdf}
+\end{center}
+\caption{A release pipeline in Microsoft Azure DevOps.}%
+\label{fig:release_pipeline_azure}
+\end{figure}
+
+Like build pipelines, release pipelines could traditionally only be set up in a
+graphical user interface. Figure~\ref{fig:release_pipeline_azure} shows a
+release pipeline with two stages that are are not executed on a schedule
+(\circled{1}) but every time a new artefact called \texttt{frontend} is created
+(\circled{2}). \circled{3} is a deployment stage in which the application is
+deployed to a development environment. To do this, only one task is needed.
+After the application was successfully deployed to development, the deployment
+to the production environment is triggered. This however is put on hold until
+an approval is given as indicated by \circled{4}.
+
+When using the visual release pipeline editor, the build process if fully
+decoupled from the release process. It only acts as a trigger for the release
+pipeline and is defined in a fully separate interface
+(figure~\ref{fig:build_pipeline_azure}). 
+
+In newer versions of Azure DevOps, the configuration via YAML files is
+preferred. Though until Azure DevOp's update in July 2019 it was not possible
+to define multi-stage pipelines, meaning pipelines that build and release a
+software, in one common YAML file.

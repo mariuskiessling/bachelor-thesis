@@ -202,7 +202,7 @@ server have to be reapplied. This process also ensures that the environment to
 which the software is deployed is clean while being more efficient
 than rebuilding each layer. In addition, the use of a container orchestration
 solution like Kubernetes has the advantage of defining the underlying
-infrastructure as code. \ac{IasC} allows the infrastructure to be defined
+infrastructure as code. \ac{IaC} allows the infrastructure to be defined
 inside a \enquote{single commonly available source of truth}, most frequently
 stored inside a \ac{VCS}, without the need for additional administrators
 \autocite{ArtacDevOpsIntroducingInfrastructure2017}. In Kubernetes,
@@ -210,7 +210,7 @@ infrastructure changes can be performed by applying these configuration files.
 When realized correctly, the developer performing these changes does not have
 to worry about past infrastructure configurations remaining in the system.
 Kubernetes keeps track of old resources and manages them accordingly
-\autocite{AuthorsDeployments2019}. The \ac{IasC} paradigm further supports the
+\autocite{AuthorsDeployments2019}. The \ac{IaC} paradigm further supports the
 aim of always producing a clean deployment environment.
 
 It is a common approach to run tests locally before pushing code changes to the
@@ -297,7 +297,7 @@ are listed in table~\ref{tab:azure_devops}.
 
 Though all of the tools listed in table~\ref{tab:azure_devops} aid teams in
 continuously releasing a microservice architecture, the upcoming section will
-only examine \textit{Azure Pipelines}, Microsoft's \ac{CI}/\ac{CD} solution. 
+only examine \textit{Azure Pipelines}, Microsoft's \ac{CI}/\ac{CD} solution.
 
 Azure Pipelines consists of the two main modules \textit{Builds} and
 \textit{Releases}. These two make up Azure DevOps' \ac{CI} and \ac{CD}
@@ -343,7 +343,7 @@ one Step.
 
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[scale=0.7]{images/figures/azure_devops_release_pipeline_base.pdf}
+  \includegraphics[scale=0.5]{images/figures/azure_devops_release_pipeline_base.pdf}
 \end{center}
 \caption{A release pipeline in Microsoft Azure DevOps.}%
 \label{fig:release_pipeline_azure}
@@ -353,7 +353,7 @@ Like build pipelines, release pipelines could traditionally only be set up in a
 graphical user interface. Figure~\ref{fig:release_pipeline_azure} shows a
 release pipeline with two stages that are are not executed on a schedule
 (\circled{1}) but every time a new artefact called \texttt{frontend} is created
-(\circled{2}). \circled{3} is a deployment stage in which the application is
+(\circled{2}). \circled{3} shows a deployment stage in which the application is
 deployed to a development environment. To do this, only one task is needed.
 After the application was successfully deployed to development, the deployment
 to the production environment is triggered. This however is put on hold until
@@ -362,9 +362,44 @@ an approval is given as indicated by \circled{4}.
 When using the visual release pipeline editor, the build process if fully
 decoupled from the release process. It only acts as a trigger for the release
 pipeline and is defined in a fully separate interface
-(figure~\ref{fig:build_pipeline_azure}). 
+(figure~\ref{fig:build_pipeline_azure}).
 
 In newer versions of Azure DevOps, the configuration via YAML files is
-preferred. Though until Azure DevOp's update in July 2019 it was not possible
+preferred. Though until Azure DevOps' update in July 2019 it was not possible
 to define multi-stage pipelines, meaning pipelines that build and release a
-software, in one common YAML file.
+software, in one common YAML file. With the introduction of file-defined,
+multi-stage pipelines, the graphical configuration interface for pipelines can
+be entirely discarded. The pipeline configuration is stored next to the
+application's actual code inside a \ac{VCS}. In a microservice environment of
+$n$ microservices, $n$ pipeline configuration files would be stored in each
+microservice's code repository. This allows for a cleaner versioning of build
+and deployment configurations right next to the project's code.
+
+\begin{listing}
+\begin{minted}{YAML}
+stages:
+- stage: BuildAndTest
+  jobs:
+    - job: ...
+- stage: DeployToDevelopment
+  dependsOn: BuildAndTest
+  condition: succeeded('BuildAndTest')
+- stage: DeployToProduction
+  dependsOn: Development
+  condition: succeeded('DeployToDevelopment')
+\end{minted}
+\caption{A build and release pipeline (multi-staged) in Microsoft Azure DevOps.}
+\label{lst:multi_stage_azure}
+\end{listing}
+
+In listing~\ref{lst:multi_stage_azure}, an exemplary multi-stage pipeline
+configuration file is shown. Like in the graphical interface, a stage can
+appoint another stage as its predecessor. When doing so, the appointing stage
+is only executed after the predecessor's run is completed. In addition, a stage
+can require that certain conditions are fulfilled. If a condition fails, the
+stage defining it is not executed.
+
+Even if multi-stage pipeline configuration files are an improvement over the
+graphical configuration, the feature is still in a preview phase. Hence, not
+all features available in the graphical editor are already ported to be used
+inside the YAML-based configurations.

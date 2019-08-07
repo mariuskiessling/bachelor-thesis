@@ -298,3 +298,14 @@ are listed in table~\ref{tab:azure_devops}.
 Though all of the tools listed in table~\ref{tab:azure_devops} aid teams in
 continuously releasing a microservice architecture, the upcoming section will
 only examine \textit{Azure Pipelines}, Microsoft's \ac{CI}/\ac{CD} solution. 
+
+Azure Pipelines consists of the two main modules \textit{Builds} and
+\textit{Releases}. These two make up Azure DevOps' \ac{CI} and \ac{CD}
+capabilities. In addition to these two, Azure Pipelines includes a
+\textit{Library} feature that can store groups of variables secure files like
+signing keys. \textit{Task groups} allow users to define common deployment
+steps in a central place. This can be helpful if the same set of steps is
+required in multiple build pipelines (e.g.\ a Node.js application always needs
+to install its dependencies first and then build the code). Lastly,
+\textit{Deployment groups} can be used to configure groups of machines, e.g.\ a
+development cluster, to which a release can be deployed.

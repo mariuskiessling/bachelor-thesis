@@ -22,7 +22,7 @@ provide services to other microservices. E.g.\ a \textit{frontend} microservice
 directly serves the end user. Hence the versioning scheme used in such a
 microservice also serves a communicative purpose.
 
-\subsection{Versioning in a Microservice Environment}%
+\subsection{Versioning in a Conventions Microservice Environment}%
 \label{sub:Versioning_in_a_Microservice_Environment}
 Chapter~\ref{sub:Versioning} already introduced the two main versioning schemes
 \textit{SemVer} and \textit{CalVer}. As microservices mostly provide their
@@ -75,6 +75,32 @@ microservices in a library like fashion. Such services can also be considered
 to be \textit{producing} parts.
 
 \LTXtable{\textwidth}{tables/versioning_machine_human.tex}
+
+\ref{tab:versioning_machine_human} shows a selected set of properties that is
+required for versioning a microservice. It groups the requirements into the two
+microservice categories \textit{Human Interaction} and \textit{Machine
+Interaction}. It can be concluded that the versioning of \textit{consuming}
+services mainly serve a communicative purpose whereas versioning in
+\textit{producing} services play a technical role. Hence it can be argued that
+for microservices which are mainly in direct contact with humans, the version
+number is an indicator for features. Thus e.g.\ version 16 of a frontend might
+introduce a feature that gives the user more editing capabilities. This added
+value can then be clearly communicated using the release's version number.
+
+In a microservice environment these four components can be identified to
+receive version numbers (in reverse order of atomicity):
+\begin{itemize}
+  \item Packaged software (e.g.\ Helm charts)
+  \item Container images
+  \item Software (e.g.\ in Node.js projects)
+  \item \acp{API}
+\end{itemize}
+
+So far, this section already explored the general issues related to versioning
+a microservice. The requirement however demands that the microservices are also
+continuously deployed. Despite an automated build and deployment process can
+reduce the workload of a developer and administrator, it introduces an
+additional facet of complexity.
 
 \subsection{Evaluating XXX Versioning}%
 \label{sub:Evaluating_XXX_Versioning}

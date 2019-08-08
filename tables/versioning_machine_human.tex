@@ -1,0 +1,23 @@
+\begin{longtable}{XXXX}%
+\label{tab:versioning_machine_human}
+\vspace{0.25cm}\\
+\toprule
+\textbf{Human Interaction} & \textbf{Machine Interaction} \\ 
+\midrule
+\endfirsthead
+\toprule
+\textbf{Human Interaction} & \textbf{Machine Interaction} \\ 
+\midrule
+\endhead
+\midrule
+& \hspace*{\fill} \small{Table continues on next page.}
+\endfoot
+\bottomrule
+\caption{The versioning requirements for a microservice that is being interacted with by humans and machines.}
+\endlastfoot
+The version number should be easy to understand. & The version number should indicate breaking compatibility.\\
+Version numbers should not be skipped. & The version number should be able to be used when logging.\\
+The version number should indicate a stable release. & It should be possible to use the version number to identify services when routing a request.\\
+It should be possible to refer to a specific version number when giving feedback (e.g.\ when reporting a bug). &\\
+$\to$ The version number serves a \textit{communicative} purpose. & $\to$ The version number serves a \textit{technical} purpose.
+\end{longtable}

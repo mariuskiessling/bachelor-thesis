@@ -29,6 +29,53 @@ Chapter~\ref{sub:Versioning} already introduced the two main versioning schemes
 \ac{API} through the \ac{REST} paradigm, the chapter also presented the three
 main possibilities to version a \ac{REST} \ac{API}.
 
+Based on this theoretical foundation, it is the aim to develop a model that
+shows how a microservice can be versioned. In addition, it is the goal to
+define a process that helps developers to choose the best versioning model for
+their given application.
+
+It might seem like that monolithic and microservice applications
+follow the same conventions in regards to versioning; at least both application
+types are versioned in some form. In addition their code base is stored and
+tracked in some form of \ac{VCS}. However they have to be handled quite
+differently. Due to their high deployment complexity a microservice
+architecture is still primarily employed in the cloud applications. There are a
+few ways the microservice architecture can be brought to desktop software.
+However due to the definitions of microservices this thesis explored to far,
+the upcoming section will only focus on microservice applications that are
+deployed in the cloud. In that case, two possible ways of distribution prevail:
+distribution as a \ac{SaaS} product or as a software package (e.g.\ in form of
+a Helm chart) in the customers cloud environment. In the case of a \ac{SaaS}
+solution, the user never interacts with the installation, configuration and
+upgrade process. Given the application is deployed by the user inside their
+cloud environment, only the version number of the complete software package is
+of interest. Even though a microservice architecture is made up of a set of
+microservices, the only component a user, in this case an administrator
+deploying the application, ever touches is the microservice architecture's
+package (e.g.\ a helm chart). Narrowing it further down, this thesis will only
+focus on cloud applications that are deployed as part of a \ac{SaaS} product
+because of the interest in a continuously deployed microservice architecture.
+Yet it is feasible to bring continuous deployment to self-hosted microservice
+architectures, this is out of this thesis' scope. From a microservice
+architecture developer's perspective, the source code of each microservice is
+managed in separate repository inside a \ac{VCS}. This introduces complexity
+but also brings the advantage of distinct build configurations if these are
+stored in configuration files next to the service's code.
+
+Now that the properties of monolithic and microservice architecture versioning
+are recorded, the question of which versioning scheme best fits a microservice
+architecture can be addressed. In order to do so, microservices can be divided
+into two categories: \textit{Human Interaction} and \textit{Machine
+Interaction}. A microservice can be classified in the Human Interaction
+category if it mainly used by humans. This is e.g.\ the case for frontend
+microservices and other \textit{consuming} parts. On the other hand, a
+microservice can be classified in the Machine Interacting category whenever it
+mainly talks to other machines or its functionality is integrated in other
+microservices in a library like fashion. Such services can also be considered
+to be \textit{producing} parts.
+
+\LTXtable{\textwidth}{tables/versioning_machine_human.tex}
+
 \subsection{Evaluating XXX Versioning}%
 \label{sub:Evaluating_XXX_Versioning}
 

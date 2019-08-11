@@ -76,12 +76,12 @@ to be \textit{producing} parts.
 
 \LTXtable{\textwidth}{tables/versioning_machine_human.tex}
 
-\ref{tab:versioning_machine_human} shows a selected set of properties that is
-required for versioning a microservice. It groups the requirements into the two
-microservice categories \textit{Human Interaction} and \textit{Machine
+Table \ref{tab:versioning_machine_human} shows a selected set of properties
+that is required for versioning a microservice. It groups the requirements into
+the two microservice categories \textit{Human Interaction} and \textit{Machine
 Interaction}. It can be concluded that the versioning of \textit{consuming}
-services mainly serve a communicative purpose whereas versioning in
-\textit{producing} services play a technical role. Hence it can be argued that
+services mainly serves a communicative purpose whereas versioning in
+\textit{producing} services plays a technical role. Hence it can be argued that
 for microservices which are mainly in direct contact with humans, the version
 number is an indicator for features. Thus e.g.\ version 16 of a frontend might
 introduce a feature that gives the user more editing capabilities. This added
@@ -89,18 +89,61 @@ value can then be clearly communicated using the release's version number.
 
 In a microservice environment these four components can be identified to
 receive version numbers (in reverse order of atomicity):
+
 \begin{itemize}
   \item Packaged software (e.g.\ Helm charts)
   \item Container images
-  \item Software (e.g.\ in Node.js projects)
+  \item Software (e.g.\ Node.js projects)
   \item \acp{API}
 \end{itemize}
 
 So far, this section already explored the general issues related to versioning
 a microservice. The requirement however demands that the microservices are also
-continuously deployed. Despite an automated build and deployment process can
-reduce the workload of a developer and administrator, it introduces an
-additional facet of complexity.
+continuously deployed. Despite the fact that an automated build and deployment
+process can reduce the workload of a developer and administrator, it introduces
+an additional facet of complexity. Whenever a microservice is continuously
+built and deployed, it has to be decided who has to bump the version number.
+Schemes like SemVer require manual version bumping whereas date-based schemas
+like CalVer can be incremented without manual intervention. The reason why
+SemVer requires input by a developer is that with each version bump the type of
+version increase has to be determined. Each time the version in incremented
+these three questions have to be asked:
+
+\begin{itemize}
+  \item Does this update only introduce fixes?
+  \item Does this update include any new features?
+  \item Does this update break the software's backward compatibility?
+\end{itemize}
+
+According to the answers to these questions, only the correct part of the
+version number has to be modified. The rules for when to update which part of a
+SemVer version number are already discussed in chapter~\ref{ssub:SemVer}. These
+question however can not be answered by a \ac{CI} solution that is not able to
+able to understand the intricate differences between a e.g.\ backward
+compatibility breaking update and a simple bug fix. Hence it can be argued that
+a versioning scheme that requires artificial decisions from developers can not
+be fully supported by \ac{CI} systems. For each new version, the developers
+have to manually write the new version number in the applications
+configuration. E.g.\ in case of Node.js application, the \texttt{version} field
+inside the \texttt{package.json} file has to be updated.
+
+In contrast, date-based versioning schemes like CalVer can update the version
+number without further intervention developers. As already discussed in
+chapter~\ref{ssub:Date_Based_Versioning}, in most cases a CalVer version number
+only includes the formatted date of the release.
+Chapter~\ref{ssub:Continuous_Integration} already stated that any software that
+is considered to be stable can be used as a release. Thus the \ac{CI} system
+can automatically generate a valid date-based version number and inject it in
+the software package. Next to the actual application, the same principles can
+be applied to packaged software and container images.
+
+Yet, when it comes to \acp{API}, an exception must me made. As pointed out in
+chapter~\ref{ssub:API_Versioning}, the usage of \acp{API} heavily depends on
+specific \ac{API} versions.
+
+Nur Software, die wirklich auf das ausweisen der backward comp angewiesen ist,
+sollte ein solch manuelles Schema wählen! -> Beziehen auf die Consumer und
+Producer.
 
 \subsection{Evaluating XXX Versioning}%
 \label{sub:Evaluating_XXX_Versioning}

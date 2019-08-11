@@ -49,12 +49,12 @@ environments to chose from. Next to Docker, Kubernetes also directly supports
 \label{par:Pods}
 Instead of directly deploying individual containers, Kubernetes introduces the
 concept of \textit{pods}. A pod is the smallest entity that can be executed on
-the cluster. It hosts at least one containers and automatically receives a
+the cluster. It hosts at least one containers and automatically receives an
 \ac{IP} address that is unique inside Kubernetes. Kubernetes ensures that all
 containers of a pod are always executed on the same node.
 
 Yet, this does not mean that a complete microservice architecture should be
-bundled into a single pod. The decision when to combines microservices into a
+bundled into a single pod. The decision when to combine microservices into a
 single pod and when to split them across multiple pods becomes clear in the
 following example. Given is an exemplary microservice architecture consisting
 of a basic web crawler that fetches all \textit{xkcd} comics from the xkcd
@@ -158,13 +158,13 @@ create new ones by using the storage classes' provisioner.
 Pods, as they were introduced in the~\ref{par:Pods} section of this chapter,
 are fully unmanaged. The downside to this is that whenever a node dies, all
 pods running on this node also die without getting redeployed on a healthy
-node. Additionally, unmanaged pods can not be be scaled automatically by
+node. Additionally, unmanaged pods can not be scaled automatically by
 Kubernetes. It is also not possible to schedule unmanaged pods to run
 periodically \autocite[Ch. 4]{LuksaKubernetesAction2017}. Kubernetes solves
 these issues by introducing a new concept: controllers. Controllers are
 responsible for managing a set of Kubernetes resources and extend their
-original capabilities \autocite{AuthorsConcepts2019}. This sectional will
-briefly cover the controllers needed for this thesis. Next to the highlighted
+original capabilities \autocite{AuthorsConcepts2019}. This section will briefly
+cover the controllers needed for this thesis. Next to the highlighted
 controllers, Kubernetes includes a number of other controllers that are listed
 in \autocite{AuthorsConcepts2019}.
 
@@ -175,7 +175,7 @@ be managed by a ReplicaSet is based on \textit{selectors}. If a ReplicaSet's
 selector matches the label of a pod and the pod is not already assigned to a
 different controller, the ReplicaSet takes ownership of said pod \autocite[Ch.
 4]{LuksaKubernetesAction2017}. Hence any pod that may not be managed by a
-ReplicaSet has to define another label in order not to be make subject to a
+ReplicaSet has to define another label in order not to be made subject to a
 ReplicaSet \autocite{AuthorsReplicaSet2019}. Additionally to owning pods that
 only match the ReplicaSet's selector, it is possible to directly specify pods
 that should be spawned whenever the ReplicaSet is loaded. This option is more
@@ -244,7 +244,7 @@ go when deploying stateful applications that may require unique pod identities.
 \paragraph{Services}%
 \label{par:Services}
 Regardless of the controller managing the replication of pods, a solution is
-needed to address any given set of pods. When e.g.\ scaling a set pods of a
+needed to address any given set of pods. When e.g.\ scaling a set of pods of a
 ReplicaSet to 15 instances, how should a user sent a request to either one of
 them without addressing each one individually. Services expose a set of pods to
 the network as an \ac{IP} address and name that can be resolved inside the

@@ -60,7 +60,7 @@ In order for this pipeline to be implemented, a number of prerequisites exist.
   \item all code has to be tracked in a central \ac{VCS},
   \item changes have to be checked in regularly,
   \item an extensive, automated test suite has to be in place and
-  \item the software has to be buildable testable in any environment.
+  \item the software has to be buildable and testable in any environment.
 \end{itemize}
 
 First, the project's source code has to be tracked in a \ac{VCS}. The \ac{VCS}
@@ -174,7 +174,7 @@ from a snapshot of files e.g.\ labelled \texttt{release\textunderscore 2.0.1}
 could be labelled \texttt{release\textunderscore 2.0.1-\textbf{1}}. Each time
 the artefact is rebuilt, the last number at the end of the label (\texttt{1})
 is incremented. When using a labelled build the features, defects and
-requirements can be traced to a specific a specific release version. Without
+requirements can be traced to a specific release version. Without
 labels it would not be possible to e.g.\ pin issues to an explicit release
 \autocite[pp. 195f.]{MatyasContinuousIntegration2007}.
 
@@ -192,22 +192,22 @@ software (like a database server) up to the actual software. Each time a new
 deployment is applied, the complete stack is purged and rebuilt from the ground
 up \autocite[p. 194]{MatyasContinuousIntegration2007}.
 
-In a monolithic architecture this approach might suffice. It, however, has to
-be adapted to also support a containerized microservice architecture. First of
+In a monolithic architecture this approach might suffice. However, it has to be
+adapted to also support a containerized microservice architecture. First of
 all, each time a container for a microservice is created, only a few layers on
 top of the stack are rebuilt. When e.g.\ deploying an application that depends
-on a \textit{NGINX} web server, the web server and any underlying layers can
-be reused as part of a Docker base image. So only the layers on top of the web
+on a \textit{NGINX} web server, the web server and any underlying layers can be
+reused as part of a Docker base image. So only the layers on top of the web
 server have to be reapplied. This process also ensures that the environment to
-which the software is deployed is clean while being more efficient
-than rebuilding each layer. In addition, the use of a container orchestration
+which the software is deployed is clean while being more efficient than
+rebuilding each layer. In addition, the use of a container orchestration
 solution like Kubernetes has the advantage of defining the underlying
-infrastructure as code. \ac{IaC} allows the infrastructure to be defined
-inside a \enquote{single commonly available source of truth}, most frequently
-stored inside a \ac{VCS}, without the need for additional administrators
+infrastructure as code. \ac{IaC} allows the infrastructure to be defined inside
+a \enquote{single commonly available source of truth}, most frequently stored
+inside a \ac{VCS}, without the need for additional administrators
 \autocite{ArtacDevOpsIntroducingInfrastructure2017}. In Kubernetes,
 infrastructure changes can be performed by applying these configuration files.
-When realized correctly, the developer performing these changes does not have
+When implemented correctly, the developer performing these changes does not have
 to worry about past infrastructure configurations remaining in the system.
 Kubernetes keeps track of old resources and manages them accordingly
 \autocite{AuthorsDeployments2019}. The \ac{IaC} paradigm further supports the
@@ -254,7 +254,7 @@ Lastly the \textit{Cloudflare} outage in July 2019 showed the importance of
 having a working process in place to roll back any release. Even though
 Cloudflare had a rollback plan in place, they could not successfully execute
 it. This resulted in a unavailability of Cloudflare's global network for 27
-minutes standing nearly all of their customers
+minutes stranding nearly all of their customers
 \autocite{Graham-CummingDetailsCloudflareoutage2019}. The existence of a
 working and fast rollback process allows defects introduced by a release to be
 temporarily resolved by simply rolling back to the previous version
@@ -351,7 +351,7 @@ one Step.
 
 Like build pipelines, release pipelines could traditionally only be set up in a
 graphical user interface. Figure~\ref{fig:release_pipeline_azure} shows a
-release pipeline with two stages that are are not executed on a schedule
+release pipeline with two stages that are not executed on a schedule
 (\circled{1}) but every time a new artefact called \texttt{frontend} is created
 (\circled{2}). \circled{3} shows a deployment stage in which the application is
 deployed to a development environment. To do this, only one task is needed.

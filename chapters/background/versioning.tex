@@ -15,7 +15,7 @@ with. It will further introduce an approach of versioning \acp{API}.
 \label{ssub:SemVer}
 The \textit{Sem}antic \textit{Ver}sioning scheme \textit{SumVer}
 \autocite{Preston-WernerSemanticVersioning2.0.0}, authored by Tom
-Preston-Werner, specifies eleven rules on how a version string should be
+Preston-Werner, specifies eleven rules for how a version string should be
 structured. It further describes when which part of the version string may be
 incremented. Each version number consists of three parts:
 
@@ -32,7 +32,7 @@ backward-compatibility. The \texttt{MINOR} part has to be incremented each
 time a release includes new features while still being backward-compatible.
 Lastly, an incremented \texttt{MAJOR} part indicates that the release breaks
 the backward-compatibility of the software's \ac{API}. In addition to these
-three main parts, SemVer also includes provisions on how to deal with
+three main parts, SemVer also includes provisions for how to deal with
 pre-released software, e.g.\ an alpha version, and how to attach metadata to
 the version number. A pre-release version must be added as a postfix,
 separated by the \texttt{-} character. The postfix may only include
@@ -57,7 +57,7 @@ fully adheres to the SemVer specifications. In a study
 to the \textit{Maven Central Repository}, a place where Java developers can
 share programming artifacts, researchers examine whether version identifiers
 actually correspond with breaking changes. They conclude that breaking changes
-are introduced both in one third of major releases as well as in one third of
+are introduces both in one third of major releases as well as in one third of
 minor releases. Hence they argue that the use of semantic versioning in a
 project is no actual guarantee that said project follows the SemVer
 specification. \ac{API} backward-compatibility can not be determined by looking
@@ -79,7 +79,7 @@ as SemVer (\texttt{MAJOR}, \texttt{MINOR}, \texttt{PATCH} [also called
 without enforcing an order or rules upon them. In addition to these basic
 building blocks, date based versioning segments are defined. They include
 \texttt{YYYY}, \texttt{YY}, \texttt{0Y}, \texttt{MM}, \texttt{0M}, \texttt{DD}
-and \texttt{0D}. Segments including a \texttt{0} prefix a 0 while the value is
+and \texttt{0D}. Segments inclding a \texttt{0} prefix a 0 while the value is
 smaller ten. Only to name one example, Ubuntu, the leading open source server
 operating system for Swiss companies according to
 \autocite{SwissICTWelcheOpenSource2018}, utilises data based versioning. Their

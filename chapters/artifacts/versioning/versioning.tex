@@ -139,11 +139,39 @@ be applied to packaged software and container images.
 
 Yet, when it comes to \acp{API}, an exception must me made. As pointed out in
 chapter~\ref{ssub:API_Versioning}, the usage of \acp{API} heavily depends on
-specific \ac{API} versions.
+pinning to specific \ac{API} versions. To do so, a number of tactics were
+already discussed. The most common \ac{API} versioning scheme differs from the
+SemVer and CalVer schemes. Instead of choosing a version number that consists
+of three parts (\texttt{MAJOR.MINOR.PATCH}) or is date-based, \acp{API} only
+announce their major version. If the major version changes, a backward
+compatibility breaking change was implemented. Like with SemVer this results in
+a manual process that requires application developers to determine if an update
+is major.
 
-Nur Software, die wirklich auf das ausweisen der backward comp angewiesen ist,
-sollte ein solch manuelles Schema wählen! -> Beziehen auf die Consumer und
-Producer.
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[scale=0.7]{images/figures/version_wrapping.pdf}
+\end{center}
+\caption{Wrapping inner versioning schemes through levels of abstraction.}%
+\label{fig:version_wrapping}
+\end{figure}
+
+Even though \acp{API} might need a manual versioning scheme, the abstraction
+layers above the actual \ac{REST} interface can be versioned differently. As
+shown in figure~\ref{fig:version_wrapping}, the application serving the
+\ac{REST} interface, in this case a Node.js application, can use an automated
+versioning scheme. This way, the \ac{API}'s manual versioning is masked and a
+\ac{CI} system can continuously version the software and the resulting
+container image and software package. The inner \ac{API} version is wrapped and
+thus no longer relevant to the \ac{CI}/\ac{CD} process.
+
+\todo[inline]{Nur Software, die wirklich auf das ausweisen der backward comp
+angewiesen ist, sollte ein solch manuelles Schema wählen! Beziehen auf die
+Consumer und Producer.}
+
+\todo[inline]{Add subsection sub headlines.}
+
+\todo[inline]{Add implementation using Azure DevOps.}
 
 \subsection{Evaluating XXX Versioning}%
 \label{sub:Evaluating_XXX_Versioning}

@@ -34,6 +34,9 @@ shows how a microservice can be versioned. In addition, it is the goal to
 define a process that helps developers to choose the best versioning model for
 their given application.
 
+\subsubsection{Versioning Monoliths vs.\ Microservices}%
+\label{ssub:Versioning Monoliths_vs_Microservices}
+
 It might seem like that monolithic and microservice applications
 follow the same conventions in regards to versioning; at least both application
 types are versioned in some form. In addition their code base is stored and
@@ -161,17 +164,102 @@ layers above the actual \ac{REST} interface can be versioned differently. As
 shown in figure~\ref{fig:version_wrapping}, the application serving the
 \ac{REST} interface, in this case a Node.js application, can use an automated
 versioning scheme. This way, the \ac{API}'s manual versioning is masked and a
-\ac{CI} system can continuously version the software and the resulting
-container image and software package. The inner \ac{API} version is wrapped and
-thus no longer relevant to the \ac{CI}/\ac{CD} process.
+\ac{CI} system can continuously version the software, the resulting container
+image and software package. The inner \ac{API} version is wrapped and thus no
+longer relevant to the \ac{CI}/\ac{CD} process.
 
-\todo[inline]{Nur Software, die wirklich auf das ausweisen der backward comp
-angewiesen ist, sollte ein solch manuelles Schema wählen! Beziehen auf die
-Consumer und Producer.}
+It can thus be argued that an automatic versioning scheme should be used
+whenever possible in order to shift the versioning responsibility from
+developers to the \ac{CI} system. Only if the software is dependend on marking
+a break in its backward compatibility, the version number should be set
+manually using a SemVer-like schema. Hence, both applications consuming as well
+as producing data can be versioned using an automatic scheme with this
+exception.
 
-\todo[inline]{Add subsection sub headlines.}
+\subsubsection{Implementation Using Azure DevOps}%
+\label{ssub:Implementation_Using_Azure_DevOps}
+The \ac{CI}/\ac{CD} service Azure DevOps can be used to show how an automatic
+versioning scheme can be implemented in practise. To dynamically generate and
+set date-based version numbers, a number of approaches exist. This section will
+explore one possible solution.
 
-\todo[inline]{Add implementation using Azure DevOps.}
+In Azure DevOps, each microservice is built using a separate pipeline. One of
+the properties that can be set for a pipeline is the \textit{build number
+format}. Based on this property, a pipeline's build receives a unique identifier
+that can also be accessed during the pipeline's run as a variable. In order to
+produce a date-based version in the CalVer format \texttt{YYYYMMDD.MINOR}, the
+following build number format \texttt{\$(Date:yyyyMMdd).\$(Rev:r)} can be used.
+If set to this value, the first build on e.g. November 24th 2019 produces the
+build number \texttt{20191124.1}.
+
+To then access the build number in one of the pipeline's steps, the
+\texttt{\$BUILD.BUILDNUMBER} variable can be read. When doing so from a
+bash-based shell script, all dots are substituted with underscores. This
+results in the variable name \texttt{\$BUILD\textunderscrore BUILDNUMBER}.
+
+\begin{listing}[H]
+  \begin{minted}{YAML}
+steps:
+- displayName: 'Inject current build number into package.json'
+  script: |
+   echo "The current build number is: $BUILD_BUILDNUMBER"
+   sed -i "s/1.0.0/1.0.0-$BUILD_BUILDNUMBER/g" package.json
+  \end{minted}
+  \caption{Injecting a date-based version number into the package.json file of
+  a Node.js project using a script-based pipeline task.}%
+  \label{listing:version_injection}
+\end{listing}
+
+Listing~\ref{listing:version_injection} shows the definition of a Azure DevOps
+pipeline task. In it, the \texttt{sed} utility is used to find the version
+string \texttt{1.0.0} and replace it with the string
+\texttt{1.0.0-\textbf{build number}}. The question of why the string
+\texttt{1.0.0} is prefixed to the version string might arise. Node.js demands
+that all project use a SemVer version number. However additional information
+can be postfixed. The postfix is also consulted when determining the newest
+version of a Node.js package; \texttt{1.0.0-20190301.1} $<$
+\texttt{1.0.0-20190301.2} $<$ \texttt{1.0.0-20200301.1}. Using this approach, a
+Node.js project can take advantage of dynamic version numbers while preserving
+the SemVer format.
+
+Next to the actual software, the built Docker container image should also
+receive a version number. This can be done by using the same variable.
+
+\begin{listing}[H]
+  \begin{minted}{YAML}
+steps:
+- task: Docker@2
+  displayName: Build Docker image and push to repo
+  inputs:
+    containerRegistry: ''
+    repository: frontend
+    tags: |
+     $(Build.BuildNumber)
+  \end{minted}
+  \caption{Tagging a Docker container image with a date-based version number
+  using a pipeline task.}%
+  \label{listing:image_version_tag}
+\end{listing}
+
+Listing~\ref{listing:image_version_tag} shows a Azure DevOps pipeline task that
+builds a Docker container image and pushes it to an image repository. In line
+8, the build number is specified as the image's tag. Thus a resulting image
+will be tagged \texttt{frontend:20190809.1}.
+
+\subsubsection{Conclusion}%
+\label{ssub:Conclusion}
+It can be concluded, that microservices can be split into two categories:
+\textit{human interaction (consuming)} and \textit{machine interaction
+(producing)}. For consuming the version number primarily serves a communicative
+purpose by associating it with newly introduced features. In contrast,
+producing microservices can use the version number to convey a technical
+meaning. This however can conflict with the goal of continuously building and
+deploying the service because the version number has to be set by hand. In the
+end it has to be decided whether the version number really has to indicate a
+break in the software's backward compatibility. If this is the case, a manual
+versioning scheme like SemVer must be used. If not, a automatic versioning
+scheme like CalVer should be used to further support the \ac{CI}/\ac{CD}
+process.
 
 \subsection{Evaluating XXX Versioning}%
 \label{sub:Evaluating_XXX_Versioning}

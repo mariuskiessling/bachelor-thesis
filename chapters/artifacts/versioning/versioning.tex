@@ -261,8 +261,61 @@ versioning scheme like SemVer must be used. If not, a automatic versioning
 scheme like CalVer should be used to further support the \ac{CI}/\ac{CD}
 process.
 
-\subsection{Evaluating XXX Versioning}%
-\label{sub:Evaluating_XXX_Versioning}
+\subsection{Evaluating Automatic Versioning}%
+\label{sub:Evaluating_Automatic_Versioning}
+To evaluate the usefulness of automatic versioning schemes (like CalVer), a
+number of requirements have to be met. For the purpose of traceability these
+requirements are labelled $R_1$ to $R_n$.
+
+\begin{itemize}
+  \item $R_1$: Automatic versioning must be applicable to a microservice
+    architecture.
+  \item $R_2$: Automatic versioning must be applicable to all components of a
+    microservice (packaged software, the software itself, container image and
+    \ac{API}).
+  \item $R_3$: Automatic versioning must be compatible with \ac{CI} systems.
+  \item $R_4$: Automatic versioning must be compatible with \ac{CD} systems.
+  \item $R_5$: Automatic versioning should improve the performance of the team.
+\end{itemize}
+
+Despite the fact that $R_1$ could be easily determined in a monolithic
+architecture, a microservice architecture does not directly reveal whether it
+meets the given requirement. In a monolithic system, only one application has
+to be reviewed. The microservice architecture however by definition consists of
+a multitude of different applications; the microservices. Thus, every
+microservice has to be evaluated separately. It can not be said that a complete
+microservice architecture can be versioned using an automatic versioning
+scheme; only its integral components, the microservices, can be evaluated.
+
+This chapter already covered, that a microservice has the four components
+packaged software, the software itself, a container image and an \ac{API} that
+can receive version numbers. The chapter introduced ways to apply automatic
+versioning to each one of them. \acp{API} are traditionally versioned using
+only major version numbers. They however change infrequently and thus can be
+left outside the scope of automation. In addition, the introduced concept of
+\textit{version wrapping} masks the \ac{API}'s version and allows a manually
+versioned component, e.g.\ an \ac{API}, to be versioned as part of an
+automatically versioned component, e.g.\ a Node.js software. Container images
+get versioned by applying the automatic version number as a tag. Lastly, both
+the actual software as well as the software's package can be versioned by
+injecting a dynamically generated version number. Hence, $R_2$ is fulfilled.
+
+Not only is automatic versioning compatible with a \ac{CI} system, the \ac{CI}
+system is an integral component that makes automatic versioning work. The
+\ac{CI} system generates every new version number and assigns it to the
+versionable microservice component. Thus, $R_3$ is also satisfied.
+
+The \ac{CD} system does not handle a manually versioned microservice any
+differently than a automatically versioned one. Thus, as long as the \ac{CD}
+system can continuously deploy a manually versioned microservice, it can do the
+same for an automatically versioned one and thus gratified $R_4$.
+
+Lastly, as with all continuously released software, the goal is to shorten
+development cycles and ease the life of developers. Continuous versioning
+further improves the automatic workflow and so also fulfils $R_5$.
+
+\todo{Maybe replace automatic versioning with continuous versioning in
+chapter.}
 
 \subsection{Advancing Continuous Deployment of Microservices using XXX Versioning}%
 \label{sub:Advancing_Continuous_Deployment_of_Microservices_using_XXX_Versioning}

@@ -1,0 +1,25 @@
+%! TEX root = ../../../main.tex
+
+\section{Handling Manifests}%
+\label{sec:Handling_Manifests}
+
+\subsection{A Call for Better Manifest Management}%
+\label{sub:A_Call_for_Better_Manifest_Management}
+When configuring a microservice architecture to be deployed to a Kubernetes
+Cluster, a lot of configuration files accrue. Each of these manifest files has
+to be managed in some form. However, Kubernetes does not enforce any structure
+upon how these files are stored and continuously managed. This lack of
+standards makes it easy to get started with Kubernetes but can leave developers
+stranded when working inside complex microservice architectures. In addition,
+the microservice chapter (\ref{sub:Microservices}) already stated that
+microservices are often developed in specialised teams. Thus, without any
+management standard enforced by Kubernetes each microservice team can
+theoretically define its own practises best fitting their preferences. This
+might be tolerable inside a microservice team. However with respect to the
+overall microservice architecture, different standards for managing Kubernetes
+manifests makes it harder for developers to understand the deployment structure
+of their colleagues' microservices. Furthermore, with a common manifest
+management standard every microservice can be set up the same way to be
+deployed using a \ac{CI}/\ac{CD} system. Lastly, when needing support from an
+external infrastructure operations team, a common manifest standard helps all
+involved parties to exchange information faster and with less friction.

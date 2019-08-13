@@ -314,9 +314,6 @@ Lastly, as with all continuously released software, the goal is to shorten
 development cycles and ease the life of developers. Continuous versioning
 further improves the automatic workflow and so also fulfils $R_5$.
 
-\todo{Maybe replace automatic versioning with continuous versioning in
-chapter.}
-
 \subsection{Advancing Continuous Deployment of Microservices using Continuous Versioning}%
 \label{sub:Advancing_Continuous_Deployment_of_Microservices_using_XXX_Versioning}
 Now that the practical use of continuous versioning has been shown, this
@@ -347,11 +344,16 @@ answered in order to derive the best fitting versioning scheme.
 \begin{center}
   \includegraphics[scale=0.55]{images/figures/versioning_decision_flow.pdf}
 \end{center}
-\caption{A decision flow helping to select the best versioning scheme for a
-microservice.}%
+\caption{A decision flow helping developers to select the best versioning
+  scheme for a microservice.}%
 \label{fig:versioning_decision_flow}
 \end{figure}
 
+Any microservice that primarily serves humans is advised to use a continuous
+versioning solution. Producing microservices which are dependend on signaling
+breaking changes using their version numbers, should use a manual versioning
+scheme. If a producing microservice is not required to signal breaking changes
+with its version number, continuous versioning is advised.
 
 \subsection{Economic Benefits of Continuous Versioning}%
 \label{sub:Economic_Benefits_of_Continuous_Versioning}

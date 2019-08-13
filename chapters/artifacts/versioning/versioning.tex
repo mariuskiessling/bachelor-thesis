@@ -317,8 +317,41 @@ further improves the automatic workflow and so also fulfils $R_5$.
 \todo{Maybe replace automatic versioning with continuous versioning in
 chapter.}
 
-\subsection{Advancing Continuous Deployment of Microservices using XXX Versioning}%
+\subsection{Advancing Continuous Deployment of Microservices using Continuous Versioning}%
 \label{sub:Advancing_Continuous_Deployment_of_Microservices_using_XXX_Versioning}
+Now that the practical use of continuous versioning has been shown, this
+section tries to extract the theoretical findings that have revealed themselves
+in the practical search process.
+
+First, the artefact reveals the distinction between consuming and producing
+microservices. A consuming microservice primarily is contacted by humans, e.g.\
+users, and consumes data provided by other microservices. A producing
+microservice actively supplies data to other microservices. Thus is is mainly
+contacted by other machines, in this case microservices. A list of requirements
+towards producing and consuming microservices can be found in
+table~\ref{tab:versioning_machine_human}.
+
+The terms \textit{manual} and \textit{continuous} versioning were introduced.
+Manual versioning must be used whenever the version number has to indicate
+breaking changes. One possible manual versioning scheme is SemVer. On the other
+hand, continuous versioning can be applied automatically by a \ac{CI} system.
+No further input by developers is requires. Thus, a scheme like defined by
+CalVer fits continuous versioning.
+
+Additionally, the practical implementation reveals a process which points
+developers towards a versioning scheme for their microservices.
+Figure~\ref{fig:versioning_decision_flow} shows the questions that need to be
+answered in order to derive the best fitting versioning scheme.
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[scale=0.55]{images/figures/versioning_decision_flow.pdf}
+\end{center}
+\caption{A decision flow helping to select the best versioning scheme for a
+microservice.}%
+\label{fig:versioning_decision_flow}
+\end{figure}
+
 
 \subsection{Economic Benefits of Continuous Versioning}%
 \label{sub:Economic_Benefits_of_Continuous_Versioning}

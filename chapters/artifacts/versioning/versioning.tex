@@ -136,7 +136,7 @@ chapter~\ref{ssub:Date_Based_Versioning}, in most cases a CalVer version number
 only includes the formatted date of the release.
 Chapter~\ref{ssub:Continuous_Integration} already stated that any software that
 is considered to be stable can be used as a release. Thus the \ac{CI} system
-can automatically generate a valid date-based version number and inject it in
+can continuously generate a valid date-based version number and inject it in
 the software package. Next to the actual application, the same principles can
 be applied to packaged software and container images.
 
@@ -168,17 +168,17 @@ versioning scheme. This way, the \ac{API}'s manual versioning is masked and a
 image and software package. The inner \ac{API} version is wrapped and thus no
 longer relevant to the \ac{CI}/\ac{CD} process.
 
-It can thus be argued that an automatic versioning scheme should be used
+It can thus be argued that a continuous versioning scheme should be used
 whenever possible in order to shift the versioning responsibility from
 developers to the \ac{CI} system. Only if the software is dependend on marking
 a break in its backward compatibility, the version number should be set
 manually using a SemVer-like schema. Hence, both applications consuming as well
-as producing data can be versioned using an automatic scheme with this
+as producing data can be versioned using a continuous scheme with this
 exception.
 
 \subsubsection{Implementation Using Azure DevOps}%
 \label{ssub:Implementation_Using_Azure_DevOps}
-The \ac{CI}/\ac{CD} service Azure DevOps can be used to show how an automatic
+The \ac{CI}/\ac{CD} service Azure DevOps can be used to show how a continuous
 versioning scheme can be implemented in practise. To dynamically generate and
 set date-based version numbers, a number of approaches exist. This section will
 explore one possible solution.
@@ -257,25 +257,25 @@ meaning. This however can conflict with the goal of continuously building and
 deploying the service because the version number has to be set by hand. In the
 end it has to be decided whether the version number really has to indicate a
 break in the software's backward compatibility. If this is the case, a manual
-versioning scheme like SemVer must be used. If not, a automatic versioning
+versioning scheme like SemVer must be used. If not, a continuous versioning
 scheme like CalVer should be used to further support the \ac{CI}/\ac{CD}
 process.
 
-\subsection{Evaluating Automatic Versioning}%
-\label{sub:Evaluating_Automatic_Versioning}
-To evaluate the usefulness of automatic versioning schemes (like CalVer), a
+\subsection{Evaluating Continuous Versioning}%
+\label{sub:Evaluating_Continuous_Versioning}
+To evaluate the usefulness of continuous versioning schemes (like CalVer), a
 number of requirements have to be met. For the purpose of traceability these
 requirements are labelled $R_1$ to $R_n$.
 
 \begin{itemize}
-  \item $R_1$: Automatic versioning must be applicable to a microservice
+  \item $R_1$: Continuous versioning must be applicable to a microservice
     architecture.
-  \item $R_2$: Automatic versioning must be applicable to all components of a
+  \item $R_2$: Continuous versioning must be applicable to all components of a
     microservice (packaged software, the software itself, container image and
     \ac{API}).
-  \item $R_3$: Automatic versioning must be compatible with \ac{CI} systems.
-  \item $R_4$: Automatic versioning must be compatible with \ac{CD} systems.
-  \item $R_5$: Automatic versioning should improve the performance of the team.
+  \item $R_3$: Continuous versioning must be compatible with \ac{CI} systems.
+  \item $R_4$: Continuous versioning must be compatible with \ac{CD} systems.
+  \item $R_5$: Continuous versioning should improve the performance of the team.
 \end{itemize}
 
 Despite the fact that $R_1$ could be easily determined in a monolithic
@@ -284,31 +284,31 @@ meets the given requirement. In a monolithic system, only one application has
 to be reviewed. The microservice architecture however by definition consists of
 a multitude of different applications; the microservices. Thus, every
 microservice has to be evaluated separately. It can not be said that a complete
-microservice architecture can be versioned using an automatic versioning
+microservice architecture can be versioned using a continuous versioning
 scheme; only its integral components, the microservices, can be evaluated.
 
 This chapter already covered, that a microservice has the four components
 packaged software, the software itself, a container image and an \ac{API} that
-can receive version numbers. The chapter introduced ways to apply automatic
+can receive version numbers. The chapter introduced ways to apply continuous
 versioning to each one of them. \acp{API} are traditionally versioned using
 only major version numbers. They however change infrequently and thus can be
 left outside the scope of automation. In addition, the introduced concept of
 \textit{version wrapping} masks the \ac{API}'s version and allows a manually
 versioned component, e.g.\ an \ac{API}, to be versioned as part of an
-automatically versioned component, e.g.\ a Node.js software. Container images
-get versioned by applying the automatic version number as a tag. Lastly, both
+continuously versioned component, e.g.\ a Node.js software. Container images
+get versioned by applying the continuous version number as a tag. Lastly, both
 the actual software as well as the software's package can be versioned by
 injecting a dynamically generated version number. Hence, $R_2$ is fulfilled.
 
-Not only is automatic versioning compatible with a \ac{CI} system, the \ac{CI}
-system is an integral component that makes automatic versioning work. The
+Not only is continuous versioning compatible with a \ac{CI} system, the \ac{CI}
+system is an integral component that makes continuous versioning work. The
 \ac{CI} system generates every new version number and assigns it to the
 versionable microservice component. Thus, $R_3$ is also satisfied.
 
 The \ac{CD} system does not handle a manually versioned microservice any
-differently than a automatically versioned one. Thus, as long as the \ac{CD}
+differently than a continuously versioned one. Thus, as long as the \ac{CD}
 system can continuously deploy a manually versioned microservice, it can do the
-same for an automatically versioned one and thus gratified $R_4$.
+same for a continuously versioned one and thus gratified $R_4$.
 
 Lastly, as with all continuously released software, the goal is to shorten
 development cycles and ease the life of developers. Continuous versioning
@@ -320,16 +320,16 @@ chapter.}
 \subsection{Advancing Continuous Deployment of Microservices using XXX Versioning}%
 \label{sub:Advancing_Continuous_Deployment_of_Microservices_using_XXX_Versioning}
 
-\subsection{Economic Benefits of Automatic Versioning}%
-\label{sub:Economic_Benefits_of_Automatic_Versioning}
+\subsection{Economic Benefits of Continuous Versioning}%
+\label{sub:Economic_Benefits_of_Continuous_Versioning}
 \ac{CI}/\ac{CD} systems already help developers by removing the need to
 manually build and deploy their software. In addition, DevOps practises give
 developers the ability to fully control their deployment infrastructure and
-thus eliminating additional operations teams. Automatic versioning takes this
+thus eliminating additional operations teams. Continuous versioning takes this
 idea even further. Instead of development teams manually having to set a
 version number, this process can now be federated to a \ac{CI} system. Only in
 cases where the version number holds a semantic meaning (e.g.\ a break in
-backward compatibility) an automatic versioning scheme can not be used. In the
+backward compatibility) a continuous versioning scheme can not be used. In the
 end, another process that is being automated means more time that developers can
 focus on the task of advancing the application's feature set and innovating.
 Hence, not only the development teams benefits but also the company carrying it

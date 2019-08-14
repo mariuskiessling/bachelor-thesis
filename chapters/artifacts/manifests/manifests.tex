@@ -1,7 +1,7 @@
 %! TEX root = ../../../main.tex
 
-\section{Handling Manifests}%
-\label{sec:Handling_Manifests}
+\section{Handling Kubernetes Manifests}%
+\label{sec:Handling_Kubernetes_Manifests}
 
 \subsection{A Call for Better Manifest Management}%
 \label{sub:A_Call_for_Better_Manifest_Management}
@@ -23,3 +23,77 @@ management standard every microservice can be set up the same way to be
 deployed using a \ac{CI}/\ac{CD} system. Lastly, when needing support from an
 external infrastructure operations team, a common manifest standard helps all
 involved parties to exchange information faster and with less friction.
+
+\subsection{Development}%
+\label{sub:Development}
+Chapter~\ref{ssub:Concepts} introduced a multitude of Kubernetes concepts that
+will be referenced throughout this chapter. In addition,
+chapter~\ref{ssub:Manifests} has shown that all infrastructure configurations of
+Kubernetes are stored inside a YAML-based manifest file. This chapter will
+build upon the knowledge from primarily these two chapters and try to develop
+the best possible way to manage Kubernetes manifests in a microservice project.
+Furthermore, the information presented in chapter~\ref{sub:Microservices} are
+useful to understand the arguments presented in this chapter.
+
+First, this section will show a \textit{naive} approach to continuously
+deploying a microservice architecture to Kubernetes. Based on the problems
+collected during this process, a better approach to manifest handling will be
+derived. The whole process will be performed on the example of a specific
+microservice architecture. The exemplary architecture contains a frontend, that
+is being served by a NGINX web server, a user backend that manages the system's
+users and an onboarding service that creates new users in the user backend. The
+user and onboarding backend each have a separate non-relational MongoDB
+database. Finally, the service adapter is responsible for resolving information
+on an external application. For this purpose the service adapter also needs
+access to the user's information. The whole infrastructure and the connections
+between its microservices are also portrayed in figure~\ref{fig:dsp_excerpt}. 
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[scale=0.7]{images/figures/dspIT_excerpt.pdf}
+\end{center}
+\caption{The examplary $\mu$App microservice architecture containing three
+backends and one frontend service.}%
+\label{fig:dsp_excerpt}
+\end{figure}
+
+Throughout this chapter, this architecture will be referred to as
+\textit{$\mu$App}. Even though the continuous deployment process will be
+performed based on this software, $\mu$App is only an example for a
+microservice architecture that can easily be exchanged with any other
+microservice architecture.
+
+\subsubsection{Deploying to Kubernetes: The Naive Way}%
+\label{ssub:Deploying_to_Kubernetes:_The_Naive_Way}
+
+The first requirement for continuously integrating a software is that it is
+tracked in a \ac{VCS}. In the case of $\mu$App, each service is managed in a
+separate Git repository. Thus, each microservice has its own build and
+deployment pipeline. When changes are pushed to the \texttt{master} branch, a
+build pipeline is triggered. Only pull requests can modify the data stored on
+the \texttt{master} branch. Development work happens on independent feature
+branches. After a feature is completed, the changes are merged into the
+\texttt{development}  branch where they reside until a pull request integrates
+the changes into the \texttt{master} branch. Hence, only fully developed
+features are build using the \ac{CI} pipeline and deployed using the \ac{CD}
+process.
+
+$\mu$App executes its \ac{CI} and \ac{CD} pipeline on the Microsoft Azure
+DevOps service. As discussed in chapter~\ref{ssub:Continuous_Integration}, the
+\ac{CI} process tests and builds the source code and constructs a Docker
+container image. The image is then pushed to a central image repository. At
+this point, the \ac{CI} pipeline is completed and a deployment is automatically
+triggered.
+
+The overall deployment goal is to run $\mu$App on Kubernetes. Thus, its
+microservices need a number of configuration objects to be either created or
+updated in the cluster. Each service has one configuration file that is stored
+in a separate \texttt{deployment} repository. So a microservice's code and its
+deployment manifests are fully isolated. Furthermore, up to this point no
+distinction has been made between services that either rely on a database or do
+not need one. Yet, services that depend on a database have a second Kubernetes
+manifest that holds the databases' configuration.
+
+During a services deployment, the pipeline reads the service's Kubernetes
+manifest and applies it to the cluster.
+

@@ -46,7 +46,7 @@ user and onboarding backend each have a separate non-relational MongoDB
 database. Finally, the service adapter is responsible for resolving information
 on an external application. For this purpose the service adapter also needs
 access to the user's information. The whole infrastructure and the connections
-between its microservices are also portrayed in figure~\ref{fig:dsp_excerpt}. 
+between its microservices are also portrayed in figure~\ref{fig:dsp_excerpt}.
 
 \begin{figure}[H]
 \begin{center}
@@ -73,7 +73,7 @@ deployment pipeline. When changes are pushed to the \texttt{master} branch, a
 build pipeline is triggered. Only pull requests can modify the data stored on
 the \texttt{master} branch. Development work happens on independent feature
 branches. After a feature is completed, the changes are merged into the
-\texttt{development}  branch where they reside until a pull request integrates
+\texttt{development} branch where they reside until a pull request integrates
 the changes into the \texttt{master} branch. Hence, only fully developed
 features are build using the \ac{CI} pipeline and deployed using the \ac{CD}
 process.
@@ -83,17 +83,28 @@ DevOps service. As discussed in chapter~\ref{ssub:Continuous_Integration}, the
 \ac{CI} process tests and builds the source code and constructs a Docker
 container image. The image is then pushed to a central image repository. At
 this point, the \ac{CI} pipeline is completed and a deployment is automatically
-triggered.
+triggered. This section will not focus any further on the microservices'
+\ac{CI} process, as the interest is primarily aimed at the procedure of
+continuously deploying a complete microservice architecture.
 
 The overall deployment goal is to run $\mu$App on Kubernetes. Thus, its
 microservices need a number of configuration objects to be either created or
 updated in the cluster. Each service has one configuration file that is stored
-in a separate \texttt{deployment} repository. So a microservice's code and its
-deployment manifests are fully isolated. Furthermore, up to this point no
-distinction has been made between services that either rely on a database or do
-not need one. Yet, services that depend on a database have a second Kubernetes
-manifest that holds the databases' configuration.
+in a separate \texttt{architecture} repository. So a microservice's code and its
+deployment manifests are fully isolated. Each manifest file holds all the
+microservice's Kubernetes objects, e.g.\ Deployments, Services or StatefulSets.
+This is also the point where a distinction between microservices that rely on a
+databases and microservice that do not have this dependency has to be made. All
+services with an additional database component, e.g.\ $\mu$App's onboarding
+backend, have the Kubernetes objects that are needed to deploy the database
+stored in a separate manifest file. Thus, in the case of $\mu$App, the frontend
+and service adapter have one manifest file. On the other hand, the onboarding
+and user backend have two manifest files; one for the microservice's main
+Kubernetes objects and one for the microservice's database Kubernetes objects.
+This way, a clear separation of concerns is achieved.
 
-During a services deployment, the pipeline reads the service's Kubernetes
-manifest and applies it to the cluster.
+When deploying a microservice, the pipeline reads the service's Kubernetes
+manifest and deploys it to the cluster using Kubernetes' \texttt{kubectl}
+utility. The service's database manifest however is not touched. Databases are
+deployed by hand and independently from the \ac{CD} pipeline.
 

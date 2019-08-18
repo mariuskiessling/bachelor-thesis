@@ -10,59 +10,52 @@ internet traffic already totalled 122 exabytes per month in 2017. Over the
 course of five years, it is predicted that the volume of traffic on the
 internet will rise to staggering 396 exabytes in 2022
 \autocite{SystemsDatenvolumendesglobalen2018}. To put this into perspective,
-one exabyte is equal to one million terabytes.
+one exabyte is equal to one million terabytes. These enormous numbers introduce
+the question how it is possible to deal with them.
 
-The problem however is that all of this traffic is not distributed evenly
-across the day. A news website might e.g.\ be consumed by more users in the
-morning or after work instead of during the day. This results in a high number
-of requests and thus a high load on the website's servers during the peak load
-times. In order to keep up with the demand the servers serving the responses
-have to be equipped accordingly. The result is a highly powerful computing
-cluster that is able to serve users during peak load times but idles the rest
-of the day. Not only is such behaviour wasting energy resources, it costs the
-company operating the site a lot of money. One possibility to solve this issue
-is to dynamically scale the infrastructure in accordance with the requests.
-During a time of high load, more servers are deployed to keep up with user
-requests. Whenever the load decreases, the number of servers is scaled down.
+The problem is that all of this traffic is not distributed evenly across the
+day. A news website might e.g.\ be consumed by more users in the morning or
+after work instead of during the day. This results in a high number of requests
+and thus a high load on the website's servers during the peak load times. In
+order to keep up with the demand the servers serving the responses have to be
+equipped accordingly. The result is a highly powerful computing cluster that is
+able to serve users during peak load times but idles the rest of the day. Not
+only is such behaviour wasting energy resources, it costs the company operating
+the site a lot of money. One possibility to solve this issue is to dynamically
+scale the infrastructure in accordance with the requests.  During a time of
+high load, more servers are deployed to keep up with user requests. Whenever
+the load decreases, the number of servers is scaled down.
 
-To ensure this functionality an important precondition has to be fulfilled: An
+To ensure this functionality, an important precondition has to be fulfilled: An
 application's infrastructure has to be as best as possible decoupled. In this
 context the term infrastructure does not denote the physical layer (hardware,
 network, etc.) but the virtual components an application is made up of. This
 includes both supporting software like databases and caching as well as the
 application's actual feature set. The feature set of web shopping application
 might e.g.\ be comprised of managing a user's shopping basket, listing a
-product's properties, a search engine that finds products suitable for a
-user and a help centre with frequently asked questions. Only if all these
-components of an application are decoupled, they can be scaled individually.
-Revisiting the web shop example, a high load on the shops search engine does
-not require that the shopping basket and help centre are scaled up as well.
-Decoupling allows application operators to target specific feature sets and the
-corresponding supporting software when scaling.
+product's properties, a search engine that finds products suitable for a user
+and a help centre with frequently asked questions. Only if all these components
+of an application are decoupled, they can be scaled individually. Revisiting
+the web shop example, a high load on the shops search engine does not require
+that the shopping basket and help centre are scaled up as well. Decoupling
+allows application operators to target specific feature sets and the
+corresponding supporting software when scaling. One approach to decoupling a
+software is called the \textit{microservice architecture}.
 
 Such flexibility needs a major change in thinking about a software's
-architecture. Ultimately the \textit{monolithic} architecture pattern has to be
-dropped in favour of \textit{microservices}. Inspired by the services oriented
-architecture, the \textit{microservice architecture} favours splitting the
-concerns of an application into many small parts called microservices. The
-benefits of the microservice architecture are fully explored further along in
-this thesis. Not only small organisations and companies jumped on the
-microservice bandwagon. The British government
-\autocite{LoweLeadingwaymicroservices2016} and major online giants like Amazon
-\autocite{JenkinsVelocityCulture2011} deploy the power and flexibility of
-microservices in their production environments.
-
-With the introduction of microservices, a number of organisational changes are
-associated. The shift towards \textit{DevOps} gives developers more power about
-their application's whole lifecycle, including its operation. Instead of being
-depended on additional teams, developers are free to deploy an application
-whenever they consider it to be stable.
+architecture. However not only the software's architecture has to adapt. A
+number of organisational changes in favour of a \textit{DevOps} culture are on
+the daily agenda of a modern software company. Not only major online giants
+like Amazon \autocite{JenkinsVelocityCulture2011} but also the British
+government \autocite{LoweLeadingwaymicroservices2016} realised this. The shift
+towards \textit{DevOps} gives developers more power about
+their application's whole lifecycle, including its operation. 
 
 \acf{CI} and \acf{CD} further support the DevOps paradigm by allowing to
 continuously build and deploy an application. Although not all applications are
-built and deployed equally. When deploying microservices instead of monoliths,
-a number of things have to be considered. This thesis asses \todo{Update number
-at the end of thesis} three problems that are associated with continuously
-deployed microservice architectures. The goal is to find solutions, e.g.\ in
-the form of models, to these problems. To get started,
-chapter~\ref{sub:Problem_Statement} will introduce the three problems in question.
+built and deployed equally. When deploying microservices, a number of things
+have to be considered. This thesis asses \todo{Update number at the end of
+thesis} three problems that are associated with continuously deployed
+microservice architectures. The goal is to find solutions, e.g.\ in the form of
+models, to these problems. To get started, chapter~\ref{sub:Problem_Statement}
+will introduce the three problems in question.

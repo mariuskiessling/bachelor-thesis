@@ -15,6 +15,7 @@
 \newcolumntype{C}{>{$\displaystyle}c<{$}}
 \renewcommand\arraystretch{1.5}
 \usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
 \usepackage{diagbox}
 \usepackage{subfig}
 \usepackage[colorinlistoftodos]{todonotes}
@@ -92,8 +93,18 @@
 \makeatother
 
 \definecolor{yedYellow}{RGB}{255,204,0}
+
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
   \node[shape=circle,draw,inner sep=2pt,fill=yedYellow] (char) {\small #1};}}
+
+\newcommand*\inlineDiamond{\tikz[baseline=-4pt]{
+  \node[diamond,draw,inner sep=2pt,fill=yedYellow] (char) {};}}
+
+\newcommand*\inlineRectangle{\tikz[baseline=-4pt]{
+  \node[rectangle,draw,inner sep=2pt,fill=yedYellow] (char) {};}}
+
+\newcommand*\inlineTriangle{\tikz[baseline=-4pt]{
+  \node[star, star points=3,draw,inner sep=2pt,fill=yedYellow] (char) {};}}
 
 \input{metadata}
 

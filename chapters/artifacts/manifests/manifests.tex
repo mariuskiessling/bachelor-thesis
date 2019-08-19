@@ -64,7 +64,7 @@ microservice architecture that can easily be exchanged with any other
 microservice architecture.
 
 \subsubsection{Deploying to Kubernetes: The Naive Way}%
-\label{ssub:Deploying_to_Kubernetes:_The_Naive_Way}
+\label{ssub:Deploying_to_Kubernetes_The_Naive_Way}
 
 The first requirement for continuously integrating a software is that it is
 tracked in a \ac{VCS}. In the case of $\mu$App, each service is managed in a
@@ -132,3 +132,60 @@ configurations of authentication and authorization policies, \ac{HTTPS}
 certificates, configuration maps, outgoing traffic rules and the Ingress
 gatway. This way, the infrastructure configuration is entirely detached from
 microservices' one.
+
+When deploying $\mu$App from scratch, a three step process must be completed.
+First, the underlying infrastructure needs to be set up. This includes all
+network and storage settings. Then the microservices' databases have to be set
+up. At last the actual application manifests are applied to the Kubernetes
+cluster. The process requires active monitoring of the Kubernetes objects to
+make sure that all configurations of a step are fully applied before starting
+the next step.
+
+Due to the file structure of the application's manifest files, it is not
+possible to apply all manifests of one stage. Thus when mapping the deployment
+steps to the manifest files, in stage one, the files marked with a
+\inlineDiamond{} are applied. Then, the database manifests files marked with
+\inlineRectangle{} are applied. They create the services' databases. Lastly,
+the files marked with \inlineTriangle{} are applied. After this step is
+completed, $\mu$App is fully deployed from scratch. All markings mentioned in
+this section refer to figure~\ref{fig:manifests_folder_naive}.
+
+This concludes the \textit{naive} deployment approach for $\mu$App. The
+approach reveals a number of issues that need to be solved in order to have a
+fully autonomous continuous deployment process. The issues include:
+
+\begin{itemize}
+  \item A \ac{CI} process is only started when changes are merged from the
+    independent \texttt{feature} branches to the \texttt{master} branch. Thus
+    the rule that software should be built every time a new change is present
+    in the \ac{VCS} is not met.
+  \item When deploying $\mu$App from scratch, the deployment is comprised of
+    three steps that need to be executed by hand.
+  \item The deployment of the actual microservice and its database is decoupled
+    and thus are executed independently from one another.
+  \item A microservice's database has to be deployed first to guarantee its
+    available once the actual microservice using that database is deployed.
+  \item A microservice's manifest files are managed independently from the
+    services actual source code. This gap means that two distinct lifecycles
+    must be managed.
+\end{itemize}
+
+Despite these issues that already reveal themselves when inspecting the
+deployment model statically, an additional issue could be observed when using
+the model in practise:
+
+\begin{itemize}
+  \item The second a microservice looses the connection to its database, it
+    becomes dead and unusable. The only way to recover it from this state is to
+    kill the pods hosting the application, making sure that the database is
+    available again and than restarting the microservice's pod.
+\end{itemize}
+
+\subsubsection{Deploying to Kubernetes: An Improved Approach}%
+\label{ssub:Deploying_to_Kubernetes_An_Improved_Approach}
+
+This section will try to develop an improved approach to managing Kubernetes
+manifests in a microservice project that is continuously deployed. It will base
+the development on the same architecture that was introduced in
+figure~\ref{fig:dsp_excerpt} and the findings of the previous
+section~\ref{ssub:Deploying_to_Kubernetes_The_Naive_Way}.

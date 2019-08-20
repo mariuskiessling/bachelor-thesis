@@ -3,6 +3,13 @@
 \section{Versioning}%
 \label{sec:Versioning}
 
+Now that the theoretical foundation has been established, this section will
+deal with the first problem domain of this thesis namely the question of how a
+continuously deployed microservice can be versioned. Based upon the \ac{DSR}
+framework, this chapter will try to produce one or more artefacts that answer
+the problem domain's question and help developers to better version their
+microservices.
+
 \subsection{The Need for Good Versioning Conventions}%
 \label{sub:The_Need_for_Good_Versioning_Conventions}
 Unlike in the monolithic architecture, a continuously deployed microservice
@@ -237,6 +244,7 @@ steps:
     repository: frontend
     tags: |
      $(Build.BuildNumber)
+     latest
   \end{minted}
   \caption{Tagging a Docker container image with a date-based version number
   using a pipeline task.}%
@@ -266,8 +274,10 @@ process.
 \subsection{Evaluating Continuous Versioning}%
 \label{sub:Evaluating_Continuous_Versioning}
 To evaluate the usefulness of continuous versioning schemes (like CalVer), a
-number of requirements have to be met. For the purpose of traceability these
-requirements are labelled $R_1$ to $R_n$.
+number of requirements are derived from both the theoretical foundation as
+outlined by chapter~\ref{sec:Background} as well as the arguments put forward
+by section~\ref{sub:Successfully_Implementing_Versioning}. For the purpose of
+traceability these requirements are labelled $R_1$ to $R_n$.
 
 \begin{itemize}
   \item $R_1$: Continuous versioning must be applicable to a microservice

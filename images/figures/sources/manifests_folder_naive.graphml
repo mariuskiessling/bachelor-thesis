@@ -20,17 +20,17 @@
           <y:Geometry height="274.0" width="238.0" x="205.0" y="125.0"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle hasColor="false" raised="false" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Inconsolata for Powerline" fontSize="14" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="258.5199890136719" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="204.2041015625" x="16.89794921875" xml:space="preserve" y="7.7400054931640625">├── authenticationPolicies
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Inconsolata for Powerline" fontSize="14" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="258.5199890136719" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="204.2041015625" x="16.89794921875" xml:space="preserve" y="7.7400054931640625">├── authenticationPolicies/
 │   ├── *.yaml
-├── authorizationPolicies
+├── authorizationPolicies/
 │   ├── *.yaml
-├── certManager
+├── certManager/
 │   ├── *.yaml
-├── configMaps
+├── configMaps/
 │   ├── *.yaml
-├── external
+├── external/
 │   ├── *.yaml
-├── gateway
+├── gateway/
 │   ├── *.yaml
 ├── onboardingBackend.yaml
 ├── onboardingBackendDB.yaml

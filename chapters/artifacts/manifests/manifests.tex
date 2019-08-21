@@ -152,20 +152,21 @@ this section refer to figure~\ref{fig:manifests_folder_naive}.
 
 This concludes the \textit{naive} deployment approach for $\mu$App. The
 approach reveals a number of issues that need to be solved in order to have a
-fully autonomous continuous deployment process. The issues include:
+fully autonomous continuous deployment process. For the purpose of
+traceability, these issues are labelled $I_1$ to $I_n$. The issues include:
 
 \begin{itemize}
-  \item A \ac{CI} process is only started when changes are merged from the
+  \item \textit{$I_1$}: A \ac{CI} process is only started when changes are merged from the
     independent \texttt{feature} branches to the \texttt{master} branch. Thus
     the rule that software should be built every time a new change is present
     in the \ac{VCS} is not met.
-  \item When deploying $\mu$App from scratch, the deployment is comprised of
+  \item \textit{$I_2$}: When deploying $\mu$App from scratch, the deployment is comprised of
     three steps that need to be executed by hand.
-  \item The deployment of the actual microservice and its database is decoupled
+  \item \textit{$I_3$}: The deployment of the actual microservice and its database is decoupled
     and thus are executed independently from one another.
-  \item A microservice's database has to be deployed first to guarantee its
+  \item \textit{$I_4$}: A microservice's database has to be deployed first to guarantee its
     available once the actual microservice using that database is deployed.
-  \item A microservice's manifest files are managed independently from the
+  \item \textit{$I_5$}: A microservice's manifest files are managed independently from the
     services actual source code. This gap means that two distinct lifecycles
     must be managed.
 \end{itemize}
@@ -175,7 +176,7 @@ deployment model statically, an additional issue could be observed when using
 the model in practise:
 
 \begin{itemize}
-  \item The second a microservice looses the connection to its database, it
+  \item \textit{$I_6$}: The second a microservice looses the connection to its database, it
     becomes dead and unusable. The only way to recover it from this state is to
     kill the pods hosting the application, making sure that the database is
     available again and than restarting the microservice's pod.
@@ -188,4 +189,24 @@ This section will try to develop an improved approach to managing Kubernetes
 manifests in a microservice project that is continuously deployed. It will base
 the development on the same architecture that was introduced in
 figure~\ref{fig:dsp_excerpt} and the findings of the previous
-section~\ref{ssub:Deploying_to_Kubernetes_The_Naive_Way}.
+section~\ref{ssub:Deploying_to_Kubernetes_The_Naive_Way}. The overall goal is
+to solve the issues identified by the naive deployment approach explored
+previously. With the help of these solutions, the problem domain's questions of
+how Kubernetes manifests should be managed and deployed in a continuously
+deployed microservice architecture can be answered.
+
+To get started, issue $I_6$ does not only relate to continuously deployed
+microservices but rather to any service that is deployed to a Kubernetes
+cluster. As pointed out in~\ref{sub:Kubernetes} it is in the nature of services
+that are run on Kubernetes to be constantly created, killed and moved between
+hosts. Thus any service that wants to withstand such a harsh conditions has to
+be resilient when dealing with dropping connections. This is not only limited
+to database connection. However databases can be used representationally for
+this issue.
+
+Issue $I_6$ can be solved on two layers. Either Kubernetes deals with a
+service's connection or the service itself deals with it. To decide which layer
+fits the situation at hand best, it has to be distinguished between
+applications which enter a state they can not recover from when their
+connection to the database is dropped and applications which can recover from
+such a state.

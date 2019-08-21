@@ -70,9 +70,21 @@ The first requirement for continuously integrating a software is that it is
 tracked in a \ac{VCS}. In the case of $\mu$App, each service is managed in a
 separate Git repository. Thus, each microservice has its own build and
 deployment pipeline. When changes are pushed to the \texttt{master} branch, a
-build pipeline is triggered. Only pull requests can modify the data stored on
-the \texttt{master} branch. Development work happens on independent feature
-branches. After a feature is completed, the changes are merged into the
+build pipeline is triggered.
+
+\begin{listing}[H]
+  \begin{minted}{YAML}
+trigger:
+- master
+  \end{minted}
+  \caption{Trigger definition for Microsoft Azure DevOps using the YAML-based syntax.}%
+  \label{listing:master_trigger}
+\end{listing}
+
+Only pull requests can modify the data stored on the \texttt{master} branch.
+This is achieved by using a YAML-based trigger definition as shown in
+listing~\ref{listing:master_trigger}. Development work happens on independent
+feature branches. After a feature is completed, the changes are merged into the
 \texttt{development} branch where they reside until a pull request integrates
 the changes into the \texttt{master} branch. Hence, only fully developed
 features are build using the \ac{CI} pipeline and deployed using the \ac{CD}
@@ -81,11 +93,13 @@ process.
 $\mu$App executes its \ac{CI} and \ac{CD} pipeline on the Microsoft Azure
 DevOps service. As discussed in chapter~\ref{ssub:Continuous_Integration}, the
 \ac{CI} process tests and builds the source code and constructs a Docker
-container image. The image is then pushed to a central image repository. At
-this point, the \ac{CI} pipeline is completed and a deployment is automatically
-triggered. This section will not focus any further on the microservices'
-\ac{CI} process, as the interest is primarily aimed at the procedure of
-continuously deploying a complete microservice architecture.
+container image. The image is then pushed to a central image repository. The
+process is divided into multiple stages. The first stage is responsible for
+building and testing $\mu$App whereas the second stage deploys the application
+to Kubernetes. At this point, the \ac{CI} pipeline is completed and a
+deployment is automatically triggered. This section will not focus any further
+on the microservices' \ac{CI} process, as the interest is primarily aimed at
+the procedure of continuously deploying a complete microservice architecture.
 
 The overall deployment goal is to run $\mu$App on Kubernetes. Thus, its
 microservices need a number of configuration objects to be either created or
@@ -156,19 +170,20 @@ fully autonomous continuous deployment process. For the purpose of
 traceability, these issues are labelled $I_1$ to $I_n$. The issues include:
 
 \begin{itemize}
-  \item \textit{$I_1$}: A \ac{CI} process is only started when changes are merged from the
-    independent \texttt{feature} branches to the \texttt{master} branch. Thus
-    the rule that software should be built every time a new change is present
-    in the \ac{VCS} is not met.
-  \item \textit{$I_2$}: When deploying $\mu$App from scratch, the deployment is comprised of
-    three steps that need to be executed by hand.
-  \item \textit{$I_3$}: The deployment of the actual microservice and its database is decoupled
-    and thus are executed independently from one another.
-  \item \textit{$I_4$}: A microservice's database has to be deployed first to guarantee its
-    available once the actual microservice using that database is deployed.
-  \item \textit{$I_5$}: A microservice's manifest files are managed independently from the
-    services actual source code. This gap means that two distinct lifecycles
-    must be managed.
+  \item \textit{$I_1$}: A \ac{CI} process is only started when changes are
+    merged from the independent \texttt{feature} branches to the
+    \texttt{master} branch. Thus the rule that software should be built every
+    time a new change is present in the \ac{VCS} is not met.
+  \item \textit{$I_2$}: When deploying $\mu$App from scratch, the deployment is
+    comprised of three steps that need to be executed by hand.
+  \item \textit{$I_3$}: The deployment of the actual microservice and its
+    database is decoupled and thus are executed independently from one another.
+  \item \textit{$I_4$}: A microservice's database has to be deployed first to
+    guarantee its available once the actual microservice using that database is
+    deployed.
+  \item \textit{$I_5$}: A microservice's manifest files are managed
+    independently from the services actual source code. This gap means that two
+    distinct lifecycles must be managed.
 \end{itemize}
 
 Despite these issues that already reveal themselves when inspecting the
@@ -176,10 +191,10 @@ deployment model statically, an additional issue could be observed when using
 the model in practise:
 
 \begin{itemize}
-  \item \textit{$I_6$}: The second a microservice looses the connection to its database, it
-    becomes dead and unusable. The only way to recover it from this state is to
-    kill the pods hosting the application, making sure that the database is
-    available again and than restarting the microservice's pod.
+  \item \textit{$I_6$}: The second a microservice looses the connection to its
+    database, it becomes dead and unusable. The only way to recover it from
+    this state is to kill the pods hosting the application, making sure that
+    the database is available again and than restarting the microservice's pod.
 \end{itemize}
 
 \subsubsection{Deploying to Kubernetes: An Improved Approach}%
@@ -250,3 +265,49 @@ response of a \ac{REST} \ac{API} that states that the service is running
 without problems. Hence, issue $I_6$ can be solved with relatively little
 implementation work when using Kubernetes' built-in features.
 
+In the naive deployment approach only commits to the \texttt{master} branch
+would be built and deployed. This however conflicts with the \ac{CI} guidelines
+as outlined by chapter~\ref{ssub:Continuous_Integration}. To build all branches
+of a project, the same pipeline definition file can be used. The trigger
+definition as shown in in listing~\ref{listing:master_trigger} has to be
+dropped. When dropped, Azure DevOps builds all changes across all branches of a
+imply dropping the trigger definition would however create a new problem. Due
+to the fact that the pipeline was previously only run when stable changes were
+pushed to the master branch, all changes would be automatically deployed. By
+just dropping the trigger definition all changes from all branches would be
+built, tested, packed into a Docker image and pushed to a central container
+image repository. However a pipeline that is being triggered from changes in a
+branch other than the \texttt{master} branch should only be built and tested
+thus only undergoing the pipeline's \ac{CI} part. To implement such a
+behaviour, pipeline conditions can be used. Conditions can be applied to both
+jobs and stages. As $\mu$App's pipeline is made up of two stages, the first
+building and testing the application and the second deploying it to Kubernetes,
+only the second stage has to protected by a condition.
+
+\begin{listing}[H]
+  \begin{minted}{YAML}
+stages:
+- stage: Deploy
+  displayName: Deploy to Kubernetes
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  jobs:
+    - ...
+  \end{minted}
+  \caption{A Microsoft Azure DevOps pipeline stage being protected by a
+  condition (condition taken from \autocite{MicrosoftConditions2019}).}%
+  \label{listing:pipeline_condition}
+\end{listing}
+
+Listing~\ref{listing:pipeline_condition} displays how a condition can be set
+for a stage that handles the deployment of $\mu$App. If not condition is set
+for a stage, Azure DevOps automatically applies the \texttt{succeeded()}
+expression. Thus, by default to execute a stage, the previous stage had to be
+successful. The \texttt{and} expression in line five of
+listing~\ref{listing:pipeline_condition} only return \texttt{true} if both its
+parameters return \texttt{true} individually. Thus, the \texttt{Deploy} stage
+is only computed if the previous stage performed successfully and the build is
+triggered by a change in the \texttt{master} branch. Hence, the same Azure
+DevOps pipeline can be used for both releasing stable as well as building and
+testing branches that are under active development. This concludes the solution
+of issue $I_1$.

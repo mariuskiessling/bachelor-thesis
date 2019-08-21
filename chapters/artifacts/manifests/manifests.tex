@@ -223,7 +223,13 @@ application having to adapt \autocite{AuthorsConfigureLivenessReadiness2019}.
 The application's developers only have to implement an interface for Kubernetes
 to determine the application's status. In the case of microservices which offer
 a \ac{REST} interface over \ac{HTTP} a simple \texttt{/health} endpoint would
-suffice.
+suffice. Though implementing a simple interface might seem like test best
+solution for all types of applications, one important notice has to be made. It
+must be assessed whether the application's full start-up when restarting its
+containers is too resource-heavy. An application which simply hosts static
+files like $\mu$App's frontend service restarts within seconds whereas
+$\mu$App's service adapter which rebuilds its cache from scratch every time it
+starts takes a long time and many resources to perform a full restart.
 
 \begin{listing}[H]
   \begin{minted}{text}

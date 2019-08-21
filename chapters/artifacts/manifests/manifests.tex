@@ -205,8 +205,42 @@ to database connection. However databases can be used representationally for
 this issue.
 
 Issue $I_6$ can be solved on two layers. Either Kubernetes deals with a
-service's connection or the service itself deals with it. To decide which layer
-fits the situation at hand best, it has to be distinguished between
+service's connection or the service itself takes on this task. To decide which
+layer fits the situation at hand best, it has to be distinguished between
 applications which enter a state they can not recover from when their
-connection to the database is dropped and applications which can recover from
-such a state.
+connection to a database is dropped and applications which can recover from
+such a state. In cases where the application can not recover itself from such a
+state, it either has to be customized to be able to do so or the only option is
+that Kubernetes deals with the situation. In case the application can not adapt
+such functionality, a Kubernetes liveness probe can be used to determine
+whether the application is still running functionally. The liveness probe
+executes a command inside the application's container, \ac{HTTP} request or
+\ac{TCP} call. If the probe reports that the service is not alive any more,
+Kubernetes automatically kills the application's container and restarts it.
+This way, the application does not have to deal with such situations itself and
+behaviour that leads the application to crash can be intercepted without the
+application having to adapt \autocite{AuthorsConfigureLivenessReadiness2019}.
+The application's developers only have to implement an interface for Kubernetes
+to determine the application's status. In the case of microservices which offer
+a \ac{REST} interface over \ac{HTTP} a simple \texttt{/health} endpoint would
+suffice.
+
+\begin{listing}[H]
+  \begin{minted}{text}
+HTTP/1.1 200 OK
+content-type: application/json; charset=utf-8
+content-length: 16
+connection: close
+
+{"status":"alive"}
+  \end{minted}
+  \caption[A REST health endpoint stating that the service is alive.]{A
+  \ac{REST} health endpoint stating that the service is alive.}%
+  \label{listing:health_endpoint_http}
+\end{listing}
+
+Listing~\ref{listing:health_endpoint_http} shows an exemplary \ac{HTTP}
+response of a \ac{REST} \ac{API} that states that the service is running
+without problems. Hence, issue $I_6$ can be solved with relatively little
+implementation work when using Kubernetes' built-in features.
+

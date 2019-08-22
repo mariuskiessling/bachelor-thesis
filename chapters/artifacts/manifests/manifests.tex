@@ -292,7 +292,8 @@ stages:
 - stage: Deploy
   displayName: Deploy to Kubernetes
   dependsOn: Build
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'],
+                 'refs/heads/master'))
   jobs:
     - ...
   \end{minted}
@@ -325,11 +326,11 @@ application has to be fitted with a more rigid database connection process.
 \begin{figure}[H]
   \hspace*{\fill}%
   \subfloat[Using Kubernete's liveness probe to handle a failed database connection during a microservice's start up. \label{subfig:database_connection_probe}]{%
-    \includegraphics[scale=0.8]{images/figures/database_connection_probe.pdf}
+    \includegraphics[scale=0.55]{images/figures/database_connection_probe.pdf}
   }
   \qquad
   \subfloat[Implementing a timeout to handle a failed database connection during microservice's start up. \label{subfig:database_connection_timeout}]{%
-    \includegraphics[scale=0.8]{images/figures/database_connection_timeout.pdf}
+    \includegraphics[scale=0.55]{images/figures/database_connection_timeout.pdf}
   }
   \hspace*{\fill}%
 
@@ -391,7 +392,7 @@ backend holds a \texttt{deployment/user-backend} folder structure.
 
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[scale=0.6]{images/figures/helmification_process.pdf}
+  \includegraphics[scale=0.7]{images/figures/helmification_process.pdf}
 \end{center}
 \caption{The transition from a separate repository holding a service's
 configuration to each microservice repository managing its respective
@@ -399,7 +400,7 @@ Kubernetes manifests.}%
 \label{fig:helmification_process}
 \end{figure}
 
-Figure~/ref{fig:helmification_process} shows the process of transforming from a
+Figure~\ref{fig:helmification_process} shows the process of transforming from a
 central deployment manifest management to a decentralized management concept
 using Helm. The figure visualizes the transformation process on the example of
 $\mu$App's onboarding backend and frontend. The frontend which does not depend

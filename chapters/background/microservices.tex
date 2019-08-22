@@ -106,7 +106,7 @@ respective advantages are further discussed in
 In summary it can be said that the microservice architecture constitutes the
 natural evolution of software architectural patterns in a distributed system.
 
-\subsubsection{A Practical Example}%
+\subsubsection{A Concrete Example}%
 \label{ssub:A_Practical_Example}
 
 The following example highlights the advantages of microservices in a practical
@@ -158,7 +158,7 @@ of a NGINX server. This approach does not lock the developers in one technology
 stack that might not suite the problem's needs in the future. In addition,
 every service can be scaled independently from one another.
 
-\subsubsection{Deployment -- Choosing the right runtime model}%
+\subsubsection{Deployment -- Choosing the Right Runtime Model}%
 \label{ssub:Deployment_Runtime_Model}
 
 Given a fully developed microservice architecture, one question remains: How is
@@ -270,8 +270,10 @@ the executed command. The most common Dockerfile commands and the issues
 regarding layering are further examined in
 \autocite{DockerBestpracticeswriting}. The command that spans from line two to
 three in listing~\ref{listing:dockerfile_example} creates a bash file that
-produces this output: \\
-\texttt{Hello from BusyBox \textbf{VERSION\textunderscore{}NUMBER}}\\
+produces this output:
+
+\hspace{1cm} \texttt{Hello from BusyBox \textbf{VERSION\textunderscore{}NUMBER}}
+
 In line four of the same listing, the \texttt{chmod} utility is used to set the
 \textit{execution} permission of the newly created file. This allows the binary
 to be executed. The last line of listing~\ref{listing:dockerfile_example} specifies the

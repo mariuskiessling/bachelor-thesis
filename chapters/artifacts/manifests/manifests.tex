@@ -135,6 +135,8 @@ holding $\mu$Apps' Kubernetes manifests.}%
 \label{fig:manifests_folder_naive}
 \end{figure}
 
+\todo{Adapt a common spelling for \texttt{visualise} throughout the thesis.}
+
 Figure~\ref{fig:manifests_folder_naive} visualises the folder structure that
 holds $\mu$App's Kubernetes manifets. As already pointed out, all manifest
 files are stored in a separate \texttt{architecture} repository. The files in
@@ -354,4 +356,70 @@ again. This cycle is repeated until a successful connection can be established.
 
 Using one of these two approaches, issue $I_4$ can be considered solved.
 
-Next, the issues $I_2$, $_3$ and $I_5$ can be dealt with collectively.
+Next, the issues $I_2$, $_3$ and $I_5$ can be dealt with collectively. Even if
+their nature appears to be quite different, a well though \textit{Kubernetes
+manifest management} concept helps to solve them. The upcoming section will try
+to formulate such a concept that defines in \textit{which place} and
+\textit{which format} Kubernetes manifests should be stored. In addition this
+concept will outline how these manifests are rolled out continuously and from
+scratch. To understand the idea behind the concept, the basic knowledge of Helm
+as outlined in chapter~\ref{sub:Helm} is required.
+
+To recap, each component of $\mu$App is stored in a distinct tac{VCS}
+repository. Nonetheless, The Kubernetes manifest needed to deploy $\mu$App are
+managed in a completely different repository called \texttt{architecture}. As a
+result, two separate lifecycle management processes are required to manage the
+application's code and its manifest files. To overcome this, the services'
+Kubernetes manifests are moved from the \texttt{architecture} repository to
+their respective service's code repository. Hence, the two management processes
+are no longer decoupled. Every time that code is modified in the services'
+repository, the manifest files have to updated too if architecture changes are
+needed. Thus, a deployment manifest is always tagged to the latest commit in a
+service's code repository. So far this solves issue $I_5$ and gives an answer
+to the question in which place manifest files should be stored. Yet it does not
+comprise a complete manifest management concept.
+
+To achieve this, the Kubernetes package manager Helm can be utilized. Instead
+of storing a service's manifests loosely next to the service's source code
+files or in some arbitrary named directly in the service's \ac{VCS} repository,
+each service gets it individual Helm chart. For each of $\mu$App's services, a
+directory called \texttt{deployment} is created in the project's root folder.
+Caused by Helm's naming requirements, the \texttt{deployment} directory houses
+another directory bearing the name of the service. $\mu$App's frontend service
+e.g.\ thus houses a \texttt{deployment/frontend} directory whereas the user
+backend holds a \texttt{deployment/user-backend} folder structure.
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[scale=0.6]{images/figures/helmification_process.pdf}
+\end{center}
+\caption{The transition from a separate repository holding a service's
+configuration to each microservice repository managing its respective
+Kubernetes manifests.}%
+\label{fig:helmification_process}
+\end{figure}
+
+Figure~/ref{fig:helmification_process} shows the process of transforming from a
+central deployment manifest management to a decentralized management concept
+using Helm. The figure visualizes the transformation process on the example of
+$\mu$App's onboarding backend and frontend. The frontend which does not depend
+on a database or any other external Kubernetes components does not have a
+\texttt{requirements.yaml} file. Hence, Helm does not need to install any
+additional software. On the contrary, the onboarding backend needs a database
+component. Therefore, a \texttt{requirements.yaml} file is present in the newly
+created Helm chart inside the onboarding backend's repository.
+
+\begin{listing}[H]
+  \begin{minted}{YAML}
+dependencies:
+  - name: mongodb-replicaset
+    version: 3.9.6
+    repository: https://kubernetes-charts.storage.googleapis.com/
+  \end{minted}
+  \caption{Helm's requirements file for $\mu$App's onboarding backend.}%
+  \label{listing:onboarding_backend_requirements}
+\end{listing}
+
+It defines an external database component (\texttt{mongodb-replicaset}) as
+shown in listing~\ref{listing:onboarding_backend_requirements} which is
+automatically set up whenever the onboarding backend is deployed by Helm.

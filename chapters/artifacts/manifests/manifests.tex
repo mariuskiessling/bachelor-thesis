@@ -311,3 +311,47 @@ triggered by a change in the \texttt{master} branch. Hence, the same Azure
 DevOps pipeline can be used for both releasing stable as well as building and
 testing branches that are under active development. This concludes the solution
 of issue $I_1$.
+
+Up next, issue $I_4$ can be partially answered using the same technique already
+presented as the solution to issue $I_6$. A microservice that depends on a
+database for its start up can use Kubernetes's built-in liveness probe to
+determine if the application crashed due to a missing database component which
+has not started yet. In case a liveness probe is not suitable for the
+application at hand, e.g.\ due to a resource consuming start up process, the
+application has to be fitted with a more rigid database connection process.
+
+\begin{figure}[H]
+  \hspace*{\fill}%
+  \subfloat[Using Kubernete's liveness probe to handle a failed database connection during a microservice's start up. \label{subfig:database_connection_probe}]{%
+    \includegraphics[scale=0.8]{images/figures/database_connection_probe.pdf}
+  }
+  \qquad
+  \subfloat[Implementing a timeout to handle a failed database connection during microservice's start up. \label{subfig:database_connection_timeout}]{%
+    \includegraphics[scale=0.8]{images/figures/database_connection_timeout.pdf}
+  }
+  \hspace*{\fill}%
+
+  \caption{Two ways to handle a failed database connection during a microservice's start up.}%
+  \label{fig:database_connection_start_up}
+\end{figure}
+
+Figure~\ref{subfig:database_connection_probe} shows how an application can
+handle a failed database connection using Kubernete's liveness probe. When
+starting the service, it tries to establish a connection to its external
+database component. If this fails, the application crashes and enters a state
+from which it can not recover without Kubernete's help. Kubernetes detects the
+service's state and restarts its container. If a database is available on the
+service's second start up, its launch can be considered successful. This cycle
+is repeated as long as the external database component is not ready to receive
+connection.
+
+On the other hand, figure~\ref{subfig:database_connection_timeout} shows a more
+robust solution that does not depend on Kubernete's liveness probe. Instead of
+letting the application enter a state from which it cannot recover from again,
+a timeout can be implemented in the microservice. After a database connection
+establishment failed, the application waits $x$ seconds and tries to connect
+again. This cycle is repeated until a successful connection can be established.
+
+Using one of these two approaches, issue $I_4$ can be considered solved.
+
+Next, the issues $I_2$, $_3$ and $I_5$ can be dealt with collectively.

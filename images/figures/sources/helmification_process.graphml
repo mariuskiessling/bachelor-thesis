@@ -57,10 +57,10 @@
     <node id="n2">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="186.90127999999999" width="262.00000000000006" x="458.9009598137292" y="216.21785353610943"/>
+          <y:Geometry height="180.90127999999999" width="262.00000000000006" x="458.9009598137292" y="216.2178535361094"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Open Sans" fontSize="12" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="20.341796875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="194.44140625" x="33.779296875" xml:space="preserve" y="4.0">Onboarding backend repository<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="-0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Open Sans" fontSize="12" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="20.341796875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="194.44140625" x="33.779296875" xml:space="preserve" y="3.9999999999999716">Onboarding backend repository<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="-0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
           <y:Shape type="roundrectangle"/>
         </y:ShapeNode>
       </data>
@@ -71,12 +71,11 @@
           <y:Geometry height="128.56000000000003" width="215.95999999999992" x="481.9209598137292" y="253.3475470722183"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle hasColor="false" raised="false" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Inconsolata for Powerline" fontSize="14" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="145.39999389648438" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="226.60546875" x="-5.322734375000039" xml:space="preserve" y="-8.419996948242158">├── code.xy
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Inconsolata for Powerline" fontSize="14" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="131.25999450683594" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="226.60546875" x="-5.322734375000039" xml:space="preserve" y="-1.3499972534179676">├── code.xy
 └── deployment/
     └── onboarding-backend
         ├── Chart.yaml
         ├── requirements.yaml
-        ├── charts/
         ├── templates/
         │   ├── deployment.yaml
         │   └── service.yaml
@@ -130,7 +129,7 @@
       <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="102.97997070838963" sy="57.30050036062556" tx="-131.00238032932475" ty="71.56611759506765">
+          <y:Path sx="102.97997070838963" sy="57.30050036062556" tx="-131.00238032932475" ty="69.26866566980311">
             <y:Point x="404.0" y="412.30050036062556"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
@@ -143,7 +142,7 @@
       <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="-79.20991962745939" sy="45.0" tx="-131.0125092799491" ty="56.86023304966006">
+          <y:Path sx="-79.20991962745939" sy="45.0" tx="-131.0125092799491" ty="55.03487691353322">
             <y:Point x="399.0" y="400.0"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>

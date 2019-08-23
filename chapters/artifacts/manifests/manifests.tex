@@ -460,13 +460,14 @@ be addressed:
 \end{itemize}
 
 Rather than just storing the Helm charts inside the service's repository, a
-built version of the chart should be saved to some chart repository. The \texttt{mongodb-replicaset
-} chart referenced in listing~\ref{listing:onboarding_backend_requirements}
-e.g.\ is hosted as part Helm's official and publicly accessible \texttt{stable}
-repository. However not every chart should be accessible to the general public.
-With $\mu$App the architecture is comprised of a set of internal services which
-deployment information should not be publicly accessible. In such cases, a
-private repository can host the Helm charts.
+built version of the chart should be saved to some chart repository. The
+\texttt{mongodb-replicaset } chart referenced in
+listing~\ref{listing:onboarding_backend_requirements} e.g.\ is hosted as part
+Helm's official and publicly accessible \texttt{stable} repository. However not
+every chart should be accessible to the general public.  With $\mu$App the
+architecture is comprised of a set of internal services which deployment
+information should not be publicly accessible. In such cases, a private
+repository can host the Helm charts.
 
 In general, a chart repository is a simple webserver which serves a
 \texttt{index.yaml} file that is fetched and parsed by a Helm client. The file
@@ -490,3 +491,69 @@ pushed to the internally hosted ChartMuseum instance. Then when this service
 should be deployed to Kubernetes, the Helm client running the deployment can
 add the ChartMuseum chart repository, fetch the chart without fetching the
 service's code and deploy it to Kubernetes.
+
+To recap, it is the overall goal to deploy microservices \textit{continuously}.
+Thus, this manifest management concept is not sufficient, yet. To become fully
+sufficient, an element of automation has to be reintroduced. Instead of
+updating, packaging and publishing a Helm chart by hand each time a service's
+code base is updated, a \ac{CI} solution can take on this job. Again, Azure
+DevOps is used as a reference for a \ac{CI} solution in the upcoming examples.
+
+\begin{listing}[H]
+  \begin{minted}[escapeinside=**]{YAML}
+- job: Create_Chart
+  dependsOn: Build
+  steps:
+  - task: HelmInstaller@1
+    inputs:
+      helmVersionToInstall: 'latest'
+  - script: |
+      sed -i "s/version: \"latest\"/version: \"$BUILD_BUILDNUMBER\"/g" \
+      deployment/*\textbf{service-name}*/values.yaml
+  - task: HelmDeploy@0
+    inputs:
+      command: 'package'
+      chartPath: *\textquotesingle*$(System.DefaultWorkingDirectory)/deployment/*\textbf{service-name}\textquotesingle*
+      chartVersion: '1.0.0+$(Build.BuildNumber)'
+      arguments: '--app-version 1.0.0+$(Build.BuildNumber)'
+  - script: |
+      curl --user username:password \
+      --data-binary "@$(Build.ArtifactStagingDirectory)/ \
+        *\textbf{service-name}*-1.0.0+$(Build.BuildNumber).tgz" \
+        https://dev.dsdmo.com/internal/chartmuseum/api/charts
+  \end{minted}
+  \caption{An Azure DevOps job which installs the Helm client, sets the
+  service's container image to the one produced by the build, packages the
+  chart and pushes the chart the a ChartMuseum instance.}%
+  \label{listing:azure_devops_build_chart_job}
+\end{listing}
+
+To continuously produce an updated Helm chart when (code) changes are pushed to
+a service's repository, the Helm client has to be installed first (line 4-6,
+listing~\ref{listing:azure_devops_build_chart_job}). As already pointed out,
+container images produced by the \ac{CI} system are tagged with the current
+build number. Each version of a service's Helm chart should always point
+deterministically to a specific container image version and not use the
+\texttt{latest}. This avoids situations in which a Helm chart is deployed once
+and e.g.\ installs application version 1.2.0 and one year later installs
+application version 3.1.0 because the \texttt{latest} tag moved along as new
+versions of the software are created. 
+
+\begin{listing}[H]
+  \begin{minted}[escapeinside=**]{YAML}
+container:
+  name: *\textbf{service-name}*
+  version: "latest"
+  \end{minted}
+  \caption{A service's \texttt{values.yaml} Helm file specifying a container
+  image name and version number.}%
+  \label{listing:helm_values_ci_image_version}
+\end{listing}
+
+Lines 7-9 of listing~\ref{listing:azure_devops_build_chart_job} show how the
+current build number can be injected into a service's \texttt{values.yaml}
+file. For reference, an examplary values file in shown in
+listing~\ref{listing:helm_values_ci_image_version}. During each build, the
+\ac{CI} system searches for the string \texttt{version: ``latest``} and replaces
+it with \texttt{version:``\textbf{build-number}\"}. The result is then written
+in the service's \texttt{values.yaml} file.

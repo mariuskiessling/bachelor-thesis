@@ -179,7 +179,8 @@ traceability, these issues are labelled $I_1$ to $I_n$. The issues include:
   \item \textit{$I_2$}: When deploying $\mu$App from scratch, the deployment is
     comprised of three steps that need to be executed by hand.
   \item \textit{$I_3$}: The deployment of the actual microservice and its
-    database is decoupled and thus are executed independently from one another.
+    database is decoupled and they thus are executed independently from one
+    another.
   \item \textit{$I_4$}: A microservice's database has to be deployed first to
     guarantee its available once the actual microservice using that database is
     deployed.
@@ -424,3 +425,36 @@ dependencies:
 It defines an external database component (\texttt{mongodb-replicaset}) as
 shown in listing~\ref{listing:onboarding_backend_requirements} which is
 automatically set up whenever the onboarding backend is deployed by Helm.
+Therefore issue $I_3$ can be considered solved as well. The deployment process
+of a service and its external dependencies, e.g. a database, is no longer
+decoupled.  For this purpose the onboarding backend also creates a
+\texttt{charts} directory which stores the service's packed dependencies. This
+directory however is not listed in figure~\ref{fig:helmification_process}
+because it does not need to exist in the \ac{VCS}. The folder is only created
+on the machine deploying the microservice once the installation process is
+triggered.
+
+So far this approach already solves issue $I_5$. Managing a microservice's code
+and its deployment information is no longer decoupled. This comprises a partial
+manifest management concept answering the questions \textit{where} and in
+\textit{which format} manifests are stored. Though it is now possible to deploy
+each of $\mu$App's microservices using the respective Helm chart, the process
+requires a number of manual inputs. Continuously releasing helmified
+microservices is only limitedly possible. To enable a fully automatic and
+continuous release process for helmified microservices, these problems have to
+be addressed:
+
+\begin{itemize}
+  \item The Helm charts only lifes inside their respective microservice's
+    \ac{VCS} repository in a non-built form. Hence, to deploy a service, the
+    entire repository has to be fetched in order to read the chart information.
+  \item To deploy $\mu$App's full microservice architecture, each service has
+    to be deployed manually one by one. No mechanism exists yet to deploy the
+    complete microservice architecture at once.
+  \item Each time the microservice's code is updated, the \texttt{appVersion}
+    property inside the service's \texttt{Chart.yaml} has to be updated to
+    reflect the builds current version. So far this is a manual process. At the
+    same time the chart's \texttt{version} property has to be bumped so that a
+    chart's version (e.g. 1.2.1) never points to more than one app version
+    (e.g. 3.4.1 and 3.4.2).
+\end{itemize}

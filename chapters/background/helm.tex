@@ -50,28 +50,29 @@ directory holding all the application's Helm configurations is also called
 Figure~\ref{fig:helm_chart_folder_example} shows a set of Helm configurations
 that are commonly used. The only mandatory file however is the
 \texttt{Charts.yaml}. It holds the chart's basic settings like name, author(s)
-and version number. The \texttt{requirements.yaml} file stores references to
-other charts that Helm can download into the \texttt{charts/} directory before
-deploying a chart. Theses charts are also known as \textit{sub-charts}. A
-backend e.g.\ would reference a \textit{Neo4j} graph database. Every time this
-backend is deployed to Kubernetes, Helm would make sure to also deploy the
-referenced Neo4j database sub-chart. Once an application is deployed by Helm,
-it is referred to as being a \textit{release}. Releases can be upgraded to new
-versions or even rolled back to a previously deployed version. Besides that,
-the \texttt{templates/} directory holds actual Kubernetes manifests. Thus, to
-\textit{helmify} an application that needs to define a Kubernetes Service and
-Deployment, the templates directory can hold two files describing these
-objects. The power of defining and managing dependencies might already enhance
-a basic deployment process drastically tough Helm's power lays in its
-templating ability. The Kubernetes manifests inside the templates directory may
-also include dynamic values. These values can either be provided by Helm
-directly, like the release's name, or set by the user inside the
-\texttt{values.yaml} file. In addition, values can also be set for sub-charts
-\autocite{HelmDocumentationCharts}. The way these Helm configurations have to
-be structured will not be further explored in this section as the practical use
-will become clear in the upcoming solution searching process. A full list of
-properties and additional files can nonetheless be found at
-\autocite{HelmDocumentationCharts}.
+, the application's version number and the chart's version number. Both version
+numbers have to be supplied in SemVer format. The \texttt{requirements.yaml}
+file stores references to other charts that Helm can download into the
+\texttt{charts/} directory before deploying a chart. Theses charts are also
+known as \textit{sub-charts}. A backend e.g.\ would reference a \textit{Neo4j}
+graph database. Every time this backend is deployed to Kubernetes, Helm would
+make sure to also deploy the referenced Neo4j database sub-chart. Once an
+application is deployed by Helm, it is referred to as being a \textit{release}.
+Releases can be upgraded to new versions or even rolled back to a previously
+deployed version. Besides that, the \texttt{templates/} directory holds actual
+Kubernetes manifests. Thus, to \textit{helmify} an application that needs to
+define a Kubernetes Service and Deployment, the templates directory can hold
+two files describing these objects. The power of defining and managing
+dependencies might already enhance a basic deployment process drastically tough
+Helm's power lays in its templating ability. The Kubernetes manifests inside
+the templates directory may also include dynamic values. These values can
+either be provided by Helm directly, like the release's name, or set by the
+user inside the \texttt{values.yaml} file. In addition, values can also be set
+for sub-charts \autocite{HelmDocumentationCharts}. The way these Helm
+configurations have to be structured will not be further explored in this
+section as the practical use will become clear in the upcoming solution
+searching process. A full list of properties and additional files can
+nonetheless be found at \autocite{HelmDocumentationCharts}.
 
 The last aspect of Helm that will be examined is the ability to share 
 charts. Once a chart is fully defined, Helm can package all its files into a

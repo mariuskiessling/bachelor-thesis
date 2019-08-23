@@ -445,7 +445,7 @@ continuous release process for helmified microservices, these problems have to
 be addressed:
 
 \begin{itemize}
-  \item The Helm charts only lifes inside their respective microservice's
+  \item The Helm charts only live inside their respective microservice's
     \ac{VCS} repository in a non-built form. Hence, to deploy a service, the
     entire repository has to be fetched in order to read the chart information.
   \item To deploy $\mu$App's full microservice architecture, each service has
@@ -458,3 +458,35 @@ be addressed:
     chart's version (e.g. 1.2.1) never points to more than one app version
     (e.g. 3.4.1 and 3.4.2).
 \end{itemize}
+
+Rather than just storing the Helm charts inside the service's repository, a
+built version of the chart should be saved to some chart repository. The \texttt{mongodb-replicaset
+} chart referenced in listing~\ref{listing:onboarding_backend_requirements}
+e.g.\ is hosted as part Helm's official and publicly accessible \texttt{stable}
+repository. However not every chart should be accessible to the general public.
+With $\mu$App the architecture is comprised of a set of internal services which
+deployment information should not be publicly accessible. In such cases, a
+private repository can host the Helm charts.
+
+In general, a chart repository is a simple webserver which serves a
+\texttt{index.yaml} file that is fetched and parsed by a Helm client. The file
+holds references to all charts hosted by the repository including their name,
+version number and packaged chart file. One solution implementing such a
+functionality is called \texttt{ChartMuseum}. Not only does ChartMuseum manage
+and store charts, it also includes a \ac{REST} \ac{API} which allows to add new
+charts, update existing ones and deletes old ones. For the purpose of hosting
+$\mu$App's microservice charts, an instance of CartMuseum is deployed to
+Kubernetes and made accessible from outside Kubernetes. Additionally,
+ChartMuseum allows to set an authentication method for both fetching charts as
+well as publishing them. This feature is also enabled for this instance of
+ChartMuseum to shield it from unauthorized access. For the purpose of
+simplicity, only the \textit{basic} \ac{HTTP} is used though other mechanism
+are supported.
+
+Now every time a Helm chart is updated, e.g. because the \texttt{appVersion}
+attribute is bumped or a deployment setting is modified, this change no longer
+just lives inside the service's repository. The chart is also packaged and
+pushed to the internally hosted ChartMuseum instance. Then when this service
+should be deployed to Kubernetes, the Helm client running the deployment can
+add the ChartMuseum chart repository, fetch the chart without fetching the
+service's code and deploy it to Kubernetes.

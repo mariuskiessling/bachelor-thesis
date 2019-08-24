@@ -2,8 +2,8 @@
 
 The internet is filled with users. In 2016 the estimated amount of active
 internet users was 3,26 billion. It is predicted that in 2021 this number will
-rise to 4,14 billion. The results are a growth of about one billion new monthly
-active users in only five years
+rise to 4,14 billion. The results show a growth of about one billion new
+monthly active users in only five years
 \autocite{eMarketerAnzahlderInternetnutzer2017}. As reported by Cisco Systems,
 one of the leading network hardware manufacturers in the world, the monthly
 internet traffic already totalled 122 exabytes per month in 2017. Over the
@@ -27,20 +27,20 @@ high load, more servers are deployed to keep up with user requests. Whenever
 the load decreases, the number of servers is scaled down.
 
 To ensure this functionality, an important precondition has to be fulfilled: An
-application's infrastructure has to be as best as possible decoupled. In this
+application's infrastructure has to be decoupled as best as possible. In this
 context the term infrastructure does not denote the physical layer (hardware,
-network, etc.) but the virtual components an application is made up of. This
-includes both supporting software like databases and caching as well as the
-application's actual feature set. The feature set of web shopping application
-might e.g.\ be comprised of managing a user's shopping basket, listing a
-product's properties, a search engine that finds products suitable for a user
-and a help centre with frequently asked questions. Only if all these components
-of an application are decoupled, they can be scaled individually. Revisiting
-the web shop example, a high load on the shops search engine does not require
-that the shopping basket and help centre are scaled up as well. Decoupling
-allows application operators to target specific feature sets and the
-corresponding supporting software when scaling. One approach to decoupling a
-software is called the \textit{microservice architecture}.
+network, etc.) but the virtual components of which an application is made up.
+This includes both supporting software like databases and caching as well as
+the application's actual feature set. The feature set of a web shopping
+application might e.g.\ be comprised of managing a user's shopping basket,
+listing a product's properties, of a search engine that finds products suitable
+for a user and of a help centre with frequently asked questions. Only if all
+these components of an application are decoupled, can they be scaled
+individually. Revisiting the web shop example, a high load on the shops search
+engine does not require that the shopping basket and help centre be scaled up
+as well. Decoupling allows application operators to target specific feature
+sets and the corresponding supporting software when scaling. One approach to
+decoupling a software is called the \textit{microservice architecture}.
 
 Such flexibility needs a major change in thinking about a software's
 architecture. However not only the software's architecture has to adapt. A
@@ -52,7 +52,7 @@ towards \textit{DevOps} gives developers more power about
 their application's whole lifecycle, including its operation. 
 
 \textit{\acf{CI}} and \textit{\acf{CD}} further support the DevOps paradigm by
-allowing to continuously build and deploy an application. Although not all
+allowing to continuously build and deploy an application. However not all
 applications are built and deployed equally. When deploying microservices, a
 number of things have to be considered. This thesis asses \todo{Update number
 at the end of thesis} three problems that are associated with continuously

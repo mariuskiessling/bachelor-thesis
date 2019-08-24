@@ -426,7 +426,7 @@ It defines an external database component (\texttt{mongodb-replicaset}) as
 shown in listing~\ref{listing:onboarding_backend_requirements} which is
 automatically set up whenever the onboarding backend is deployed by Helm.
 Therefore issue $I_3$ can be considered solved as well. The deployment process
-of a service and its external dependencies, e.g. a database, is no longer
+of a service and its external dependencies, e.g.\ a database, is no longer
 decoupled.  For this purpose the onboarding backend also creates a
 \texttt{charts} directory which stores the service's packed dependencies. This
 directory however is not listed in figure~\ref{fig:helmification_process}
@@ -455,8 +455,8 @@ be addressed:
     property inside the service's \texttt{Chart.yaml} has to be updated to
     reflect the builds current version. So far this is a manual process. At the
     same time the chart's \texttt{version} property has to be bumped so that a
-    chart's version (e.g. 1.2.1) never points to more than one app version
-    (e.g. 3.4.1 and 3.4.2).
+    chart's version (e.g.\ 1.2.1) never points to more than one app version
+    (e.g.\ 3.4.1 and 3.4.2).
 \end{itemize}
 
 Rather than just storing the Helm charts inside the service's repository, a
@@ -484,7 +484,7 @@ ChartMuseum to shield it from unauthorized access. For the purpose of
 simplicity, only the \textit{basic} \ac{HTTP} is used though other mechanism
 are supported.
 
-Now every time a Helm chart is updated, e.g. because the \texttt{appVersion}
+Now every time a Helm chart is updated, e.g.\ because the \texttt{appVersion}
 attribute is bumped or a deployment setting is modified, this change no longer
 just lives inside the service's repository. The chart is also packaged and
 pushed to the internally hosted ChartMuseum instance. Then when this service
@@ -595,7 +595,7 @@ chart receives a unique version number based on the SemVer
 \texttt{MAJOR.MINOR.PATCH+\textbf{build-number}} scheme. The corresponding
 Docker images use a similar tag while dropping the \texttt{MAJOR.MINOR.PATCH}
 part. In addition, the figure shows that both the user backend as well as the
-onboarding backend depend on an publicly hosted MongoDB helm chart.
+onboarding backend depend on an publicly hosted MongoDB Helm chart.
 
 Up to this point the creation of individual Helm charts for each service is
 fully automated using a \ac{CI} solution like Azure DevOps. However, no
@@ -608,4 +608,16 @@ the underlying infrastructure. Step two sets up a service's external
 dependencies and lastly step three deploys the service's actual application.
 How can the now existing automation process of step two and three be combined
 with step one to form a fully autonomous manifest management and deployment
-concept for a microservice architecture?
+concept for a microservice architecture? After all, it is not always possible
+to assign infrastructure configurations to a distinct service. Kubernetes
+StorageClass definitions e.g.\ might be relevant to all microservice of a
+application. 
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[scale=0.7]{images/figures/master_chart.pdf}
+\end{center}
+\caption{A master chart which defines a microservice architecture's individual
+services as dependencies and which is continuously versioned.}%
+\label{fig:master_chart}
+\end{figure}

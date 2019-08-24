@@ -17,7 +17,7 @@ management standard enforced by Kubernetes each microservice team can
 theoretically define its own practises best fitting their preferences. This
 might be tolerable inside a microservice team. However with respect to the
 overall microservice architecture, different standards for managing Kubernetes
-manifests makes it harder for developers to understand the deployment structure
+manifests make it harder for developers to understand the deployment structure
 of their colleagues' microservices. Furthermore, with a common manifest
 management standard every microservice can be set up the same way to be
 deployed using a \ac{CI}/\ac{CD} system. Lastly, when needing support from an
@@ -104,27 +104,27 @@ the procedure of continuously deploying a complete microservice architecture.
 The overall deployment goal is to run $\mu$App on Kubernetes. Thus, its
 microservices need a number of configuration objects to be either created or
 updated in the cluster. Each service has one configuration file that is stored
-in a separate \texttt{architecture} repository. So a microservice's code and its
-deployment manifests are fully isolated. Each manifest file holds all the
-microservice's Kubernetes objects, e.g.\ Deployments, Services or StatefulSets.
-This is also the point where a distinction between microservices that rely on a
-databases and microservice that do not have this dependency has to be made. All
-services with an additional database component, e.g.\ $\mu$App's onboarding
-backend, have the Kubernetes objects that are needed to deploy the database
-stored in a separate manifest file. Thus, in the case of $\mu$App, the frontend
-and service adapter have one manifest file. On the other hand, the onboarding
-and user backend have two manifest files; one for the microservice's main
-Kubernetes objects and one for the microservice's database Kubernetes objects.
-This way, a clear separation of concerns is achieved.
+in a separate \texttt{architecture} repository. Therefore a microservice's code
+and its deployment manifests are fully isolated. Each manifest file holds all
+the microservice's Kubernetes objects, e.g.\ Deployments, Services or
+StatefulSets.  This is also the point where a distinction between microservices
+that rely on a databases and microservice that do not have this dependency has
+to be made. All services with an additional database component, e.g.\
+$\mu$App's onboarding backend, have the Kubernetes objects that are needed to
+deploy the database stored in a separate manifest file. Thus, in the case of
+$\mu$App, the frontend and service adapter have one manifest file. On the other
+hand, the onboarding and user backend have two manifest files; one for the
+microservice's main Kubernetes objects and one for the microservice's database
+Kubernetes objects.  This way, a clear separation of concerns is achieved.
 
 When deploying a microservice, the pipeline reads the service's Kubernetes
 manifest and deploys it to the cluster using Kubernetes' \texttt{kubectl}
 utility. The service's database manifest however is not touched. Databases are
-deployed by hand and independently from the \ac{CD} pipeline. Thus whenever a
-new microservice is deployed, the service's database has to be deployed first
-by hand. This can lead to situations in which the service can not be
+deployed by hand and independent from the \ac{CD} pipeline. Thus whenever a new
+microservice is deployed, the service's database has to be deployed by hand
+first. This can lead to situations in which the service can not be
 automatically deployed because a required database component needs to be set up
-manully first.
+manually first.
 
 \begin{figure}[H]
 \begin{center}
@@ -160,9 +160,9 @@ the next step.
 Due to the file structure of the application's manifest files, it is not
 possible to apply all manifests of one stage. Thus when mapping the deployment
 steps to the manifest files, in stage one, the files marked with a
-\inlineDiamond{} are applied. Then, the database manifests files marked with
-\inlineRectangle{} are applied. They create the services' databases. Lastly,
-the files marked with \inlineTriangle{} are applied. After this step is
+\inlineDiamond{} are applied. The database manifests files marked with
+\inlineRectangle{} are then applied. They create the services' databases.
+Lastly, the files marked with \inlineTriangle{} are applied. After this step is
 completed, $\mu$App is fully deployed from scratch. All markings mentioned in
 this section refer to figure~\ref{fig:manifests_folder_naive}.
 
@@ -215,12 +215,12 @@ deployed microservice architecture can be answered.
 
 To get started, issue $I_6$ does not only relate to continuously deployed
 microservices but rather to any service that is deployed to a Kubernetes
-cluster. As pointed out in~\ref{sub:Kubernetes} it is in the nature of services
-that are run on Kubernetes to be constantly created, killed and moved between
-hosts. Thus any service that wants to withstand such a harsh conditions has to
-be resilient when dealing with dropping connections. This is not only limited
-to database connection. However databases can be used representationally for
-this issue.
+cluster. As pointed out in chapter~\ref{sub:Kubernetes} it is in the service's
+nature which are executed on Kubernetes to be constantly created, killed and
+moved between hosts. Thus any service that wants to withstand such harsh
+conditions has to be resilient when dealing with dropping connections. This is
+not only limited to database connections. However databases can be used
+representationally for this issue.
 
 Issue $I_6$ can be solved on two layers. Either Kubernetes deals with a
 service's connection or the service itself takes on this task. To decide which
@@ -228,8 +228,8 @@ layer fits the situation at hand best, it has to be distinguished between
 applications which enter a state they can not recover from when their
 connection to a database is dropped and applications which can recover from
 such a state. In cases where the application can not recover itself from such a
-state, it either has to be customized to be able to do so or the only option is
-that Kubernetes deals with the situation. In case the application can not adapt
+state, it either has to be customized to be able recover itself or Kubernetes
+is forced to deal with the situation. In case the application can not adapt
 such functionality, a Kubernetes liveness probe can be used to determine
 whether the application is still running functionally. The liveness probe
 executes a command inside the application's container, \ac{HTTP} request or
@@ -304,8 +304,8 @@ stages:
 \end{listing}
 
 Listing~\ref{listing:pipeline_condition} displays how a condition can be set
-for a stage that handles the deployment of $\mu$App. If not condition is set
-for a stage, Azure DevOps automatically applies the \texttt{succeeded()}
+for a stage that handles the deployment of $\mu$App. If no condition is set for
+a stage, Azure DevOps automatically applies the \texttt{succeeded()}
 expression. Thus, by default to execute a stage, the previous stage had to be
 successful. The \texttt{and} expression in line five of
 listing~\ref{listing:pipeline_condition} only return \texttt{true} if both its
@@ -375,11 +375,11 @@ application's code and its manifest files. To overcome this, the services'
 Kubernetes manifests are moved from the \texttt{architecture} repository to
 their respective service's code repository. Hence, the two management processes
 are no longer decoupled. Every time that code is modified in the services'
-repository, the manifest files have to updated too if architecture changes are
-needed. Thus, a deployment manifest is always tagged to the latest commit in a
-service's code repository. So far this solves issue $I_5$ and gives an answer
-to the question in which place manifest files should be stored. Yet it does not
-comprise a complete manifest management concept.
+repository, the manifest files have to be updated too if architecture changes
+are needed. Thus, a deployment manifest is always tagged to the latest commit
+in a service's code repository. So far this solves issue $I_5$ and gives an
+answer to the question in which place manifest files should be stored. Yet it
+does not comprise a complete manifest management concept.
 
 To achieve this, the Kubernetes package manager Helm can be utilized. Instead
 of storing a service's manifests loosely next to the service's source code
@@ -463,13 +463,13 @@ Rather than just storing the Helm charts inside the service's repository, a
 built version of the chart should be saved to some chart repository. The
 \texttt{mongodb-replicaset } chart referenced in
 listing~\ref{listing:onboarding_backend_requirements} e.g.\ is hosted as part
-Helm's official and publicly accessible \texttt{stable} repository. However not
-every chart should be accessible to the general public.  With $\mu$App the
+of Helm's official and publicly accessible \texttt{stable} repository. However
+not every chart should be accessible to the general public.  With $\mu$App the
 architecture is comprised of a set of internal services which deployment
 information should not be publicly accessible. In such cases, a private
 repository can host the Helm charts.
 
-In general, a chart repository is a simple webserver which serves a
+In general, a chart repository is a simple webserver which serves an
 \texttt{index.yaml} file that is fetched and parsed by a Helm client. The file
 holds references to all charts hosted by the repository including their name,
 version number and packaged chart file. One solution implementing such a
@@ -552,7 +552,7 @@ container:
 
 Lines 7-9 of listing~\ref{listing:azure_devops_build_chart_job} show how the
 current build number can be injected into a service's \texttt{values.yaml}
-file. For reference, an examplary values file in shown in
+file. For reference, an examplary values file is shown in
 listing~\ref{listing:helm_values_ci_image_version}. During each build, the
 \ac{CI} system searches for the string \texttt{version: ``latest``} and replaces
 it with \texttt{version:``\textbf{build-number}\"}. The result is then written

@@ -24,7 +24,7 @@ microservice's \ac{API}. Not only is the client able to pin its implementation
 to a specific \ac{API} version but also select any version of a resource that
 best fits its implementation. In addition, a good versioning scheme allows
 developers to quickly assess whether a new version breaks the service's
-backward-compatibility. Lastly, microservice do not only provide services to
+backward-compatibility. Lastly, microservices do not only provide services to
 other microservices. E.g.\ a microservice hosting a \textit{frontend} directly
 serves the end user. Hence the versioning scheme used in such a microservice
 also serves a communicative purpose.
@@ -48,7 +48,7 @@ their given application.
 
 At first sight, monolithic and microservice applications might seem to follow
 the same conventions in regards to versioning; at least both application types
-are versioned in some form. In addition their code base is stored and tracked
+are versioned in some form. In addition, their code base is stored and tracked
 in some form of \ac{VCS}. However they have to be handled quite differently.
 Due to their high deployment complexity a microservice architecture is still
 primarily employed in the cloud applications. A few possibilities exist to port
@@ -69,17 +69,17 @@ that are deployed as part of a \ac{SaaS} product because of the interest in a
 continuously deployed microservice architecture.  Yet it is feasible to bring
 continuous deployment to self-hosted microservice architectures, this is out of
 this thesis' scope. From a microservices architect's perspective, the source
-code of each microservice is managed in separate repository inside a \ac{VCS}.
-This introduces complexity but also brings the advantage of distinct build
-configurations if these are stored in configuration files next to the service's
-code.
+code of each microservice is managed in separate repositories inside a
+\ac{VCS}.  This introduces complexity but also brings the advantage of distinct
+build configurations if these are stored in configuration files next to the
+service's code.
 
 Now that the properties of monolithic and microservice architecture versioning
 are recorded, the question of which versioning scheme best fits a microservice
 architecture can be addressed. In order to do so, microservices can be divided
 into two categories: \textit{Human Interaction} and \textit{Machine
 Interaction}. A microservice can be classified in the Human Interaction
-category if it mainly used by humans. This is e.g.\ the case for frontend
+category if it is mainly used by humans. This is e.g.\ the case for frontend
 microservices and other \textit{consuming} parts. On the other hand, a
 microservice can be classified in the Machine Interacting category whenever it
 mainly talks to other machines or its functionality is integrated in other
@@ -133,16 +133,16 @@ According to the answers to these questions, only the correct part of the
 version number has to be modified. The rules for when to update which part of a
 SemVer version number are already discussed in chapter~\ref{ssub:SemVer}. These
 question however can not be answered by a \ac{CI} solution that is not able to
-able to understand the intricate differences between a e.g.\ backward
-compatibility breaking update and a simple bug fix. Hence it can be argued that
-a versioning scheme that requires artificial decisions from developers can not
-be fully supported by \ac{CI} systems. For each new version, the developers
-have to manually write the new version number in the applications
-configuration. E.g.\ in case of Node.js application, the \texttt{version} field
-inside the \texttt{package.json} file has to be updated.
+understand the intricate differences between a e.g.\ backward compatibility
+breaking update and a simple bug fix. Hence it can be argued that a versioning
+scheme that requires artificial decisions from developers cannot be fully
+supported by \ac{CI} systems. For each new version, the developers have to
+manually write the new version number in the applications configuration. E.g.\
+in case of Node.js application, the \texttt{version} field inside the
+\texttt{package.json} file has to be updated.
 
 In contrast, date-based versioning schemes like CalVer can update the version
-number without further intervention developers. As already discussed in
+number without further intervention from developers. As already discussed in
 chapter~\ref{ssub:Date_Based_Versioning}, in most cases a CalVer version number
 only includes the formatted date of the release.
 Chapter~\ref{ssub:Continuous_Integration} already stated that any software that
@@ -176,16 +176,15 @@ shown in figure~\ref{fig:version_wrapping}, the application serving the
 \ac{REST} interface, in this case a Node.js application, can use an automated
 versioning scheme. This way, the \ac{API}'s manual versioning is masked and a
 \ac{CI} system can continuously version the software, the resulting container
-image and software package. The inner \ac{API} version is wrapped and thus no
-longer relevant to the \ac{CI}/\ac{CD} process.
+image and the software package. The inner \ac{API} version is wrapped and thus
+no longer relevant to the \ac{CI}/\ac{CD} process.
 
 It can thus be argued that a continuous versioning scheme should be used
-whenever possible in order to shift the versioning responsibility from
-developers to the \ac{CI} system. Only if the software is dependend on marking
-a break in its backward compatibility, the version number should be set
-manually using a SemVer-like schema. Hence, both applications consuming as well
-as producing data can be versioned using a continuous scheme with this
-exception.
+whenever possible to shift the versioning responsibility from developers to the
+\ac{CI} system. Only if the software is dependend on marking a break in its
+backward compatibility, the version number should be set manually using a
+SemVer-like schema. Hence, both applications consuming as well as producing
+data can be versioned using a continuous scheme with this exception.
 
 \subsubsection{Implementation Using Azure DevOps}%
 \label{ssub:Implementation_Using_Azure_DevOps}
@@ -260,7 +259,7 @@ will be tagged \texttt{frontend:20190809.1}.
 
 \subsubsection{Partial Conclusion}%
 \label{ssub:Partial_Conclusion}
-It can be concluded, that microservices can be split into two categories:
+It can be concluded that microservices can be split into two categories:
 \textit{human interaction (consuming)} and \textit{machine interaction
 (producing)}. For consuming the version number primarily serves a communicative
 purpose by associating it with newly introduced features. In contrast,
@@ -295,24 +294,25 @@ traceability these requirements are labelled $R_1$ to $R_n$.
 Despite the fact that $R_1$ could be easily determined in a monolithic
 architecture, a microservice architecture does not directly reveal whether it
 meets the given requirement. In a monolithic system, only one application has
-to be reviewed. The microservice architecture however by definition consists of
-a multitude of different applications; the microservices. Thus, every
+to be reviewed. However, by definition the microservice architecture consists
+of a multitude of different applications; the microservices. Thus, every
 microservice has to be evaluated separately. It can not be said that a complete
 microservice architecture can be versioned using a continuous versioning
 scheme; only its integral components, the microservices, can be evaluated.
 
-This chapter already covered, that a microservice has the four components
-packaged software, the software itself, a container image and an \ac{API} that
-can receive version numbers. The chapter introduced ways to apply continuous
-versioning to each one of them. \acp{API} are traditionally versioned using
-only major version numbers. They however change infrequently and thus can be
-left outside the scope of automation. In addition, the introduced concept of
-\textit{version wrapping} masks the \ac{API}'s version and allows a manually
-versioned component, e.g.\ an \ac{API}, to be versioned as part of an
-continuously versioned component, e.g.\ a Node.js software. Container images
-get versioned by applying the continuous version number as a tag. Lastly, both
-the actual software as well as the software's package can be versioned by
-injecting a dynamically generated version number. Hence, $R_2$ is fulfilled.
+This chapter already covered, that a microservice is comprised of the four
+components packaged software, the software itself, a container image and an
+\ac{API} that can receive version numbers. The chapter introduced ways to apply
+continuous versioning to each one of them. \acp{API} are traditionally
+versioned using only major version numbers. They however change infrequently
+and thus can be left outside the scope of automation. In addition, the
+introduced concept of \textit{version wrapping} masks the \ac{API}'s version
+and allows a manually versioned component, e.g.\ an \ac{API}, to be versioned
+as part of a continuously versioned component, e.g.\ a Node.js software.
+Container images get versioned by applying the continuous version number as a
+tag. Lastly, both the actual software as well as the software's package can be
+versioned by injecting a dynamically generated version number. Hence, $R_2$ is
+fulfilled.
 
 Not only is continuous versioning compatible with a \ac{CI} system, the \ac{CI}
 system is an integral component that makes continuous versioning work. The
@@ -326,7 +326,7 @@ same for a continuously versioned one and thus gratified $R_4$.
 
 Lastly, as with all continuously released software, the goal is to shorten
 development cycles and ease the life of developers. Continuous versioning
-further improves the automatic workflow and so also fulfils $R_5$.
+further improves the automatic workflow and thus also fulfils $R_5$.
 
 \subsection{Advancing Continuous Deployment of Microservices using Continuous Versioning}%
 \label{sub:Advancing_Continuous_Deployment_of_Microservices_using_XXX_Versioning}
@@ -335,9 +335,9 @@ section tries to extract the theoretical findings that have revealed themselves
 in the practical search process.
 
 First, the artefact reveals the distinction between consuming and producing
-microservices. A consuming microservice primarily is contacted by humans, e.g.\
+microservices. A consuming microservice is primarily contacted by humans, e.g.\
 users, and consumes data provided by other microservices. A producing
-microservice actively supplies data to other microservices. Thus is is mainly
+microservice actively supplies data to other microservices. Thus, it is mainly
 contacted by other machines, in this case microservices. A list of requirements
 towards producing and consuming microservices can be found in
 table~\ref{tab:versioning_machine_human}.
@@ -346,8 +346,8 @@ The terms \textit{manual} and \textit{continuous} versioning were introduced.
 Manual versioning must be used whenever the version number has to indicate
 breaking changes. One possible manual versioning scheme is SemVer. On the other
 hand, continuous versioning can be applied automatically by a \ac{CI} system.
-No further input by developers is requires. Thus, a scheme like defined by
-CalVer fits continuous versioning.
+No further input by developers is required. Thus, a CalVer-like versioning
+scheme is best suitable for continuous versioning.
 
 Additionally, the practical implementation reveals a process which points
 developers towards a versioning scheme for their microservices.
@@ -381,5 +381,5 @@ cases where the version number holds a semantic meaning (e.g.\ a break in
 backward compatibility) a continuous versioning scheme can not be used. In the
 end, another process that is being automated means more time that developers can
 focus on the task of advancing the application's feature set and innovating.
-Hence, not only the development teams benefits but also the company carrying it
+Hence, not only the development teams benefit but also the company carrying it
 out.

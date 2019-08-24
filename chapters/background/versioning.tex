@@ -6,10 +6,10 @@ The topic of versioning does not only come up in the context of microservices.
 In traditional software releases, e.g.\ of \textit{Microsoft Windows}, a number
 of different versioning schemes were used; from Version 1.0, 3.1, 95, 2000, XP
 and 8 up to 10. The number schemes changed without retaining a consistency. For
-programmers, a consistent versioning scheme is necessary in order to properly
-deal with dependencies \autocite{Preston-WernerSemanticVersioning2.0.0}. Thus
-this chapter will introduce two schemes software can be consistently versioned
-with. It will further introduce an approach of versioning \acp{API}.
+programmers, a consistent versioning scheme is necessary to properly deal with
+dependencies \autocite{Preston-WernerSemanticVersioning2.0.0}. Thus this
+chapter will introduce two schemes software can be consistently versioned with.
+It will further introduce an approach of versioning \acp{API}.
 
 \subsubsection{SemVer}%
 \label{ssub:SemVer}
@@ -146,7 +146,7 @@ that a \ac{URI} based \ac{API} versioning should be avoided. According to
 A resource only has one identity and a resource's identity
 is its full \ac{URI}. Thus a \ac{URI} based version number is part of a
 resource's identity. This would imply that different version numbers inside the
-\ac{URI} denote that the concept of the resource has multiple version
+\ac{URI} denote that the concept of the resource has multiple versions
 \autocite[Ch. 6]{MasseRESTAPIDesign2011}. In addition to this,
 \autocite{MicrosoftAPIdesign2018} argues that resources that describe the same
 data simply should not be able to be addressed using different \acp{URI}.

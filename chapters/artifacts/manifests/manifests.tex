@@ -520,11 +520,11 @@ DevOps is used as a reference for a \ac{CI} solution in the upcoming examples.
       curl --user username:password \
       --data-binary "@$(Build.ArtifactStagingDirectory)/ \
         *\textbf{service-name}*-1.0.0+$(Build.BuildNumber).tgz" \
-        https://dev.dsdmo.com/internal/chartmuseum/api/charts
+        https://domain.local/internal/chartmuseum/api/charts
   \end{minted}
   \caption{An Azure DevOps job which installs the Helm client, sets the
   service's container image to the one produced by the build, packages the
-  chart and pushes the chart the a ChartMuseum instance.}%
+  chart and pushes the chart to a ChartMuseum instance.}%
   \label{listing:azure_devops_build_chart_job}
 \end{listing}
 
@@ -537,7 +537,7 @@ deterministically to a specific container image version and not use the
 \texttt{latest}. This avoids situations in which a Helm chart is deployed once
 and e.g.\ installs application version 1.2.0 and one year later installs
 application version 3.1.0 because the \texttt{latest} tag moved along as new
-versions of the software are created. 
+versions of the software are created.
 
 \begin{listing}[H]
   \begin{minted}[escapeinside=**]{YAML}
@@ -576,4 +576,36 @@ how the newly packaged chart is uploaded to the internal ChartMuseum instance.
 ChartMuseum's username and password combination is supplied to authenticate the
 \texttt{curl} request. At this point, the internal chart repository hosted by
 ChartMuseum serves the newly created Helm chart which specifically points to
-the newest built container image and is versioned based the build's number.
+the newest built container image and which is versioned based on the build's
+number.
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[scale=0.6]{images/figures/chart_to_image_mapping.pdf}
+\end{center}
+\caption{A visual representation of the storage locations, version numbers and
+image dependencies of $\mu$App's Helm charts.}%
+\label{fig:chart_to_image_mapping}
+\end{figure}
+
+Figure~\ref{fig:chart_to_image_mapping} shows the mappings from a Helm chart to
+the corresponding referenced container image that are created by the \ac{CI}
+system as outlined in listing~\ref{listing:azure_devops_build_chart_job}. Each
+chart receives a unique version number based on the SemVer
+\texttt{MAJOR.MINOR.PATCH+\textbf{build-number}} scheme. The corresponding
+Docker images use a similar tag while dropping the \texttt{MAJOR.MINOR.PATCH}
+part. In addition, the figure shows that both the user backend as well as the
+onboarding backend depend on an publicly hosted MongoDB helm chart.
+
+Up to this point the creation of individual Helm charts for each service is
+fully automated using a \ac{CI} solution like Azure DevOps. However, no
+automated continuous deployment process exists yet. One option would be to use
+the Helm utility to upgrade the respective chart in Kubernetes within a
+service's Azure DevOps pipeline. This would automate the second and third step
+of the last issue $I_2$ but leave the first step to be executed by hand. To
+recap, the first deployment step referenced in in issue $I_3$ is a set up of
+the underlying infrastructure. Step two sets up a service's external
+dependencies and lastly step three deploys the service's actual application.
+How can the now existing automation process of step two and three be combined
+with step one to form a fully autonomous manifest management and deployment
+concept for a microservice architecture?

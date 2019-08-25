@@ -554,12 +554,11 @@ Lines 7-9 of listing~\ref{listing:azure_devops_build_chart_job} show how the
 current build number can be injected into a service's \texttt{values.yaml}
 file. For reference, an exemplary values file is shown in
 listing~\ref{listing:helm_values_ci_image_version}. During each build, the
-\ac{CI} system searches for the string \texttt{version:``
-latest''} and replaces it with
-\texttt{version:``\textbf{build-number}''}. The result is
-then written in the service's \texttt{values.yaml} file. These changes only
-live inside the build pipeline and are not persistently written into the
-\ac{VCS} system.
+\ac{CI} system searches for the string \texttt{version:\textquotedbl
+latest\textquotedbl} and replaces it with \texttt{version:\textquotedbl
+\textbf{build-number}\textquotedbl}. The result is then written in the
+service's \texttt{values.yaml} file. These changes only live inside the build
+pipeline and are not persistently written into the \ac{VCS} system.
 
 In the next step (shown in line 10-15 of
 listing~\ref{listing:azure_devops_build_chart_job}) a built-in Azure DevOps

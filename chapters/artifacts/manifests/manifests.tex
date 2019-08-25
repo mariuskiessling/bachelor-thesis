@@ -680,8 +680,9 @@ folder structure is set up and the \texttt{yq} utility is fetched from GitHub.
 \texttt{yq} can among other things read YAML files, modify their content and
 output the modified content. Next, the \texttt{deployment} repository is cloned
 into the newly created folder structure (line 16-18). The \texttt{yq} utility
-is now accessible inside the \texttt{master_chart} directory and the master
-chart's Helm files are accessible at \texttt{master_chart/deployment/u-app}.
+is now accessible inside the \texttt{master\textunderscore chart} directory and
+the master chart's Helm files are accessible at \texttt{master\textunderscore
+chart/deployment/u-app}.
 
 Coming up next in line 20-26 of
 listing~\ref{listing:azure_devops_build_master_chart_job}, the \texttt{yq}

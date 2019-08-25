@@ -679,5 +679,21 @@ listing the job's environment is prepared. The Helm client is installed, the
 folder structure is set up and the \texttt{yq} utility is fetched from GitHub.
 \texttt{yq} can among other things read YAML files, modify their content and
 output the modified content. Next, the \texttt{deployment} repository is cloned
-into the newly created folder structure (line 16-18).
+into the newly created folder structure (line 16-18). The \texttt{yq} utility
+is now accessible inside the \texttt{master_chart} directory and the master
+chart's Helm files are accessible at \texttt{master_chart/deployment/u-app}.
 
+Coming up next in line 20-26 of
+listing~\ref{listing:azure_devops_build_master_chart_job}, the \texttt{yq}
+utility is used to read the master chart's requirements file and replace the
+chart version of the newly built component chart. In this case, the job updates
+the version of the frontend as defined in line 3 of
+listing~\ref{listing:master_chart_requirements}. A three step ring exchange is
+used here because \texttt{yq} is not capable of writing its output in the same
+file it reads its input from. The same three step procedure is then used in
+line 26-40 to bump the master chart's \texttt{version} and \texttt{appVersion}
+property. Both properties are set to \texttt{1.0.0+\textbf{build-number}}.
+
+To have a persistent state from which the whole architecture of $\mu$App can be
+deployed any time, the changes to the Helm files of the master chart are
+registered with the \ac{VCS} and then pushed the \ac{VCS}'s server.

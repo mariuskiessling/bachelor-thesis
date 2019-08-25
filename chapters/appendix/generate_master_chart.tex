@@ -1,0 +1,81 @@
+%! TEX root = ../../main.tex
+
+\section{Generate a Helm Master Chart}%
+\label{Generate_a_Helm_Master_Chart}
+
+\begin{longlisting}
+  \begin{minted}[escapeinside=**]{YAML}
+- job: Update_Master_Chart
+  dependsOn: Create_Chart
+  steps:
+  - task: HelmInstaller@1
+    inputs:
+      helmVersionToInstall: 'latest'
+
+  - script: |
+      mkdir master_chart && mkdir master_chart/deployment
+
+  - script: |
+      curl -L https://github.com/mikefarah/yq/releases/[...] \
+        --output master_chart/yq
+      chmod +x master_chart/yq
+
+  - script: |
+      git clone https://username:password@dev.azure.com/org/project/ \
+        _git/deployment master_chart/deployment
+
+  - script: |
+      ./master_chart/yq w master_chart/deployment/u-app/requirements.yaml \
+        dependencies[0].version 1.0.0+$(Build.BuildNumber) > \ 
+        master_chart/deployment/u-app/requirements.yaml_new
+      rm master_chart/deployment/u-app/requirements.yaml
+      mv master_chart/deployment/u-app/requirements.yaml_new \
+        master_chart/deployment/u-app/requirements.yaml
+
+  - script: |
+      ./master_chart/yq w master_chart/deployment/u-app/Chart.yaml \
+        version 1.0.0+$(Build.BuildNumber) > \
+        master_chart/deployment/u-app/Chart.yaml_new
+      rm master_chart/deployment/u-app/Chart.yaml
+      mv master_chart/deployment/u-app/Chart.yaml_new \
+        master_chart/deployment/u-app/Chart.yaml
+      ./master_chart/yq w master_chart/deployment/u-app/Chart.yaml \
+        appVersion 1.0.0+$(Build.BuildNumber) > \
+        master_chart/deployment/u-app/Chart.yaml_new
+      rm master_chart/deployment/u-app/Chart.yaml
+      mv master_chart/deployment/u-app/Chart.yaml_new \
+        master_chart/deployment/u-app/Chart.yaml
+
+  - script: |
+      git -C master_chart/deployment/u-app add requirements.yaml
+      git -C master_chart/deployment/u-app add Chart.yaml
+      git config --global user.email "pipeline@example.net"
+      git config --global user.name "Build Pipeline"
+      git -C master_chart/deployment/u-app commit -m \
+        "Update master chart to version 1.0.0+$(Build.BuildNumber) \
+        from *\textbf{service-name}* pipeline"
+      git -C master_chart/deployment/u-app push -u origin master
+
+  - script: |
+      helm repo add u-app \
+        https://domain.local/internal/chartmuseum/api/charts
+      helm dependency update master_chart/deployment/u-app
+
+  - task: HelmDeploy@0
+    inputs:
+      command: 'package'
+      chartPath: '$(System.DefaultWorkingDirectory)/master_chart/ \
+        deployment/u-app'
+      chartVersion: '1.0.0+$(Build.BuildNumber)'
+      arguments: '--app-version 1.0.0+$(Build.BuildNumber)'
+
+  - script: |
+      curl --user username:password --data-binary \
+        "@$(Build.ArtifactStagingDirectory)/u-app-1.0.0+ \
+          $(Build.BuildNumber).tgz" \
+        https://domain.local/internal/chartmuseum/api/charts
+  \end{minted}
+  \caption{A job definition in Azure DevOps which updates the master chart of a
+  microservice architecture.}%
+  \label{listing:azure_devops_build_master_chart_job}
+\end{longlisting}

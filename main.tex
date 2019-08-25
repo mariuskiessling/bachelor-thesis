@@ -21,6 +21,9 @@
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage{morewrites}
 \usepackage{wrapfig}
+\usepackage[title]{appendix}
+
+\newenvironment{longlisting}{\captionsetup{type=listing}}{}
 
 \clubpenalty=10000
 \widowpenalty=10000
@@ -153,12 +156,13 @@
         \clearpage
         \input{chapters/outlook.tex}
 
-        \clearpage
-        \pagenumbering{arabic}
 
         \clearpage
         \printbibliography
 
-        \newpage
-        \printglossary
+        %\newpage
+        %\printglossary
+
+        \clearpage
+        \input{chapters/appendix/appendix.tex}
 \end{document}

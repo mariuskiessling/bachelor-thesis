@@ -695,5 +695,23 @@ line 26-40 to bump the master chart's \texttt{version} and \texttt{appVersion}
 property. Both properties are set to \texttt{1.0.0+\textbf{build-number}}.
 
 To have a persistent state from which the whole architecture of $\mu$App can be
-deployed any time, the changes to the Helm files of the master chart are
-registered with the \ac{VCS} and then pushed the \ac{VCS}'s server.
+deployed at any time, the changes to the Helm files of the master chart are
+registered with the \ac{VCS} and then pushed the \ac{VCS}'s server (line
+42-50). In addition, like with all component charts, it is the goal to have the
+master chart stored on a chart repository for easy access. This way, it is
+possible to install $\mu$App's complete architecture by just typing
+\texttt{helm install repository/u-app}. Therefore, the internal ChartMuseum
+instance is added to the build pipeline's local Helm client (line 52-55) and
+the master chart is packaged (line 57-63). As with the component charts, the
+charts \texttt{version} and \texttt{appVersion} property are bumped. At last,
+the packaged master chart is published to the internal ChartMuseum instance in
+line 65-69 of listing~\ref{listing:azure_devops_build_master_chart_job}.
+
+Now every time that one of $\mu$App's components is built, both the component's
+chart as well as the master chart is updated automatically. In doing so, the
+master chart always stores the deployment information of the $\mu$App's
+complete architecture. Thus, to continuously deploy a new version of a
+component, a Helm client only has to upgrade the deployed master chart to the
+newest version. With all three steps of $\mu$App's infrastructure installation
+being automated, issue $I_2$ can finally be considered solved and with that a
+self-contained continuous deployment concept for microservices is constituted.

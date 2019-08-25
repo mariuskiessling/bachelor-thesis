@@ -3,7 +3,7 @@
 \usepackage{enumitem}
 \usepackage{minted}
 \setminted{frame=lines,framesep=3mm,linenos}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 \usepackage{url}
 \usepackage[utf8]{inputenc}
 \usepackage{textcomp}
@@ -42,18 +42,7 @@
 \usepackage[subfigure]{tocloft}
 \setlength{\cfttabindent}{0cm}
 \setlength{\cftfigindent}{0cm}
-\setlength{\cftfigindent}{0cm}
 %\cftsetpnumwidth{3cm}
-
-
-\makeatletter
-  \newenvironment{chapquote}[2][2em]
-  {\setlength{\@tempdima}{#1}%
-   \def\chapquote@author{#2}%
-   \parshape 1 \@tempdima \dimexpr\textwidth-2\@tempdima\relax%
-   \itshape}
-  {\par\normalfont\hfill--\ \chapquote@author\hspace*{\@tempdima}\par\bigskip}
-\makeatother
 
 % don't indent paragraphs but insert newline
 \usepackage[parfill]{parskip}
@@ -90,9 +79,6 @@
 \definecolor{background}{HTML}{f7f7f7}
 \definecolor{delim}{RGB}{20,105,176}
 \colorlet{numb}{magenta!60!black}
-\makeatletter
-\renewcommand*{\l@lstlisting}{\@dottedtocline{1}{0em}{2.3em}}
-\makeatother
 
 \definecolor{yedYellow}{RGB}{255,204,0}
 
@@ -160,8 +146,8 @@
         \clearpage
         \printbibliography
 
-        %\newpage
-        %\printglossary
+        \newpage
+        \printglossary
 
         \clearpage
         \input{chapters/appendix/appendix.tex}

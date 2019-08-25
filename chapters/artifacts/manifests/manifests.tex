@@ -610,8 +610,8 @@ How can the now existing automation process of step two and three be combined
 with step one to form a fully autonomous manifest management and deployment
 concept for a microservice architecture? After all, it is not always possible
 to assign infrastructure configurations to a distinct service. Kubernetes
-StorageClass definitions e.g.\ might be relevant to all microservice of a
-application. 
+StorageClass definitions e.g.\ might be relevant to all microservices of an
+application.
 
 \begin{figure}[H]
 \begin{center}
@@ -621,3 +621,63 @@ application.
 services as dependencies and which is continuously versioned.}%
 \label{fig:master_chart}
 \end{figure}
+
+Hence, a component which ties all of the architecture's services together is
+introduced. This component will be referred to as the \textit{master chart}.
+The master chart not only ties all microservices of an architecture together
+but also holds all infrastructure configurations that cannot be distinctively
+assigned to one service. Figure~\ref{fig:master_chart} shows a visual
+representation of the master chart and its connections to all of $\mu$App's
+dependencies. For reference, all of $\mu$App's microservices will be referred
+to as \textit{components} and \texttt{component charts} from here on. During
+the build process of a component, not only is its code tested, built, packaged
+into a container image and a component chart is generated but in addition the
+master chart is updated. After the update, the master chart no longer referrers
+to old component chart but to the newly generated one. Furthermore, as with
+component charts, every change requires the master chart to bump its version
+number. This is why the master chart's version number in
+figure~\ref{fig:master_chart} corresponds with the version number of the newest
+built component chart (\texttt{1.0.0+20190705.3}). The whole procedure with
+which the master chart is built will become clearer within the following few
+paragraphs.
+
+As the master chart cannot be subordinated to any of $\mu$App's components, it
+is stored and managed in a separate \ac{VCS} repository called
+\texttt{deployment}. In general, the master chart is a Helm chart like any
+other. Helm requires charts to be named the same as the directory they are
+stored in. Hence, as with the component charts, the master chart lays in a
+sub-directory which is in this case called \texttt{u-app}. The master chart
+holds a requirements file which looks like
+listing~\ref{listing:master_chart_requirements}.
+
+\begin{listing}[H]
+  \begin{minted}{YAML}
+dependencies:
+- name: frontend
+  version: 1.0.0+20190702.1
+  repository: https://username:password@domain.local/internal/chartmuseum
+- name: service-adapter
+  version: 1.0.0+20190701.3
+  repository: https://username:password@domain.local/internal/chartmuseum
+- name: user-backend
+  version: 1.0.0+20190701.1
+  repository: https://username:password@domain.local/internal/chartmuseum
+- name: onboarding-backend
+  version: 1.0.0+20190705.3
+  repository: https://username:password@domain.local/internal/chartmuseum
+
+  \end{minted}
+  \caption{The requirements file of $\mu$App's master chart.}%
+  \label{listing:master_chart_requirements}
+\end{listing}
+
+In addition to the job that builds a component's chart as shown in
+listing~\ref{listing:azure_devops_build_chart_job} a new job is added to a
+service's build pipeline. Due to its size, this job is only shown in appendix
+listing~\ref{listing:azure_devops_build_master_chart_job}. In line 4-14 of the
+listing the job's environment is prepared. The Helm client is installed, the
+folder structure is set up and the \texttt{yq} utility is fetched from GitHub.
+\texttt{yq} can among other things read YAML files, modify their content and
+output the modified content. Next, the \texttt{deployment} repository is cloned
+into the newly created folder structure (line 16-18).
+

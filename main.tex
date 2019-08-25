@@ -1,8 +1,23 @@
 \documentclass[12pt, a4paper, abstract=on]{scrartcl}
 
 \usepackage{enumitem}
-\usepackage{minted}
+
+% This is so damn ugly but right now the solution must suffice. Based on this
+% post:
+% https://tex.stackexchange.com/questions/260801/customizing-the-list-of-listings-from-minted
+\usepackage[subfigure]{tocloft}
+\newlistof{listing}{lol}{List of Listings}
+\setlength{\cfttabindent}{0cm}
+\setlength{\cftfigindent}{0cm}
+\usepackage[newfloat]{minted}
 \setminted{frame=lines,framesep=3mm,linenos}
+\newenvironment{code}{\captionsetup{type=listing}}{}
+\SetupFloatingEnvironment{listing}{%
+  name={Listing},
+  fileext=lol}
+\renewcommand{\cftlistingpresnum}{~}
+\setlength{\cftlistingnumwidth}{1cm}
+
 \usepackage[hidelinks]{hyperref}
 \usepackage{url}
 \usepackage[utf8]{inputenc}
@@ -29,8 +44,10 @@
 \widowpenalty=10000
 \displaywidowpenalty=10000
 
+\usepackage[T1]{fontenc}
 \usepackage[sc]{mathpazo}
 \usepackage{inconsolata}
+\setkomafont{disposition}{\normalcolor\bfseries}
 
 \usepackage[printonlyused]{acronym}
 
@@ -38,11 +55,6 @@
 \usepackage[acronym]{glossaries}
 \input{glossary.tex}
 \makeglossaries
-
-\usepackage[subfigure]{tocloft}
-\setlength{\cfttabindent}{0cm}
-\setlength{\cftfigindent}{0cm}
-%\cftsetpnumwidth{3cm}
 
 % don't indent paragraphs but insert newline
 \usepackage[parfill]{parskip}
@@ -140,7 +152,6 @@
         \input{chapters/conclusion.tex}
         \clearpage
         \input{chapters/outlook.tex}
-
 
         \clearpage
         \printbibliography

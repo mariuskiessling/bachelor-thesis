@@ -246,8 +246,9 @@ In order to build an image, the developers of a microservice have to define a
 \textit{Dockerfile}. The Dockerfile contains all instructions that are needed
 by the Docker engine to produce an image. Multiple images built from the same
 Dockerfile \textit{should} always be identical because the build process is
-deterministic. The issues in respect to the deterministic build process will
-also be discussed in chapter \todo{Add correct chapter reference.} TODO.
+deterministic. Their exist a few cases in which this is not the case. However,
+they are not relevant to this thesis' work and thus will not be further
+examined.
 
 \begin{listing}[H]
 \begin{minted}{Dockerfile}

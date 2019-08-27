@@ -7,6 +7,7 @@
 % https://tex.stackexchange.com/questions/260801/customizing-the-list-of-listings-from-minted
 \usepackage[subfigure]{tocloft}
 \newlistof{listing}{lol}{List of Listings}
+\setlength{\cftbeforesecskip}{0.2cm}
 \setlength{\cfttabindent}{0cm}
 \setlength{\cftfigindent}{0cm}
 \usepackage[newfloat]{minted}
@@ -128,13 +129,17 @@
         \tableofcontents
         \clearpage
 
+        \addcontentsline{toc}{section}{Acronyms}
         \input{acronyms}
         \clearpage
 
+        \addcontentsline{toc}{section}{List of Figures}
         \listoffigures
         \clearpage
+        \addcontentsline{toc}{section}{List of Tables}
         \listoftables
         \clearpage
+        \addcontentsline{toc}{section}{List of Listings}
         \listoflistings
         \clearpage
         \pagenumbering{arabic}
@@ -154,6 +159,7 @@
         \input{chapters/outlook.tex}
 
         \clearpage
+        \addcontentsline{toc}{section}{References}
         \printbibliography
 
         \newpage

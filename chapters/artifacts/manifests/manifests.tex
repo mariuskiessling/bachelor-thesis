@@ -773,3 +773,58 @@ state are possible. In addition, the whole chart creation process is automated
 using a \ac{CI} system which further fastens the development cycle. The
 \ac{CIST} deployment model not only fastens the development cycle but with the
 introduction of Helm provides additional fail-safes.
+
+\subsection{Theoretical Findings}%
+\label{sub:Theoretical_Findings}
+
+This application of a \ac{DSR} development cycle produced one main artefact;
+the \ac{CIST} deployment concept. \ac{CIST} defines how the deployment
+configuration of a whole microservice architecture should be stored and
+continuously managed. The concept is based upon \textit{Helm} which is used to
+define dependencies and to roll out a complete architecture.
+
+\ac{CIST} distinguishes between a \textit{component} and the \textit{master}. A
+microservice architecture is made up of one or more components. Thus, a
+component is synonymous with a microservice. Each component defines its
+configuration inside a format that complies with Helm's requirements. The chart
+is versioned continuously. Each time changes are introduced, the chart's
+\texttt{version} and \texttt{appVersion} properties are bumped. On the other
+hand, a microservice architecture only has one master. The master is just a
+Helm chart which glues all components of an architecture together. It defines
+all component charts as its dependencies. Like the component chart, it is
+continuously versioned.
+
+With continuous versioning, one version of a master or component chart can
+never point to two or more deployment configuration states. Each chart version
+only maps to a single configuration state. In this context, the term
+configuration state includes both the actual deployment configuration files as
+well as other deployment-related information such as the container image of a
+microservice.
+
+Together, the component charts and the master chart form a single point of
+truth which represents a microservice architecture's deployment configuration.
+To either deploy the complete architecture or upgrade a single component, only
+the master chart has to be upgraded as it is aware of which dependencies make
+up the architecture.
+
+\begin{figure}[H]
+\begin{center}
+  \includegraphics[scale=0.6]{images/figures/cist_chart.pdf}
+\end{center}
+\caption{The steps that are performed every time that a component's code is
+updated.}%
+\label{fig:cist_chart}
+\end{figure}
+
+Figure~\ref{fig:cist_chart} shows the sequence of steps that are executed when
+changes are committed to a component's code base. The nature of these changes
+is not limited. Thus, also changes to a service's configuration files trigger
+the steps shown in figure~\ref{fig:cist_chart}. First, a new container image is
+built. To identify the newly created image, it is tagged using a continuous
+versioning scheme. The image's tag is then referenced in the component's
+deployment information, e.g.\ a Kubernetes manifest. Now, the deployment
+configuration points specifically to the newest container image. The chart is
+then packaged. While packaging, the component chart's version properties are
+bumped according to the rules that were previously outlined. Next, the newly
+packaged component chart is published on a chart repository. This concludes the
+steps needed to build a component chart.

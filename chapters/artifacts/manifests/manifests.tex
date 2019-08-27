@@ -723,5 +723,53 @@ that were used in ancient Greece to store sacred utensils
 \label{sub:Evaluating_the_CIST_Deployment_Concept}
 
 The evaluation of \ac{CIST} is similar to that of continuous versioning as
-performed in chapter~\ref{sub:Evaluating_Continuous_Versioning}.
+performed in chapter~\ref{sub:Evaluating_Continuous_Versioning}. It is
+performed on the basis of the theoretical background and the practical
+experience that was gained throughout this chapter. Based on these two factors,
+a list of requirements towards the \ac{CIST} deployment concept can be derived.
+For reference they are labelled $R_1$ to $R_n$.
 
+\begin{itemize}
+  \item \textit{$R_1$}: The \ac{CIST} deployment concept must be applicable to
+    a microservice architecture.
+  \item \textit{$R_2$}: The \ac{CIST} deployment concept must be compatible
+    with \ac{CI} systems.
+  \item \textit{$R_3$}: The \ac{CIST} deployment concept must be compatible
+    with \ac{CD} systems.
+  \item \textit{$R_4$}: The \ac{CIST} deployment concept should improve the
+    workflow of the team. 
+\end{itemize}
+
+The \ac{CIST} deployment concept is specifically developed for a microservice
+architecture. It might be possible to customize it to also fit other
+architectural flavours like the monolithic one. Though as the development of
+\ac{CIST} is tailored to the deployment of microservice architectures, it
+consciously fits $R_1$.
+
+\ac{CIST} was developed with with automation in mind. However, \ac{CI} was not
+only an important influence in developing the deployment model. Without the
+workflow automation provided by \ac{CI} systems, \ac{CIST} would not be a
+usable in practise because too much manual work would be required. Thus $R_2$
+can also be considered fulfilled.
+
+In contrast to \ac{CI} systems, \ac{CIST} is not specifically designed to be
+used with a \ac{CD} solution. It only describes how the deployment
+configuration state of an application should be continuously managed. This
+enables developers to roll out any old or new version of their microservice
+architecture from one central point of truth. However, the \ac{CIST} deployment
+model can be easily integrated with \ac{CD} systems. All that needs to be done
+to deploy a microservice architecture using \ac{CIST} is to have a \ac{CD}
+system that is capable of deploying Helm charts. If so, every time the master
+chart is updated, the \ac{CD} system has to upgrade the Helm release of the
+master chart running in a Kubernetes Cluster. Hence, \ac{CIST} fits requirement
+$R_3$, too.
+
+Lastly, with \ac{CIST} every configuration item about a microservice
+architecture's deployment is either stored inside the master chart or in one of
+the component charts. This gives developers a clear guideline where to find
+which deployment configurations. With the introduction of Helm into an
+application's deployment workflow, rollbacks in case of a faulty application
+state are possible. In addition, the whole chart creation process is automated
+using a \ac{CI} system which further fastens the development cycle. The
+\ac{CIST} deployment model not only fastens the development cycle but with the
+introduction of Helm provides additional fail-safes.

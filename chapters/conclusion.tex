@@ -1,4 +1,73 @@
 %! TEX root = ../../main.tex
 
-\section{Conclusion}%
+\section{Conclusion \& Outlook}%
 \label{sec:Conclusion}
+
+This thesis started with the goal of solving two problems commonly associated
+with a continuously deployed microservice architecture. To achieve this goal,
+the \ac{DSR} research framework was used to guarantee an outcome that would be
+tested in practise as well as theoretically applicable to similar problems. The
+two research questions that were discussed in this thesis were:
+
+\begin{itemize}
+  \item How should a continuously deployed microservice be versioned?
+  \item How should microservice manifests be managed and continuously deployed?
+\end{itemize}
+
+The actual task of deploying a microservice architecture was considered to be
+trivial. Therefore, it was only outlined as part of the background chapter and
+not further examined.
+
+The first research question was answered in chapter~\ref{sec:Versioning}. A
+classification model for microservices was introduced which distinguishes
+between \textit{consuming} and \textit{producing} microservices. Based on this
+classification, the terms \textit{manual} and \textit{continuous} versioning
+were coined. If applicable, microservices should be assigned a version number
+using a continuous versioning scheme. One example for a continuous versioning
+scheme is CalVer. CalVer defines a set of rules for version numbers that are
+based on calender dates. Thus, they can be assigned automatically without human
+intervention. In cases, where the version number of a microservice has to
+indicate a break in backward-compatibility, a manual versioning scheme like
+SemVer should be used. If SemVer is technically required, it can also be
+customized to be partially continuous by e.g.\ appending a rolling build
+version at the end of the version string. In addition, a guideline was
+developed for developers which helps them to identify the best versioning
+scheme for their current project.
+
+The second research question was resolved in
+chapter~\ref{sec:Handling_Kubernetes_Manifests}. First, a naive deployment
+approach was outlined. On the basis of this approach, a new one was developed
+which solves a number of issues related to deployment configuration management.
+The newly developed \ac{CIST} deployment concept is based on Helm, a package
+manager for Kubernetes. With \ac{CIST}, a microservice architecture's
+deployment configuration state is defined a central location, a Helm chart
+repository. The architecture is divided into \textit{component charts} and
+\textit{master charts}. A component chart defines how a single microservice has
+to be deployed. A master chart glues all microservices of an microservice
+architecture together and defines the architecture's underlying infrastructure.
+From the chart repository, a complete microservice architecture including all
+its components can be deployed without any additional manual interaction. The
+only component that has to be deployed is the master chart. Everything else is
+put together by Helm. \ac{CIST} also defines the procedure that produces said
+central state. This procedure can be applied to any microservice architecture
+which developers aim to simplify the project's deployment process. In addition
+to an easier deployment process, Helm offers additional advantages like a
+simple rollback strategy.
+
+The outcome of both research questions can be easily transferred to similar
+projects. However, the practical implementations of both solutions only
+represent a reference and no completed solutions. Thus, only one possible
+improvement for the implementation of \ac{CIST} is presented. When generating a
+component chart and its corresponding master chart, a SemVer versioning number
+is updated. In the proposed implementation, the version number is always set to
+\texttt{1.0.0+\textbf{build-number}}. If the manual part of the version number
+was set to anything other than \texttt{1.0.0}, these manually set values would
+be overwritten. To solve this problem, the old version number could be read
+from the chart's configuration file. The build number could then be appended to
+the dynamically read manual part of the SemVer version number.
+
+Nonetheless, all theoretical findings of this thesis are applicable without
+constraints in a project that uses a microservice architecture. Finally, this
+thesis' findings support developers whose applications are publicly accessible
+on the internet to continuously serve their applications to the demand of
+billions of possible users.

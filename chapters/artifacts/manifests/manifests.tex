@@ -842,3 +842,24 @@ from the chart repository. To install the entire microservice architecture, the
 master chart can be fetched and installed using a Helm client. This can either
 be done by hand or using an continuous roll out with the help of \ac{CD}
 solution.
+
+\subsection{Economic Benefits of the \acf{CIST} Deployment Concept}%
+\label{sub:Economic_Benefits_of_the_CIST_Deployment_Concept}
+
+It is challenging to evaluate the economic benefits of the \ac{CIST} deployment
+concept because its nature is rather abstract. However, a few points can be
+made which are derived from the practical implementation as outlined in
+section~\ref{ssub:Deploying_to_Kubernetes_An_Improved_Approach}.
+
+When implemented well, the \ac{CIST} deployment concept helps development teams
+to reduce time that would be spend on manually stitching together their
+microservice architecture's services. With \ac{CIST}, the architecture only has
+to be defined once. Every time a component is updated, the component chart and
+master chart are continuously versioned. Thus, the changes of a build are
+clearly traceable though no time has to be wasted on manually setting a new
+version number. Additionally, the deployment concept not only supports but also
+promotes automation. Hence, further manual operations when deploying an
+architecture are superfluous with the help of \ac{CI}/\ac{CD} systems.
+
+The explicit economic benefits however can be measured in a specialised study.
+Nonetheless, this is outside the scope of this thesis.

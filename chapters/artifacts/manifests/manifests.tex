@@ -737,7 +737,7 @@ For reference they are labelled $R_1$ to $R_n$.
   \item \textit{$R_3$}: The \ac{CIST} deployment concept must be compatible
     with \ac{CD} systems.
   \item \textit{$R_4$}: The \ac{CIST} deployment concept should improve the
-    workflow of the team. 
+    workflow of the team.
 \end{itemize}
 
 The \ac{CIST} deployment concept is specifically developed for a microservice
@@ -827,4 +827,18 @@ configuration points specifically to the newest container image. The chart is
 then packaged. While packaging, the component chart's version properties are
 bumped according to the rules that were previously outlined. Next, the newly
 packaged component chart is published on a chart repository. This concludes the
-steps needed to build a component chart.
+steps needed to build a component chart. Subsequently, a new version of the
+master chart is generated. First, the new version of the component chart is
+referenced inside the master chart's \texttt{requirements.yaml} file. Then, the
+master chart's \texttt{version} and \texttt{appVersion} properties inside the
+master chart's \texttt{Chart.yaml} file are bumped. In contrast to the
+component chart, these three changes are then stored inside a \ac{VCS}. In
+doing so, changes are traceable and automatically documented. The master chart
+is then packaged and pushed to a chart repository. This then also wraps up the
+creation of a new version of the master chart.
+
+The newly created component chart can be installed separately by fetching it
+from the chart repository. To install the entire microservice architecture, the
+master chart can be fetched and installed using a Helm client. This can either
+be done by hand or using an continuous roll out with the help of \ac{CD}
+solution.

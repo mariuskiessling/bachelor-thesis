@@ -3,20 +3,47 @@
 \section{Conclusion \& Outlook}%
 \label{sec:Conclusion}
 
-This thesis started with the goal of solving two problems commonly associated
-with a continuously deployed microservice architecture. To achieve this goal,
-the \ac{DSR} research framework was used to guarantee an outcome that would be
-tested in practise as well as theoretically applicable to similar problems. The
-two research questions that were discussed in this thesis were:
+The shift from the monolithic application architecture to the microservice
+architecture solves a lot of problems. E.g.\ different architecture components
+can be scaled individually to better deal with requests that are unevenly
+distributed across the day. However, with the introduction of microservices a
+number of new problems are introduced. This thesis confined its research to
+problems are are associated with the deployment of microservice architectures.
+Since this is a broad field, two particular problems were selected.
 
 \begin{itemize}
   \item How should a continuously deployed microservice be versioned?
   \item How should microservice manifests be managed and continuously deployed?
 \end{itemize}
 
+These two research questions were selected out of a practical necessity. Like a
+monolithic piece of software, a microservice architecture has to be versioned
+somehow. Though due to the many parts that make up a microservice based
+architecture, no apparent versioning scheme could be determined. In addition,
+the deployment of microservices can be admirably well implemented automated.
+This lays in the nature of the microservice architecture as its different
+components can be interchanged isolatedly. Yet, a number of new configurations,
+Kubernetes manifests, are often affiliated with the deployment of a
+microservice architecture. Each service needs specific deployment
+configurations. Furthermore, a number of deployment configurations exists which
+cannot be assigned to a specific microservice. This calls for a concept which
+states how the number of deployment configurations should be managed.
+
 The actual task of deploying a microservice architecture was considered to be
 trivial. Therefore, it was only outlined as part of the background chapter and
 not further examined.
+
+To solve the two problems outlined above, the \ac{DSR} research framework was
+used to guarantee an outcome that would be tested in practise as well as
+theoretically applicable to similar problems. Hence, the workings of \ac{DSR}
+were summarized in chapter~\ref{sub:Design_Science_Research}. Next to the
+methodology, this thesis also provided the necessary background knowledge on the
+topics that were later utilized in the development of solutions in
+chapter~\ref{sec:Background}. This thesis therefore also acts as an information
+piece on architectural changes from monoliths to microservices, over the
+container orchestration solution Kubernetes, the Helm package manager for
+Kubernetes, \ac{CI} and \ac{CD} systems in general and with regard to
+microservices up to different versioning schemes.
 
 The first research question was answered in chapter~\ref{sec:Versioning}. A
 classification model for microservices was introduced which distinguishes
@@ -56,18 +83,17 @@ simple rollback strategy.
 
 The outcome of both research questions can be easily transferred to similar
 projects. However, the practical implementations of both solutions only
-represent a reference and no completed solutions. Thus, only one possible
-improvement for the implementation of \ac{CIST} is presented. When generating a
-component chart and its corresponding master chart, a SemVer versioning number
-is updated. In the proposed implementation, the version number is always set to
-\texttt{1.0.0+\textbf{build-number}}. If the manual part of the version number
-was set to anything other than \texttt{1.0.0}, these manually set values would
-be overwritten. To solve this problem, the old version number could be read
-from the chart's configuration file. The build number could then be appended to
-the dynamically read manual part of the SemVer version number.
+represent a reference and no completed solutions. Thus, additional research can
+be performed on developing an implementation which is platform-independent as
+the implementation proposals in this thesis were always based on Microsoft
+Azure DevOps. Additionally, as already pointed out, additional studies could
+further examine the theoretical concepts' economic benefits. Furthermore, the
+applicability of the \ac{CIST} deployment model to other architectural styles
+can be studied. Nonetheless, all theoretical findings of this thesis are
+applicable without constraints in a project that uses a microservice
+architecture as they do not require any technological stacks except for
+Kubernetes and Helm.
 
-Nonetheless, all theoretical findings of this thesis are applicable without
-constraints in a project that uses a microservice architecture. Finally, this
-thesis' findings support developers whose applications are publicly accessible
-on the internet to continuously serve their applications to the demand of
-billions of possible users.
+Finally, this thesis' findings support developers whose applications are
+publicly accessible on the internet to continuously serve their applications to
+the demand of billions of possible users.

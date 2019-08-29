@@ -572,7 +572,7 @@ At last, line 16-20 of listing~\ref{listing:azure_devops_build_chart_job} show
 how the newly packaged chart is uploaded to the internal ChartMuseum instance.
 ChartMuseum's username and password combination is supplied to authenticate the
 \texttt{curl} request. At this point, the internal chart repository hosted by
-ChartMuseum serves the newly created Helm chart which specifically points to
+ChartMuseum serves the newly created Helm chart which points specifically to
 the newest built container image and which is versioned based on the build's
 number.
 
@@ -592,7 +592,7 @@ chart receives a unique version number based on the SemVer
 \texttt{MAJOR.MINOR.PATCH+\textbf{build-number}} scheme. The corresponding
 Docker images use a similar tag while dropping the \texttt{MAJOR.MINOR.PATCH}
 part. In addition, the figure shows that both the user backend as well as the
-onboarding backend depend on an publicly hosted MongoDB Helm chart.
+onboarding backend depend on a publicly hosted MongoDB Helm chart.
 
 Up to this point the creation of individual Helm charts for each service is
 fully automated using a \ac{CI} solution like Azure DevOps. However, no
@@ -600,15 +600,14 @@ automated continuous deployment process exists yet. One option would be to use
 the Helm utility to upgrade the respective chart in Kubernetes within a
 service's Azure DevOps pipeline. This would automate the second and third step
 of the last issue $I_2$ but leave the first step to be executed by hand. To
-recap, the first deployment step referenced in in issue $I_3$ is a set up of
-the underlying infrastructure. Step two sets up a service's external
-dependencies and lastly step three deploys the service's actual application.
-How can the now existing automation process of step two and three be combined
-with step one to form a fully autonomous manifest management and deployment
-concept for a microservice architecture? After all, it is not always possible
-to assign infrastructure configurations to a distinct service. Kubernetes
-StorageClass definitions e.g.\ might be relevant to all microservices of an
-application.
+recap, the first deployment step referenced in issue $I_3$ is a set up of the
+underlying infrastructure. Step two sets up a service's external dependencies
+and lastly step three deploys the service's actual application.  How can the
+now existing automation process of step two and three be combined with step one
+to form a fully autonomous manifest management and deployment concept for a
+microservice architecture? After all, it is not always possible to assign
+infrastructure configurations to a distinct service. Kubernetes StorageClass
+definitions e.g.\ might be relevant to all microservices of an application.
 
 \begin{figure}[H]
 \begin{center}
@@ -629,8 +628,8 @@ dependencies. For reference, all of $\mu$App's microservices will be referred
 to as \textit{components} and \texttt{component charts} from here on. During
 the build process of a component, not only is its code tested, built, packaged
 into a container image and a component chart is generated but in addition the
-master chart is updated. After the update, the master chart no longer referrers
-to old component chart but to the newly generated one. Furthermore, as with
+master chart is updated. After the update, the master chart no longer refers to
+the old component chart but to the newly generated one. Furthermore, as with
 component charts, every change requires the master chart to bump its version
 number. This is why the master chart's version number in
 figure~\ref{fig:master_chart} corresponds with the version number of the newest
@@ -641,8 +640,8 @@ paragraphs.
 As the master chart cannot be subordinated to any of $\mu$App's components, it
 is stored and managed in a separate \ac{VCS} repository called
 \texttt{deployment}. In general, the master chart is a Helm chart like any
-other. Helm requires charts to be named the same as the directory they are
-stored in. Hence, as with the component charts, the master chart lays in a
+other. Helm requires charts to be named the same as the directory in which they
+are stored in. Hence, as with the component charts, the master chart lays in a
 sub-directory which is in this case called \texttt{u-app}. The master chart
 holds a requirements file which looks like
 listing~\ref{listing:master_chart_requirements}.

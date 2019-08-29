@@ -8,11 +8,11 @@ There exist many different definitions of the term \textit{microservice}.
 a \enquote{cohesive, independent process interacting via messages}. The
 definition of \autocite{MikeAmundsenMicroserviceArchitecture2016} also takes
 the architectural aspect into account stating that a \textit{microservice
-architecture} is \enquote{style of engineering highly automated, evolvable
+architecture} is a \enquote{style of engineering highly automated, evolvable
 software systems made up of capability-aligned microservices}. Regardless of
 the specific definition, one common concept becomes clear: A microservice
 should be a small independent piece of software that communicates using
-messages and can be deployed autonomously.
+messages and that can be deployed autonomously.
 
 This chapter will cover the origins of the microservice architecture, introduce
 a practical example of a microservice and outline the problems that need to be
@@ -44,20 +44,20 @@ Enterprise Edition stack.}%
 Monolithic applications (as exemplarily portrayed in
 figure~\ref{fig:monolith_example}) are hard to deploy in a distributed system
 without introducing some kind of middleware that handles the way the monolith
-is distributed. In addition to this, monolithic application suffer additional
+is distributed. Furthermore, monolithic applications suffer additional
 drawbacks. Maintaining a monolith can pose a big problem due to its huge code
-base and many internal and external dependencies. Furthermore, deploying a new
-version can cause major downtimes since the whole application has to be
-(re)started. From a development standpoint, monoliths also pose the problem of
-restricting the technology stack once it has been defined. This can produce an
-environment that is now longer suitable for all new services added to the
-monolith. Lastly scaling a monolith is not possible indefinitely \autocite[p.
+base and many internal and external dependencies. In addition to this,
+deploying a new version can cause major downtimes since the whole application
+has to be (re)started. From a development standpoint, monoliths also pose the
+problem of restricting the technology stack once it has been defined. This can
+produce an environment that is now longer capable being extended with new
+services. Lastly, scaling a monolith is not possible indefinitely \autocite[p.
 2]{DragoniMicroservicesyesterdaytoday2016}. When scaling an application
-\textit{vertically}, resources (e.g.\ RAM) are added to the machine executing
-the application. Contrary to this approach, when scaling \textit{horizontally}
-the application gets distributed onto a number of machines. This however
-requires the use of a distributed middleware or code changes \autocite[Ch.
-1.1.1]{LuksaKubernetesAction2017}.
+\textit{vertically}, resources (e.g.\ \ac{RAM}) are added to the machine
+executing the application. Contrary to this approach, when scaling
+\textit{horizontally} the application gets distributed onto a number of
+machines. This however requires the use of a distributed middleware or code
+changes \autocite[Ch. 1.1.1]{LuksaKubernetesAction2017}.
 
 The \ac{SOA} solves a lot of the problems afflicting the monolithic
 architecture. Rather than providing all services as part of one application, in
@@ -65,9 +65,9 @@ architecture. Rather than providing all services as part of one application, in
 applications} that each offer only a small hand of services. Each business
 application is maintained by a specialised development team. The business
 applications offer their services to other services or directly to consumers
-through a set of protocols; the primarily used protocol is \ac{SOAP}. The
-operation of all business applications is handled by a separate operations
-team \autocite[p. 584]{VillamizarEvaluatingmonolithicmicroservice2015}.
+through a set of protocols; the primarily used protocol is the \ac{SOAP}. The
+operation of all business applications is handled by a separate operations team
+\autocite[p. 584]{VillamizarEvaluatingmonolithicmicroservice2015}.
 
 Even though the \ac{SOA} approach does solve a lot of problems the monolithic
 architecture suffers from, several problems remain. Implementing the \ac{SOA}
@@ -90,17 +90,17 @@ that it additionally focuses on greater agility. Altogether,
 architecture to be a distributed application which \textit{modules} are solely
 microservices. The term \enquote{module} is synonymous with the term
 \enquote{service} used in the description of the monolithic architecture and
-\ac{SOA}.
+the \ac{SOA}.
 
 Furthermore, the user does not contact any service directly. One or more
 gateways receive the user's requests and route them to the correct service.
 Depending on the type of user, the requested information are encoded
 appropriately by the gateway. An end user might receive a rendered website over
-\ac{HTTP} whereas an \ac{API} call has to be sent via \ac{REST} over \ac{HTTP}.
-The operation of said gateway is managed by an independent team \autocite[p.
-585]{VillamizarEvaluatingmonolithicmicroservice2015}. Two common approaches in
-this field are \ac{API} gateways and service meshes. Their properties and
-respective advantages are further discussed in
+the \ac{HTTP} whereas an \ac{API} call has to be sent via \ac{REST} over
+\ac{HTTP}. The operation of said gateway is managed by an independent team
+\autocite[p. 585]{VillamizarEvaluatingmonolithicmicroservice2015}. Two common
+approaches in this field are \ac{API} gateways and service meshes. Their
+properties and respective advantages are further discussed in
 \autocite{HariharaSubramanianHandsRESTfulAPI2019}.
 
 In summary it can be said that the microservice architecture constitutes the
@@ -151,7 +151,7 @@ features still solve the problem of viewing and posting pictures of pets. If
 this is not the case, a new service must be introduced. This ensures that each
 service still follows the concept of cohesion.
 
-The service's technology stacks are fully independent from one another. The
+The services' technology stacks are fully independent from one another. The
 authentication service e.g.\ is written in Golang due to the high performance
 the language offers. The backend however is written in Python and runs on top
 of a NGINX server. This approach does not lock the developers in one technology
@@ -199,24 +199,25 @@ resource consumption of \acp{VM}.
 
 Figure~\ref{subfig:microserviceType2Hypervisor} shows the application runtime
 model of a \textit{type2 hypervisor}. In addition to the host \ac{OS}, each
-\ac{VM} executes its own full guest \ac{OS}. If this runtime model is chosen to
-deploy a microservice architecture, the resource overhead for each microservice
-would be major.
+\ac{VM} executes its own full guest \ac{OS}. If this runtime model was chosen
+to deploy a microservice architecture, the resource overhead for each
+microservice would be major.
 
 The goal is to define a runtime model that encapsulates every microservice as
-well as a \ac{VM} executed by a hypervisor does but much more light weight
-\autocite{SchenkerLearnDockerFundamentals2018}. The container model depicted in
-figure~\ref{subfig:microserviceContainer} fits that description. Rather than
-needing a full guest \ac{OS} for each application/microservice, each
-container only includes the application it is tasked to execute and any needed
-libraries. This approach reduces the overhead of each application to a bare
-minimum while gaining near bare-metal performance \autocite[Ch.
-1A]{CombeDockerNotDocker2016}. In case of the Docker architecture depicted in
-figure~\ref{subfig:microserviceContainer}, the \textit{Docker deamon} is
-responsible for managing all container instances. All of this is only possible
-as a result of a few Linux kernel features. \autocite{CombeDockerNotDocker2016}
-and \autocite[Ch. 1.2.1]{LuksaKubernetesAction2017} further highlight the
-security features needed to make the container runtime model work.
+well as a \ac{VM} executed by a hypervisor does but that is much more light
+weight \autocite{SchenkerLearnDockerFundamentals2018}. The container model
+depicted in figure~\ref{subfig:microserviceContainer} fits that description.
+Rather than needing a full guest \ac{OS} for each application/microservice,
+each container only includes the application it is tasked to execute and any
+needed libraries. This approach reduces the overhead of each application to a
+bare minimum while gaining near bare-metal performance \autocite[Ch.
+1A]{CombeDockerNotDocker2016}. In case of the \textit{Docker architecture}
+depicted in figure~\ref{subfig:microserviceContainer}, the \textit{Docker
+deamon} is responsible for managing all container instances. All of this is
+only possible as a result of a few Linux kernel features.
+\autocite{CombeDockerNotDocker2016} and \autocite[Ch.
+1.2.1]{LuksaKubernetesAction2017} further highlight the security features
+needed to make the container runtime model work.
 
 At this point a distinction has to be made: The term Docker refers to a whole
 system of functionality. It combines the actual container runtime along with a
@@ -246,9 +247,9 @@ In order to build an image, the developers of a microservice have to define a
 \textit{Dockerfile}. The Dockerfile contains all instructions that are needed
 by the Docker engine to produce an image. Multiple images built from the same
 Dockerfile \textit{should} always be identical because the build process is
-deterministic. Their exist a few cases in which this is not the case. However,
-they are not relevant to this thesis' work and thus will not be further
-examined.
+deterministic \autocite{DockerBestpracticeswriting}. Their exist a few cases in
+which this is not the case. However, they are not relevant to this thesis' work
+and thus will not be further examined.
 
 \begin{listing}[H]
 \begin{minted}{Dockerfile}
@@ -258,22 +259,22 @@ RUN echo 'echo "Hello world from BusyBox" \
 RUN chmod +x /bin/hello-world
 ENTRYPOINT exec /bin/hello-world
 \end{minted}
-\caption{A Dockerfile for building a \textit{hello world} Docker image based on BusyBox.}
+\caption{A Dockerfile for building a \textit{hello world} Docker image based on \textit{BusyBox}.}
 \label{listing:dockerfile_example}
 \end{listing}
 
 Each image has to be built on top of a \textit{base image}. The example image
 in listing~\ref{listing:dockerfile_example} is built upon \textit{BusyBox}
-which is one of the smallest base images available. % TODO: Add citation!
-The instructions inside a Dockerfile are executed from top to bottom. Each
-\texttt{RUN} command creates a new \textit{layer} containing the changes from
-the executed command. The most common Dockerfile commands and the issues
-regarding layering are further examined in
-\autocite{DockerBestpracticeswriting}. The command that spans from line two to
-three in listing~\ref{listing:dockerfile_example} creates a bash file that
-produces this output:
+which is a very small base image totalling only up to 5 megabyte
+\autocite{Communitybusybox2019}.  The instructions inside a Dockerfile are
+executed from top to bottom. Each \texttt{RUN} command creates a new
+\textit{layer} containing the changes from the executed command. The most
+common Dockerfile commands and the issues regarding layering are further
+examined in \autocite{DockerBestpracticeswriting}. The command that spans from
+line two to three in listing~\ref{listing:dockerfile_example} creates a bash
+file that produces this output:
 
-\hspace{1cm} \texttt{Hello from BusyBox \textbf{VERSION\textunderscore{}NUMBER}}
+\hspace{1cm} \texttt{Hello from BusyBox 1.31.0}
 
 In line four of the same listing, the \texttt{chmod} utility is used to set the
 \textit{execution} permission of the newly created file. This allows the binary
@@ -293,17 +294,17 @@ interrelations are however fully contrasted in
 \label{fig:docker_workflow}
 \end{figure}
 
-All development (step 1 in~\ref{fig:docker_workflow}) and image building steps
-(step 2 in~\ref{fig:docker_workflow}) take place on the developer's machine.
+All development (step 1 in figure~\ref{fig:docker_workflow}) and image building steps
+(step 2 in figure~\ref{fig:docker_workflow}) take place on the developer's machine.
 After a development cycle is completed, the developer pushes the newly built
 image(s) to a central image repository (step 3 and 4
-in~\ref{fig:docker_workflow}). Each microservice now exists as a separate image
-on the image repository. The production machine then has to be instructed to
-run the newly created image(s) (step 5 in~\ref{fig:docker_workflow}). This
-triggers the Docker daemon (step 6 in~\ref{fig:docker_workflow}) to pull the
-built images from the image repository (step 7 in~\ref{fig:docker_workflow}).
+in figure~\ref{fig:docker_workflow}). Each microservice now exists as a separate image
+in the image repository. The production machine then has to be instructed to
+run the newly created image(s) (step 5 in figure~\ref{fig:docker_workflow}). This
+triggers the Docker daemon (step 6 in figure~\ref{fig:docker_workflow}) to pull the
+built images from the image repository (step 7 in figure~\ref{fig:docker_workflow}).
 Lastly, all pulled images are executed as a container (step 8
-in~\ref{fig:docker_workflow}).
+in figure~\ref{fig:docker_workflow}).
 
 The result of this process is a complete microservice architecture running
 containerized on a production Docker machine. The process however also reveals

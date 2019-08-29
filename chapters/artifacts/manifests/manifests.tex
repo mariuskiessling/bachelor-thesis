@@ -422,15 +422,18 @@ dependencies:
 
 It defines an external database component (\texttt{mongodb-replicaset}) as
 shown in listing~\ref{listing:onboarding_backend_requirements} which is
-automatically set up whenever the onboarding backend is deployed by Helm.
-Therefore issue $I_3$ can be considered solved as well. The deployment process
-of a service and its external dependencies, e.g.\ a database, is no longer
-decoupled.  For this purpose the onboarding backend also creates a
-\texttt{charts} directory which stores the service's packed dependencies. This
-directory however is not listed in figure~\ref{fig:helmification_process}
-because it does not need to exist in the \ac{VCS}. The folder is only created
-on the machine deploying the microservice once the installation process is
-triggered.
+automatically set up whenever the onboarding backend is deployed by Helm. If
+Helm detects that the database is already deployed to Kubernetes, it will only
+apply changes that might have been made to the database's configuration. If the
+database was not already deployed, Helm would create a new MongoDB installation
+in the Kubernetes cluster. Therefore issue $I_3$ can be considered solved as
+well. The deployment process of a service and its external dependencies, e.g.\
+a database, is no longer decoupled.  For this purpose the onboarding backend
+also creates a \texttt{charts} directory which stores the service's packed
+dependencies. This directory however is not listed in
+figure~\ref{fig:helmification_process} because it does not need to exist in the
+\ac{VCS}. The folder is only created on the machine deploying the microservice
+once the installation process is triggered.
 
 So far this approach already solves issue $I_5$. Managing a microservice's code
 and its deployment information is no longer decoupled. This comprises a partial
@@ -479,8 +482,8 @@ Kubernetes and made accessible from outside Kubernetes. Additionally,
 ChartMuseum allows to set an authentication method for both fetching charts as
 well as publishing them. This feature is also enabled for this instance of
 ChartMuseum to shield it from unauthorized access. For the purpose of
-simplicity, only the \textit{basic} \ac{HTTP} is used though other mechanism
-are supported.
+simplicity, only the \textit{basic} \ac{HTTP} authentication is used though
+other mechanism are supported.
 
 Now every time a Helm chart is updated, e.g.\ because the \texttt{appVersion}
 attribute is bumped or a deployment setting is modified, this change no longer
@@ -633,9 +636,7 @@ the old component chart but to the newly generated one. Furthermore, as with
 component charts, every change requires the master chart to bump its version
 number. This is why the master chart's version number in
 figure~\ref{fig:master_chart} corresponds with the version number of the newest
-built component chart (\texttt{1.0.0+20190705.3}). The whole procedure with
-which the master chart is built will become clearer within the following few
-paragraphs.
+built component chart (\texttt{1.0.0+20190705.3}).
 
 As the master chart cannot be subordinated to any of $\mu$App's components, it
 is stored and managed in a separate \ac{VCS} repository called
@@ -674,22 +675,25 @@ listing~\ref{listing:azure_devops_build_master_chart_job}. In line 4-14 of the
 listing the job's environment is prepared. The Helm client is installed, the
 folder structure is set up and the \texttt{yq} utility is fetched from GitHub.
 \texttt{yq} can among other things read YAML files, modify their content and
-output the modified content. Next, the \texttt{deployment} repository is cloned
-into the newly created folder structure (line 16-18). The \texttt{yq} utility
-is now accessible inside the \texttt{master\textunderscore chart} directory and
-the master chart's Helm files are accessible at \texttt{master\textunderscore
-chart/deployment/u-app}.
+output the modified content \autocite{Farahyq2017}. Next, the
+\texttt{deployment} repository is cloned into the newly created folder
+structure (line 16-18). The \texttt{yq} utility is now accessible inside the
+\texttt{master\textunderscore chart} directory and the master chart's Helm
+files are accessible at \texttt{master\textunderscore chart/deployment/u-app}.
 
 Coming up next in line 20-26 of
 listing~\ref{listing:azure_devops_build_master_chart_job}, the \texttt{yq}
 utility is used to read the master chart's requirements file and replace the
 chart version of the newly built component chart. In this case, the job updates
 the version of the frontend as defined in line 3 of
-listing~\ref{listing:master_chart_requirements}. A three step ring exchange is
-used here because \texttt{yq} is not capable of writing its output in the same
-file it reads its input from. The same three step procedure is then used in
-line 26-40 to bump the master chart's \texttt{version} and \texttt{appVersion}
-property. Both properties are set to \texttt{1.0.0+\textbf{build-number}}.
+listing~\ref{listing:master_chart_requirements}. A three step swap is used here
+because \texttt{yq} is not capable of writing its output in the same file it
+reads its input from. The output of the \texttt{yq} command is first written to
+a temporary file. Then the file holding the non-modified version value is
+deleted and replaced with the newly created temporary file. The same three step
+procedure is then used in line 26-40 to bump the master chart's
+\texttt{version} and \texttt{appVersion} property. Both properties are set to
+\texttt{1.0.0+\textbf{build-number}}.
 
 To have a persistent state from which the whole architecture of $\mu$App can be
 deployed at any time, the changes to the Helm files of the master chart are
@@ -724,9 +728,11 @@ that were used in ancient Greece to store sacred utensils
 The evaluation of \ac{CIST} is similar to that of continuous versioning as
 performed in chapter~\ref{sub:Evaluating_Continuous_Versioning}. It is
 performed on the basis of the theoretical background and the practical
-experience that was gained throughout this chapter. Based on these two factors,
-a list of requirements towards the \ac{CIST} deployment concept can be derived.
-For reference they are labelled $R_1$ to $R_n$.
+experience that was gained throughout chapter~\ref{sub:Development}. Based on
+these two factors, a list of requirements towards the \ac{CIST} deployment
+concept can be derived. This list does not claim to be exhaustive but merely
+tries to give an evaluation baseline. For reference they are labelled $R_1$ to
+$R_n$.
 
 \begin{itemize}
   \item \textit{$R_1$}: The \ac{CIST} deployment concept must be applicable to
@@ -860,5 +866,5 @@ version number. Additionally, the deployment concept not only supports but also
 promotes automation. Hence, further manual operations when deploying an
 architecture are superfluous with the help of \ac{CI}/\ac{CD} systems.
 
-The explicit economic benefits however can be measured in a specialised study.
-Nonetheless, this is outside the scope of this thesis.
+Although the explicit economic benefits can be measured in a specialised study,
+this is outside the scope of this thesis.

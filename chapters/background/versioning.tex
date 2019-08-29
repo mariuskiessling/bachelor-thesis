@@ -8,12 +8,12 @@ of different versioning schemes were used; from Version 1.0, 3.1, 95, 2000, XP
 and 8 up to 10. The number schemes changed without retaining a consistency. For
 programmers, a consistent versioning scheme is necessary to properly deal with
 dependencies \autocite{Preston-WernerSemanticVersioning2.0.0}. Thus this
-chapter will introduce two schemes software can be consistently versioned with.
-It will further introduce an approach of versioning \acp{API}.
+chapter will introduce two schemes that can be used to consistently version
+software width. It will further introduce an approach of versioning \acp{API}.
 
 \subsubsection{SemVer}%
 \label{ssub:SemVer}
-The \textit{Sem}antic \textit{Ver}sioning scheme \textit{SumVer}
+The \textit{Sem}antic \textit{Ver}sioning scheme \textit{SemVer}
 \autocite{Preston-WernerSemanticVersioning2.0.0}, authored by Tom
 Preston-Werner, specifies eleven rules on how a version string should be
 structured. It further describes when which part of the version string may be
@@ -42,8 +42,8 @@ number of said pre-release. The patch number is separated by the \texttt{.}
 character. All in all a pre-released software version number may look like
 this: \texttt{2.0.0-alpha.public.4}. Any metadata is added at the end of the
 version number separated by the \texttt{+} character. The character
-requirements for the metadata part are identical to the ones of pre-release
-flag. The metadata also may consist of multiple parts that are separated by the
+requirements for the metadata part are identical to the ones of the pre-release
+flag. The metadata may also consist of multiple parts that are separated by the
 \texttt{.} character. The metadata part is intended to include information
 about the build of a software. A full version number, according to SemVer, for
 an application that is currently in beta phase and is built on the first of
@@ -55,7 +55,7 @@ updating it to a newer version. This however is only possible if the dependency
 fully adheres to the SemVer specifications. In a study
 \autocite{RaemaekersSemanticVersioningversus2014} of 22,205 libraries published
 to the \textit{Maven Central Repository}, a place where Java developers can
-share programming artifacts, researchers examine whether version identifiers
+share programming artefacts, researchers examined whether version identifiers
 actually correspond with breaking changes. They conclude that breaking changes
 are introduced both in one third of major releases as well as in one third of
 minor releases. Hence they argue that the use of semantic versioning in a
@@ -75,12 +75,12 @@ using a date based versioning approach. Based on this case study,
 advantages of favouring a date based versioning format. The proposed versioning
 schema is called \textit{CalVer}. It builds upon the same versioning segments
 as SemVer (\texttt{MAJOR}, \texttt{MINOR}, \texttt{PATCH} [also called
-\texttt{MICRO}] and additional pieces of data called \texttt{MODIFIERs})
+\texttt{MICRO}] and additional pieces of data called \texttt{MODIFIERS})
 without enforcing an order or rules upon them. In addition to these basic
 building blocks, date based versioning segments are defined. They include
 \texttt{YYYY}, \texttt{YY}, \texttt{0Y}, \texttt{MM}, \texttt{0M}, \texttt{DD}
 and \texttt{0D}. Segments including a \texttt{0} prefix a 0 while the value is
-smaller ten. Only to name one example, Ubuntu, the leading open source server
+less ten. Only to name one example, Ubuntu, the leading open source server
 operating system for Swiss companies according to
 \autocite{SwissICTWelcheOpenSource2018}, utilises data based versioning. Their
 implementation follows the \texttt{YY.0M.PATCH} scheme.
@@ -154,7 +154,7 @@ data simply should not be able to be addressed using different \acp{URI}.
 Instead of including the \ac{API} version number in the resource \ac{URI}, it
 is possible to include a custom header in the consumer's request. This way, the
 consumer can specify the \ac{API} version independently from the resource by
-e.g.\ supplying a header field \texttt{API-Version: v1}
+e.g.\ supplying a header field containing \texttt{API-Version: v1}
 \autocite{MicrosoftAPIdesign2018}.
 
 According to \autocite{MicrosoftAPIdesign2018}, these are the two most commonly

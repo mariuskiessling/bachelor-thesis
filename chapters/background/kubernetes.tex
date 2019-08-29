@@ -30,13 +30,13 @@ in detail, can be used as a supplement to this thesis.
 Kubernetes distinguishes between \textit{master} and \textit{node} components.
 The master components, also referred to as \textit{control plane}, are in
 charge of managing a cluster. The control plane hosts Kubernetes' API, manages
-the clusters configuration and schedules \textit{pods} to run on available
+the clusters configuration and schedules \textit{Pods} to run on available
 nodes \autocite{AuthorsKubernetesComponents2019}. In general, the master
 components are responsible for keeping the cluster alive.
 
 The node components on the other hand are executed on every node of the
 cluster. Any node of a Kubernetes cluster runs an agent, \textit{kubelet}, that
-ensures that all containers of the node's assigned pods are executed. Further,
+ensures that all containers of the node's assigned Pods are executed. Further,
 a node always runs the network proxy \textit{kube-proxy} that enforces
 networking rules and manages the node's traffic. Lastly, a container runtime
 allows all of this to happen. As already mentioned in
@@ -48,34 +48,34 @@ environments to chose from. Next to Docker, Kubernetes also directly supports
 \paragraph{Pods}%
 \label{par:Pods}
 Instead of directly deploying individual containers, Kubernetes introduces the
-concept of \textit{pods}. A pod is the smallest entity that can be executed on
-the cluster. It hosts at least one containers and automatically receives an
+concept of \textit{Pods}. A Pod is the smallest entity that can be executed on
+the cluster. It hosts at least one container and automatically receives an
 \ac{IP} address that is unique inside Kubernetes. Kubernetes ensures that all
-containers of a pod are always executed on the same node.
+containers of a Pod are always executed on the same node.
 
 Yet, this does not mean that a complete microservice architecture should be
-bundled into a single pod. The decision when to combine microservices into a
-single pod and when to split them across multiple pods becomes clear in the
+bundled into a single Pod. The decision when to combine microservices into a
+single Pod and when to split them across multiple Pods becomes clear in the
 following example. Given is an exemplary microservice architecture consisting
 of a basic web crawler that fetches all \textit{xkcd} comics from the xkcd
 archive and stores them in the file system, a frontend that displays the
-fetched comics and a backend that serves the fetches images to the frontend.
-The architecture is also depicted in figure~\ref{fig:pods_example}. Both the
+fetched comics and a backend that serves the fetched images to the frontend.
+The architecture is also depicted in figure~\ref{fig:Pods_example}. Both the
 backend as well as the crawler have to access the same file system. Further,
 the backend would not be able to serve comics without the crawler hence it
 would fail to fulfil its task. Thus it can be said that these two services are
-\textit{tightly coupled} and are a dependent components. It can also be argued
+\textit{tightly coupled} and are dependent components. It can also be argued
 that the crawler only acts as a supporting component for the actual backend.
-Hence, the crawler and backend should be shipped inside the same pod. On the
-other hand the frontend is a fully independent system component. It can be
+Hence, the crawler and backend should be shipped inside the same Pod. On the
+other hand, the frontend is a fully independent system component. It can be
 scaled independently from the backend and crawler. Hence it belongs in a
-separate pod. 
+separate Pod \autocite[Ch. 3]{LuksaKubernetesAction2017}. 
 
 \begin{figure}[H]
 \begin{center}
   \includegraphics[scale=0.7]{images/figures/pod_example.pdf}
 \end{center}
-\caption{Example microservice architecture displayed as pods, containers and a volume.}%
+\caption{Examplary microservice architecture displayed as Pods, containers and a volume.}%
 \label{fig:pods_example}
 \end{figure}
 
@@ -84,29 +84,29 @@ separate pod.
 
 The example in figure~\ref{fig:pods_example} also introduces the concept of
 \textit{volumes}. Volumes bring the ability to store files \textit{outside} the
-context of the local file system of a container. A pod can specify that it
-needs one or more volumes. Each container inside a pod is able to mount these
+context of the local file system of a container. A Pod can specify that it
+needs one or more volumes. Each container inside a Pod is able to mount these
 volumes in the same or a different path. The backend from
 figure~\ref{fig:pods_example} might mount the volume to
 \texttt{/var/www/storage} whereas the crawler wants to mount the volume to
 \texttt{/mnt/comics}. Volumes are either local paths on the Kubernetes node or
 are maintained by a cloud provider's service like e.g. \textit{Microsoft Azure
-File Volumes}.
+File Volumes} \autocite[Ch. 6]{LuksaKubernetesAction2017}.
 
 Simply using the Kubernetes concept of volumes however does pose two significant problems:
 \begin{itemize}
   \item For most volume types, the volume has to be provisioned by hand before
     the container can allocate said volume.
-  \item The volume is bound to the pods lifecycle. This means that whenever a
-    pod is deleted or dies due to a problem or scaling, the volume needs
-    to be recreated during the pod's next startup. This also means that volumes
-    can not be defined without first defining a pod.
+  \item The volume is bound to the Pods lifecycle. This means that whenever a
+    Pod is deleted or dies due to a problem or scaling, the volume needs
+    to be recreated during the Pod's next startup. This also means that volumes
+    can not be defined without first defining a Pod.
 \end{itemize}
 
 \paragraph{Persistent Volumes, Persistent Volume Claims and Storage Classes}%
 \label{par:Persistent_Volume_Claims_and_Storage_Classes}
 One way to solve these problems is to use \textit{\acfp{PV}}. A \ac{PV} can be
-defined without first having to define a pod. While it is possible to
+defined without first having to define a Pod. While it is possible to
 statically define a set of \acp{PV}, it is useful to let Kubernetes dynamically
 provision \acp{PV} when needed.
 
@@ -120,10 +120,10 @@ provision \acp{PV} when needed.
 
 Figure~\ref{fig:dynamic_pvs} shows the process of how Kubernetes dynamically
 provisions \acp{PV}. To understand this flow of actions, two terms have to be
-defined: \textit{\acf{PVC}} and \textit{storage classes}. 
+defined: \textit{\acf{PVC}} and \textit{storage class}. 
 
 A \ac{PVC} is a request for an available \ac{PV}. It can specify, among other
-things, an access mode and resources. Contrary to pods which can request
+things, an access mode and resources. Contrary to Pods which can request
 computing resources, \acp{PVC} request storage resources. Additionally, the
 \ac{PVC} can request a specific storage class and a selector that must match
 the \ac{PV}'s label. Only if the selector matches the \ac{PV}'s label, the
@@ -138,9 +138,9 @@ classes are their \textit{reclaim policy}. The reclaim policy determines
 whether a \ac{PV} deployed on a storage class is \textit{deleted} or
 \textit{retained} once the \ac{PV}'s \ac{PVC} is released. Thus the reclaim
 policy ultimately defines the persistency of a \ac{PV} beyond the lifecycle of
-a \ac{PVC}. Additionally whenever a new \ac{PVC} is created that matches the
+a \ac{PVC}. Additionally, whenever a new \ac{PVC} is created that matches the
 originally described selector and storage class, a retained \ac{PV} can be
-reallocated by the \ac{PVC}.
+reallocated by the \ac{PVC} \autocite[Ch. 6]{LuksaKubernetesAction2017}.
 
 The behaviour in figure~\ref{fig:dynamic_pvs} should now become clear.
 Kubernetes tries to assign an available, non-bound \ac{PV} to the \ac{PVC}.
@@ -149,17 +149,17 @@ solve this, a new \ac{PV} is automatically provisioned that fully complies with
 the requirements of the \ac{PVC}.
 
 To conclude this section, it can be said that \acp{PV} bring the ability to
-define storage resources that are independent from a pod's lifecycle.
+define storage resources that are independent from a Pod's lifecycle.
 \acp{PVC} can then be used to allocate the created \acp{PV} or dynamically
 create new ones by using the storage classes' provisioner.
 
 \paragraph{Controllers: StatefulSets, ReplicaSets and Deployments}%
 \label{par:Controllers}
-Pods, as they were introduced in the~\ref{par:Pods} section of this chapter,
+Pods, as they were introduced in section ~\ref{par:Pods} of this chapter,
 are fully unmanaged. The downside to this is that whenever a node dies, all
-pods running on this node also die without getting redeployed on a healthy
-node. Additionally, unmanaged pods can not be scaled automatically by
-Kubernetes. It is also not possible to schedule unmanaged pods to run
+Pods running on this node also die without getting redeployed on a healthy
+node. Additionally, unmanaged Pods can not be scaled automatically by
+Kubernetes. It is also not possible to schedule unmanaged Pods to run
 periodically \autocite[Ch. 4]{LuksaKubernetesAction2017}. Kubernetes solves
 these issues by introducing a new concept: controllers. Controllers are
 responsible for managing a set of Kubernetes resources and extend their
@@ -168,25 +168,25 @@ cover the controllers needed for this thesis. Next to the highlighted
 controllers, Kubernetes includes a number of other controllers that are listed
 in \autocite{AuthorsConcepts2019}.
 
-Instead of scaling pods manually to ensure the accessibility to a service, a
-ReplicaSet manages a set of pods and ensures that a specified number of
-replicas of these pods is always available. The discovery of pods that should
+Instead of scaling Pods manually to ensure their accessibility to a service, a
+ReplicaSet manages a set of Pods and ensures that a specified number of
+replicas of these Pods is always available. The discovery of Pods that should
 be managed by a ReplicaSet is based on \textit{selectors}. If a ReplicaSet's
-selector matches the label of a pod and the pod is not already assigned to a
-different controller, the ReplicaSet takes ownership of said pod \autocite[Ch.
-4]{LuksaKubernetesAction2017}. Hence any pod that may not be managed by a
+selector matches the label of a Pod and the Pod is not already assigned to a
+different controller, the ReplicaSet takes ownership of said Pod \autocite[Ch.
+4]{LuksaKubernetesAction2017}. Hence any Pod that may not be managed by a
 ReplicaSet has to define another label in order not to be made subject to a
-ReplicaSet \autocite{AuthorsReplicaSet2019}. Additionally to owning pods that
-only match the ReplicaSet's selector, it is possible to directly specify pods
+ReplicaSet \autocite{AuthorsReplicaSet2019}. Additionally, to owning Pods that
+only match the ReplicaSet's selector, it is possible to directly specify Pods
 that should be spawned whenever the ReplicaSet is loaded. This option is more
-common and directly highlights the pod's connection to the ReplicaSet
+common and directly highlights the Pod's connection to the ReplicaSet
 \autocite{AuthorsReplicaSet2019}. In addition, \autocite{AuthorsReplicaSet2019}
 discourages from directly using ReplicaSets if the use case does not need a
 custom update logic. Instead, it is recommended to use \textit{deployments}.
 
 A deployment is a higher-level abstractional concept that itself manages
 ReplicaSets \autocite{AuthorsReplicaSet2019}. Contrary to the ReplicaSet, a
-deployment is able to update all its managed pods and roll back changes to a
+deployment is able to update all its managed Pods and roll back changes to a
 previous state. All changes can be performed declaratively without having to
 write any logic; this process is managed by Kubernetes \autocite[Ch.
 9]{LuksaKubernetesAction2017}.
@@ -194,23 +194,23 @@ write any logic; this process is managed by Kubernetes \autocite[Ch.
  % Add more information about the rolling update process.
 
 Both the ReplicaSet and deployment are meant to be used for stateless
-applications. Each pod that is managed by either one of these controllers does
+applications. Each Pod that is managed by either one of these controllers does
 not have an individual identity. Hence, it is not possible to identify a single
-managed pod; they all look and behave exactly the same. All pods also share the
+managed Pod; they all look and behave exactly the same. All Pods also share the
 same persistent volume. The question arising from this is how a distributed
 application that needs stateful and distinct entities, i.e.\ a database system
 using the master/slave paradigm, can be hosted using Kubernetes. In the
 master/slave paradigm, the master nodes are responsible for managing the
-databases data. The slaves then replicate the data and can be used for i.e.\
+database's data. The slaves then replicate the data and can be used for i.e.\
 reliably reading data and balancing the reading load. Yet, this scenario brings
 up three problems that can not be easily solved with a ReplicaSet or
 deployment. The problems are named $P_x$ for future reference.
 
 \begin{itemize}
-  \item \textbf{$P_1$}: Each pod needs its own storage volume to avoid lock problems.
-  \item \textbf{$P_2$}: Each pod needs to be addressed individually so that the master(s) are
+  \item \textbf{$P_1$}: Each Pod needs its own storage volume to avoid lock problems.
+  \item \textbf{$P_2$}: Each Pod needs to be addressed individually so that the master(s) are
     capable of syncing data to only selected slave(s).
-  \item \textbf{$P_3$}: After a pod dies, Kubernetes has to spawn a pod with
+  \item \textbf{$P_3$}: After a Pod dies, Kubernetes has to spawn a Pod with
     the same identity. This is the only way to guarantee that the master(s)
     get respawned with the same data and that slave(s) do not have to rejoin
     the database cluster and resync all data.
@@ -228,70 +228,72 @@ sustainably - entering StatefulSets.
 \label{fig:statefulSetsVSReplicaSets}
 \end{figure}
 
-In a StatefulSet, each managed pod receives its own identity. Instead of
-randomly assigning names and \ac{IP} addresses to pods, their names are
+In a StatefulSet, each managed Pod receives its own identity. Instead of
+randomly assigning names and \ac{IP} addresses to Pods, their names are
 numbered. A custom identity also means a seperate volume from the rest of the
-pods inside the StatefulSet. Whenever the StatefulSet needs to redeploy a pod
-(e.g.\ due to a node that went down or due to scaling) the respawned pods
+Pods inside the StatefulSet. Whenever the StatefulSet needs to redeploy a Pod
+(e.g.\ due to a node that went down or due to scaling) the respawned Pods
 receive the same identity they had before. In
 figure~\ref{fig:statefulSetsVSReplicaSets} this would mean that if
 \texttt{backend-2} went offline due to a faulty host, the StatefulSet would
 spawn an exact copy of \texttt{backend-2} with the same identity (meaning name,
 \ac{IP} and volume). Hence, it can be argued that StatefulSets solve problems
 $P_1$-$P_3$ that could not be easily solved by ReplicaSets. They are the way to
-go when deploying stateful applications that may require unique pod identities.
+go when deploying stateful applications that may require unique Pod identities
+\autocite[Ch. 10]{LuksaKubernetesAction2017}.
 
 \paragraph{Services}%
 \label{par:Services}
-Regardless of the controller managing the replication of pods, a solution is
-needed to address any given set of pods. When e.g.\ scaling a set of pods of a
+Regardless of the controller managing the replication of Pods, a solution is
+needed to address any given set of Pods. When e.g.\ scaling a set of Pods of a
 ReplicaSet to 15 instances, how should a user sent a request to either one of
-them without addressing each one individually. Services expose a set of pods to
+them without addressing each one individually? Services expose a set of Pods to
 the network as an \ac{IP} address and name that can be resolved inside the
-cluster. Using the service's name or \ac{IP} address other pods inside the
+cluster. Using the Service's name or \ac{IP} address other Pods inside the
 cluster or, with a minor addition, even external users are able to access the
-service's pods. The user or pods do not have to know the pod's individual
-\ac{IP} addresses or names. The service proxies the request using different
-routing mechanism \autocite{AuthorsService2019} to the pods associated with the
-service.
+Service's Pods. The user or Pods do not have to know the Pod's individual
+\ac{IP} addresses or names. The Service proxies the request using different
+routing mechanism \autocite{AuthorsService2019} to the Pods associated with the
+Service.
 
 \begin{figure}[H]
 \begin{center}
   \includegraphics[scale=0.55]{images/figures/service_example.pdf}
 \end{center}
-\caption{Example services proxying requests to two different sets of pods.}%
+\caption{Example Services proxying requests to two different sets of Pods.}%
 \label{fig:services_example}
 \end{figure}
 
-Figure~\ref{fig:services_example} shows two example services \texttt{frontend}
-and \texttt{backend}. Requests directed at these services are proxyed to the
-corresponding set of pods. In the case of the given example, each set of pods
+Figure~\ref{fig:services_example} shows two example Services \texttt{frontend}
+and \texttt{backend}. Requests directed at these Services are proxyed to the
+corresponding set of Pods. In the case of the given example, each set of Pods
 is managed by a ReplicaSet. This however does not have to be the case. Services
-do not depend on the management type of pods. They directly relay requests to
-pods without knowledge of a perhaps existing controller. This is due to the
-fact that a service's selector only selects \textit{pods} that match the
-selector's label. Services are reasons why requests in Kubernetes can be
+do not depend on the management type of Pods. They directly relay requests to
+Pods without having the knowledge of a perhaps existing controller. This is due
+to the fact that a Service's selector only selects \textit{Pods} that match the
+selector's label. Services are the reason why requests in Kubernetes can be
 directed at one entity without having the knowledge of the underlying amount of
-pods. Without services, effective \textit{horizontal scaling}, meaning that in
-Kubernetes many pods can provide the same service, would not be possible
+Pods. Without Services, effective \textit{horizontal scaling}, meaning that in
+Kubernetes many Pods can provide the same Service, would not be possible
 \autocite[Ch. 5]{LuksaKubernetesAction2017}.
 
 \subsubsection{Manifests}%
 \label{ssub:Manifests}
 Manifest files are the place where the cluster's configurations are stored. Any
-Kubernetes object (e.g.\ a pod or Deployment) is defined inside a manifest
+Kubernetes object (e.g.\ a Pod or Deployment) is defined inside a manifest
 configuration file. Manifest files can either be written in \textit{YAML} or
 \textit{JSON}. Both YAML and JSON can encode data in a form readable for humans
 and computers. Kubernetes manifests are mainly written in YAML though they are
 translated to JSON before being passed to the Kubernetes \ac{API}. Thus, this
 thesis will only display manifest files in YAML format.
 
-When describing an Kubernetes object, four keys are mandatory:
+When describing a Kubernetes object, four keys are mandatory:
 \texttt{apiVersion} which specifies Kubernetes' \ac{API} version that will be
-used to create the object, \texttt{kind} which is object's type (e.g.\ Pod),
-\texttt{metadata} which is a property that e.g.\ specifies the object's name
-within Kubernetes and \texttt{spec} which always contains object type specific
-configuration properties \autocite{AuthorsUnderstandingKubernetesObjects2019}.
+used to create the object, \texttt{kind} which is the object's type (e.g.\
+Pod), \texttt{metadata} which is a property that e.g.\ specifies the object's
+name within Kubernetes and \texttt{spec} which always contains object type
+specific configuration properties
+\autocite{AuthorsUnderstandingKubernetesObjects2019}.
 
 \begin{listing}[H]
   \begin{minted}{YAML}
@@ -306,13 +308,13 @@ spec:
     ports:
     - containerPort: 3000
   \end{minted}
-  \caption{An exemplary Kubernetes manifest defining a pod object.}%
+  \caption{An exemplary Kubernetes manifest defining a Pod object.}%
   \label{listing:manifest_example}
 \end{listing}
 
-In listing~\ref{listing:manifest_example} an exemplary pod object is defined.
-Defining pods does not require beta features. Thus \texttt{.apiVersion} is set
-to \texttt{v1}. When defining a pod, the objects \texttt{.spec} includes a list
+In listing~\ref{listing:manifest_example} an exemplary Pod object is defined.
+Defining Pods does not require beta features. Thus \texttt{.apiVersion} is set
+to \texttt{v1}. When defining a Pod, the objects \texttt{.spec} includes a list
 of \texttt{.spec.containers}. Each container gets a name, an image that can be
 executed by Docker and \texttt{.spec.containers[\textbf{n}].ports} that should
 be accessible from outside the container. The properties listed in
@@ -321,13 +323,13 @@ object definition can consist of many more attributes.
 
 In \autocite{AuthorsConfigurationBestPractices2019}, the Kubernetes project
 also defines a set of guidelines for writing manifest files. It is discouraged
-to use unmanaged pods without any controller like a ReplicaSet. Kubernetes is
-unable to respawn unmanaged pods that are no longer available due to e.g.\ node
+to use unmanaged Pods without any controller like a ReplicaSet. Kubernetes is
+unable to respawn unmanaged Pods that are no longer available due to e.g.\ node
 failures. Additionally, multiple object definitions should not be split into
 multiple files whenever they serve a similar purpose. A backend that e.g.\
 needs a database cluster should be defined in the same configuration file. The
 different objects can be separated by inserting a line containing \texttt{---}.
-In addition, Services should always be defined prior to the pods they handle
+In addition, Services should always be defined prior to the Pods they handle
 traffic for. Users are also advised to use semantic labelling for all objects
 in Kubernetes. Any object that follows this advice can be easily found by a
 user without having to specify the object's explicit type. E.g.\ a frontend's
@@ -336,9 +338,9 @@ deployment could have the labels \texttt{app=frontend-web} and
 frontends which are production-ready. The last best practice to be introduced
 here is to never use the \texttt{latest} tag when defining a container's image.
 This leads to confusion when trying to determine which version of a software is
-currently deployed in the cluster. Instead, a containers image version should
-be locked by specifying the exact version number. This can be achieved by
-referencing the images hash. These are just a select number of best practices
+currently deployed in the cluster. Instead, a container's image version should
+be locked by specifying a exact version number. This can be achieved by
+referencing the image's hash. These are just a select number of best practices
 that will guide this thesis. \autocite{AuthorsConfigurationBestPractices2019}
 offers a great deal of additional guidelines that exceed the scope of this
 thesis.

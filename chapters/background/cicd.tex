@@ -14,9 +14,9 @@ central repository. While this is still a valid possibility, the process
 consumes a lot of extra time spent by the developer and is error prone.
 Furthermore, in such a manual process no central quality control can force
 policies upon the source code of each service. These problems can be solved by
-introducing an additional automation component: A \acf{CI} and \ac{CD} server.
+introducing an additional automation component: A \acf{CI} and \acf{CD} server.
 This section will outline the basic principles of such a server and apply them
-to the exemplary \ac{SaaS} solution \textit{Microsoft DevOps}.
+to the exemplary \ac{SaaS} solution \textit{Microsoft Azure DevOps}.
 
 \subsubsection{Continuous Integration}%
 \label{ssub:Continuous_Integration}
@@ -50,7 +50,6 @@ software.]{The most common, abstracted \ac{CI} pipeline for a classic
 software (adapted from \autocite[Fig. 1-4]{MatyasContinuousIntegration2007}).}%
 \label{fig:ci_pipeline_classic}
 \end{figure}
-\todo{The order of steps may has to be adjusted (position of compilation).}
 
 In order for this pipeline to be implemented, a number of prerequisites exist.
 \autocite{MatyasContinuousIntegration2007} and
@@ -74,8 +73,7 @@ Furthermore, the code produced by the developers has to be checked in the
 \ac{VCS} regularly. Only then may the \ac{CI} process detect problems early and
 inform the responsible developer of the breaking change. Code should be checked
 in more than a couple of times a day \autocite[p.
-59]{JezHumbleContinuousDelivery2010}. \todo{Maybe add statement that states
-that CI is not compatible with branching; Maybe refute?}
+59]{JezHumbleContinuousDelivery2010}.
 
 A requirement for successful continuous integration is an extensive test suite.
 When building software, a successful build does not necessarily imply that the
@@ -120,9 +118,9 @@ place inside the Docker build process. The reasons for this are further
 outlined in the upcoming section~\ref{ssub:Continuous_Deployment}. Another
 distinction between the classic \ac{CI} pipeline from
 figure~\ref{fig:ci_pipeline_classic} to the dockerized model from
-figure~\ref{fig:container_ci_pipeline} is that the build artefact no longer
+figure~\ref{fig:container_ci_pipeline} is that the built artefact no longer
 only remains on the build machine. After an image was successfully constructed,
-it is pushed to a central image repository for further use.
+it is pushed to a central image repository for future use.
 
 \subsubsection{Continuous Deployment}%
 \label{ssub:Continuous_Deployment}
@@ -130,7 +128,7 @@ Now that the \ac{CI} process has produced a runnable artefact, the next step is
 to deploy this artefact to an environment. The environment to which the
 artefact is deployed can be freely chosen. However the most typical
 environments a software lives in are amongst others \textit{development},
-\textit{staging} and \textit{production}. In general \ac{CD} is a set of
+\textit{staging} and \textit{production}. In general, \ac{CD} is a set of
 methods and steps that deploys software scheduled to an end user. A software
 that is not successfully deployed does not exist for the end user. \ac{CD}
 helps developers to overcome this problem by giving them a framework for
@@ -302,27 +300,27 @@ only examine \textit{Azure Pipelines}, Microsoft's \ac{CI}/\ac{CD} solution.
 Azure Pipelines consists of the two main modules \textit{Builds} and
 \textit{Releases}. These two make up Azure DevOps' \ac{CI} and \ac{CD}
 capabilities. In addition to these two, Azure Pipelines includes a
-\textit{Library} feature that can store groups of variables secure files like
-signing keys. \textit{Task groups} allow users to define common deployment
+\textit{Library} feature that can store groups of variables and secure files
+like signing keys. \textit{Task groups} allow users to define common deployment
 steps in a central place. This can be helpful if the same set of steps is
 required in multiple build pipelines (e.g.\ a Node.js application always needs
 to install its dependencies first and then build the code). Lastly,
 \textit{Deployment groups} can be used to configure groups of machines, e.g.\ a
-development cluster, to which a release can be deployed. As the Library, Task
-Groups and Deployment Groups features only contribute advanced capabilities for
-the Build and Releases features, they will not be explored further at this
-point.
+development cluster, to which a release should be deployed. As the Library,
+Task Groups and Deployment Groups features only contribute advanced
+capabilities for the Build and Releases features, they will not be explored
+further at this point.
 
-Pipelines are made up of one or more \textit{Stages}. Each stage can contain
+Pipelines are made up of one or more \textit{Stages}. Each Stage can contain
 two types of tasks: \textit{Jobs} and \textit{Deployments}. Even though it is
 possible to realise deployment tasks using a Job, Microsoft discourages this
 behaviour and recommends the use of Deployments instead. Deployments e.g.
-preserve a history of Deployments that would not be collected when using Jobs.
-Further, it possible to define one or more Jobs and Deployments per Stage. Both
-Jobs and Deployments can contain multiple steps. DevOps treats different types
-of Steps differently. The types \texttt{script}, \texttt{bash}, \texttt{pwsh}
-and \texttt{powershell} each run commands a respective shell whereas
-\texttt{checkout}, \texttt{task} and \texttt{templateReference} perform
+preserve a history of all Deployments that would not be collected when using
+Jobs.  Further, it possible to define one or more Jobs and Deployments per
+Stage. Both Jobs and Deployments can contain multiple steps. DevOps treats
+different types of Steps differently. The types \texttt{script}, \texttt{bash},
+\texttt{pwsh} and \texttt{powershell} each run commands a respective shell
+whereas \texttt{checkout}, \texttt{task} and \texttt{templateReference} perform
 additional pipeline and repository related actions. Jobs and Deployments may
 require that preconditions be fulfilled before running. This allows developers
 to e.g.\ integrate manual reviews into a pipeline \autocite{MicrosoftJobs2019}.
@@ -339,7 +337,7 @@ Traditionally, build pipelines could only be created and modified in a visual
 editor. Figure~\ref{fig:build_pipeline_azure} shows an exemplary Azure DevOps
 pipeline that consists of the two Jobs \texttt{Build and Test} and
 \texttt{Deploy to Development}. The first Job has five Steps and the second Job
-one Step.
+defines one Step.
 
 \begin{figure}[H]
 \begin{center}
@@ -351,9 +349,9 @@ one Step.
 
 Like build pipelines, release pipelines could traditionally only be set up in a
 graphical user interface. Figure~\ref{fig:release_pipeline_azure} shows a
-release pipeline with two stages that are not executed on a schedule
+release pipeline with two Stages that are not executed on a schedule
 (\circled{1}) but every time a new artefact called \texttt{frontend} is created
-(\circled{2}). \circled{3} shows a deployment stage in which the application is
+(\circled{2}). \circled{3} shows a deployment Stage in which the application is
 deployed to a development environment. To do this, only one task is needed.
 After the application was successfully deployed to development, the deployment
 to the production environment is triggered. This however is put on hold until
@@ -367,13 +365,15 @@ pipeline and is defined in a fully separate interface
 In newer versions of Azure DevOps, the configuration via YAML files is
 preferred. Though until Azure DevOps' update in July 2019 it was not possible
 to define multi-stage pipelines, meaning pipelines that build and release a
-software, in one common YAML file. With the introduction of file-defined,
-multi-stage pipelines, the graphical configuration interface for pipelines can
-be entirely discarded. The pipeline configuration is stored next to the
-application's actual code inside a \ac{VCS}. In a microservice environment of
-$n$ microservices, $n$ pipeline configuration files would be stored in each
-microservice's code repository. This allows for a cleaner versioning of build
-and deployment configurations right next to the project's code.
+software, in one common YAML file
+\autocite{GuckenheimerNewAnalyticsreports2019}. With the introduction of
+file-defined, multi-stage pipelines, the graphical configuration interface for
+pipelines can be entirely discarded. The pipeline configuration is stored next
+to the application's actual code inside a \ac{VCS}. In a microservice
+environment of $n$ microservices, $n$ pipeline configuration files would be
+stored in each microservice's code repository. This allows for a cleaner
+versioning of build and deployment configurations right next to the project's
+code.
 
 \begin{listing}
 \begin{minted}{YAML}
@@ -393,11 +393,11 @@ stages:
 \end{listing}
 
 In listing~\ref{lst:multi_stage_azure}, an exemplary multi-stage pipeline
-configuration file is shown. Like in the graphical interface, a stage can
-appoint another stage as its predecessor. When doing so, the appointing stage
-is only executed after the predecessor's run is completed. In addition, a stage
+configuration file is shown. Like in the graphical interface, a Stage can
+appoint another Stage as its predecessor. When doing so, the appointing Stage
+is only executed after the predecessor's run is completed. In addition, a Stage
 can require that certain conditions are fulfilled. If a condition fails, the
-stage defining it is not executed.
+Stage defining it is not executed \autocite{MicrosoftStages2019}.
 
 Even if multi-stage pipeline configuration files are an improvement over the
 graphical configuration, the feature is still in a preview phase. Hence, not

@@ -50,7 +50,7 @@ between its microservices are also portrayed in figure~\ref{fig:dsp_excerpt}.
 
 \begin{figure}[H]
 \begin{center}
-  \includegraphics[scale=0.7]{images/figures/dspIT_excerpt.pdf}
+  \includegraphics[scale=0.6]{images/figures/dspIT_excerpt.pdf}
 \end{center}
 \caption{The examplary $\mu$App microservice architecture containing three
 backends and one frontend service.}%
@@ -104,18 +104,19 @@ the procedure of continuously deploying a complete microservice architecture.
 The overall deployment goal is to run $\mu$App on Kubernetes. Thus, its
 microservices need a number of configuration objects to be either created or
 updated in the cluster. Each service has one configuration file that is stored
-in a separate \texttt{architecture} repository. Therefore, a microservice's
-code and its deployment manifests are fully isolated. Each manifest file holds
-all the microservice's Kubernetes objects, e.g.\ Deployments, Services or
-StatefulSets.  This is also the point where a distinction between microservices
-that rely on a databases and microservice that do not have this dependency has
-to be made. All services with an additional database component, e.g.\
-$\mu$App's onboarding backend, have the Kubernetes objects that are needed to
-deploy the database stored in a separate manifest file. Thus, in the case of
-$\mu$App, the frontend and service adapter have one manifest file. On the other
-hand, the onboarding and user backend have two manifest files; one for the
-microservice's main Kubernetes objects and one for the microservice's database
-Kubernetes objects.  This way, a clear separation of concerns is achieved.
+in a fully separate \texttt{architecture} repository. Therefore, a
+microservice's code and its deployment manifests are fully isolated. Each
+manifest file holds all the microservice's Kubernetes objects, e.g.\
+Deployments, Services or StatefulSets.  This is also the point where a
+distinction between microservices that rely on a databases and microservice
+that do not have this dependency has to be made. All services with an
+additional database component, e.g.\ $\mu$App's onboarding backend, have the
+Kubernetes objects that are needed to deploy the database stored in a separate
+manifest file. Thus, in the case of $\mu$App, the frontend and service adapter
+have one manifest file. On the other hand, the onboarding and user backend have
+two manifest files; one for the microservice's main Kubernetes objects and one
+for the microservice's database Kubernetes objects.  This way, a clear
+separation of concerns is achieved.
 
 When deploying a microservice, the pipeline reads the service's Kubernetes
 manifest and deploys it to the cluster using Kubernetes' \texttt{kubectl}
@@ -137,7 +138,7 @@ holding $\mu$Apps' Kubernetes manifests.}%
 
 Figure~\ref{fig:manifests_folder_naive} visualises the folder structure that
 holds $\mu$App's Kubernetes manifets. As already pointed out, all manifest
-files are stored in a separate \texttt{architecture} repository. The files in
+files are stored in a fully separate \texttt{architecture} repository. The files in
 figure~\ref{fig:manifests_folder_naive} next to \circled{1} are the manifests
 of $\mu$App's services which were introduced in figure~\ref{fig:dsp_excerpt}.
 Additionally a set of configurations are defined next to \circled{2}. These
@@ -591,11 +592,12 @@ image dependencies of $\mu$App's Helm charts.}%
 Figure~\ref{fig:chart_to_image_mapping} shows the mappings from a Helm chart to
 the corresponding referenced container image that are created by the \ac{CI}
 system as outlined in listing~\ref{listing:azure_devops_build_chart_job}. Each
-chart receives a unique version number based on the SemVer
-\texttt{MAJOR.MINOR.PATCH+\textbf{build-number}} scheme. The corresponding
-Docker images use a similar tag while dropping the \texttt{MAJOR.MINOR.PATCH}
-part. In addition, the figure shows that both the user backend as well as the
-onboarding backend depend on a publicly hosted MongoDB Helm chart.
+chart receives a unique version number based on the SemVer scheme. The assigned
+version numbers look like this:
+\texttt{MAJOR.MINOR.PATCH+\textbf{build-number}}. The corresponding Docker
+images use a similar tag while dropping the \texttt{MAJOR.MINOR.PATCH} part. In
+addition, the figure shows that both the user backend as well as the onboarding
+backend depend on a publicly hosted MongoDB Helm chart.
 
 Up to this point the creation of individual Helm charts for each service is
 fully automated using a \ac{CI} solution like Azure DevOps. However, no

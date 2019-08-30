@@ -60,7 +60,7 @@ following example. Given is an exemplary microservice architecture consisting
 of a basic web crawler that fetches all \textit{xkcd} comics from the xkcd
 archive and stores them in the file system, a frontend that displays the
 fetched comics and a backend that serves the fetched images to the frontend.
-The architecture is also depicted in figure~\ref{fig:Pods_example}. Both the
+The architecture is also depicted in figure~\ref{fig:pods_example}. Both the
 backend as well as the crawler have to access the same file system. Further,
 the backend would not be able to serve comics without the crawler hence it
 would fail to fulfil its task. Thus it can be said that these two services are
@@ -83,7 +83,7 @@ separate Pod \autocite[Ch. 3]{LuksaKubernetesAction2017}.
 \label{par:Volumes}
 
 The example in figure~\ref{fig:pods_example} also introduces the concept of
-\textit{volumes}. Volumes bring the ability to store files \textit{outside} the
+\textit{volumes}. Volum-es bring the ability to store files \textit{outside} the
 context of the local file system of a container. A Pod can specify that it
 needs one or more volumes. Each container inside a Pod is able to mount these
 volumes in the same or a different path. The backend from

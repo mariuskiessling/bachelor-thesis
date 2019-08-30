@@ -199,7 +199,7 @@ following build number format \texttt{\$(Date:yyyyMMdd).\$(Rev:r)} can be used.
 If set to this value, the first build on e.g. November 24th 2019 produces the
 build number \texttt{20191124.1}.
 
-To then access the build number in one of the pipeline's steps, the
+To access the build number in one of the pipeline's steps, the
 \texttt{\$BUILD.BUILDNUMBER} variable can be read. When doing so from a
 bash-based shell script, all dots are substituted with underscores. This
 results in the variable name \texttt{\$BUILD\textunderscore BUILDNUMBER}.
@@ -332,7 +332,7 @@ section tries to extract the theoretical findings that have revealed themselves
 in the practical search process.
 
 First, the artefact reveals the distinction between \textit{consuming} and
-\textit{producing} microservices. A consuming microservice is primarily
+\textit{producing} microser-vices. A consuming microservice is primarily
 contacted by humans, e.g.\ users, and consumes data provided by other
 microservices. A producing microservice actively supplies data to other
 microservices. Thus, it is mainly contacted by other machines, in this case
@@ -347,7 +347,7 @@ No further input by developers is required. Thus, a CalVer-like versioning
 scheme is best suitable for continuous versioning.
 
 Additionally, the practical implementation reveals a process which points
-developers towards a versioning scheme for their microservices.
+develo-pers towards a versioning scheme for their microservices.
 Figure~\ref{fig:versioning_decision_flow} shows the questions that need to be
 answered in order to derive the best fitting versioning scheme.
 

@@ -8,8 +8,9 @@ architecture solves a lot of problems. E.g.\ different architecture components
 can be scaled individually to better deal with requests that are unevenly
 distributed across the day. However, with the introduction of microservices a
 number of new problems are introduced. This thesis confined its research to
-problems are are associated with the deployment of microservice architectures.
-Since this is a broad field, two particular problems were selected.
+problems that are are associated with the deployment of microservice
+architectures. Since this is a broad field, two particular problems were
+selected.
 
 \begin{itemize}
   \item How should a continuously deployed microservice be versioned?
@@ -20,14 +21,14 @@ These two research questions were selected out of a practical necessity. Like a
 monolithic piece of software, a microservice architecture has to be versioned
 somehow. Though due to the many parts that make up a microservice based
 architecture, no apparent versioning scheme could be determined. In addition,
-the deployment of microservices can be admirably well implemented automated.
-This lays in the nature of the microservice architecture as its different
-components can be interchanged isolatedly. Yet, a number of new configurations,
-Kubernetes manifests, are often affiliated with the deployment of a
-microservice architecture. Each service needs specific deployment
-configurations. Furthermore, a number of deployment configurations exists which
-cannot be assigned to a specific microservice. This calls for a concept which
-states how the number of deployment configurations should be managed.
+the deployment of microservices can be admirably well automated.  This lays in
+the nature of the microservice architecture as its different components can be
+interchanged isolatedly. Yet, a number of new configurations, Kubernetes
+manifests, are often affiliated with the deployment of a microservice
+architecture. Each service needs specific deployment configurations.
+Furthermore, a number of deployment configurations exists which cannot be
+assigned to a specific microservice. This calls for a concept which states how
+the number of deployment configurations should be managed.
 
 The actual task of deploying a microservice architecture was considered to be
 trivial. Therefore, it was only outlined as part of the background chapter and
@@ -67,10 +68,10 @@ approach was outlined. On the basis of this approach, a new one was developed
 which solves a number of issues related to deployment configuration management.
 The newly developed \ac{CIST} deployment concept is based on Helm, a package
 manager for Kubernetes. With \ac{CIST}, a microservice architecture's
-deployment configuration state is defined a central location, a Helm chart
+deployment configuration state is defined in a central location, a Helm chart
 repository. The architecture is divided into \textit{component charts} and
 \textit{master charts}. A component chart defines how a single microservice has
-to be deployed. A master chart glues all microservices of an microservice
+to be deployed. A master chart glues all microservices of a microservice
 architecture together and defines the architecture's underlying infrastructure.
 From the chart repository, a complete microservice architecture including all
 its components can be deployed without any additional manual interaction. The

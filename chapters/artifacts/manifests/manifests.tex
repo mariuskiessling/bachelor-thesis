@@ -29,9 +29,9 @@ involved parties to exchange information faster and with less friction.
 Chapter~\ref{ssub:Concepts} introduced a multitude of Kubernetes concepts that
 will be referenced throughout this chapter. In addition,
 chapter~\ref{ssub:Manifests} has shown that all infrastructure configurations of
-Kubernetes are stored inside a YAML-based manifest file. This chapter will
-build upon the knowledge from primarily these two chapters and try to develop
-the best possible way to manage Kubernetes manifests in a microservice project.
+Kubernetes are stored inside YAML-based manifest files. This chapter will build
+upon the knowledge from primarily these two chapters and try to develop the
+best possible way to manage Kubernetes manifests in a microservice project.
 Furthermore, the information presented in chapter~\ref{sub:Microservices} are
 useful to understand the arguments presented in this chapter.
 
@@ -81,13 +81,13 @@ trigger:
   \label{listing:master_trigger}
 \end{listing}
 
-Only pull requests can modify the data stored on the \texttt{master} branch.
 This is achieved by using a YAML-based trigger definition as shown in
-listing~\ref{listing:master_trigger}. Development work happens on independent
+listing~\ref{listing:master_trigger}. Only pull requests can modify the data
+stored on the \texttt{master} branch.  Development work happens on independent
 feature branches. After a feature is completed, the changes are merged into the
 \texttt{development} branch where they reside until a pull request integrates
 the changes into the \texttt{master} branch. Hence, only fully developed
-features are build using the \ac{CI} pipeline and deployed using the \ac{CD}
+features are built using the \ac{CI} pipeline and deployed using the \ac{CD}
 process.
 
 $\mu$App executes its \ac{CI} and \ac{CD} pipeline on the Microsoft Azure
@@ -104,9 +104,9 @@ the procedure of continuously deploying a complete microservice architecture.
 The overall deployment goal is to run $\mu$App on Kubernetes. Thus, its
 microservices need a number of configuration objects to be either created or
 updated in the cluster. Each service has one configuration file that is stored
-in a separate \texttt{architecture} repository. Therefore a microservice's code
-and its deployment manifests are fully isolated. Each manifest file holds all
-the microservice's Kubernetes objects, e.g.\ Deployments, Services or
+in a separate \texttt{architecture} repository. Therefore, a microservice's
+code and its deployment manifests are fully isolated. Each manifest file holds
+all the microservice's Kubernetes objects, e.g.\ Deployments, Services or
 StatefulSets.  This is also the point where a distinction between microservices
 that rely on a databases and microservice that do not have this dependency has
 to be made. All services with an additional database component, e.g.\
@@ -120,9 +120,9 @@ Kubernetes objects.  This way, a clear separation of concerns is achieved.
 When deploying a microservice, the pipeline reads the service's Kubernetes
 manifest and deploys it to the cluster using Kubernetes' \texttt{kubectl}
 utility. The service's database manifest however is not touched. Databases are
-deployed by hand and independent from the \ac{CD} pipeline. Thus whenever a new
+deployed by hand and independent from the \ac{CD} pipeline. Thus, whenever a new
 microservice is deployed, the service's database has to be deployed by hand
-first. This can lead to situations in which the service can not be
+first. This can lead to situations in which the service cannot be
 automatically deployed because a required database component needs to be set up
 manually first.
 
@@ -139,13 +139,12 @@ Figure~\ref{fig:manifests_folder_naive} visualises the folder structure that
 holds $\mu$App's Kubernetes manifets. As already pointed out, all manifest
 files are stored in a separate \texttt{architecture} repository. The files in
 figure~\ref{fig:manifests_folder_naive} next to \circled{1} are the manifests
-of all the $\mu$App's services as they were introduced in
-figure~\ref{fig:dsp_excerpt}. Additionally a set of configurations are defined
-next to \circled{2}. These files are stored in distinct directories and hold
-configurations of authentication and authorization policies, \ac{HTTPS}
-certificates, configuration maps, outgoing traffic rules and the Ingress
-gatway. This way, the infrastructure configuration is entirely detached from
-microservices' one.
+of $\mu$App's services which were introduced in figure~\ref{fig:dsp_excerpt}.
+Additionally a set of configurations are defined next to \circled{2}. These
+files are stored in distinct directories and hold configurations of
+authentication and authorization policies, \ac{HTTPS} certificates,
+configuration maps, outgoing traffic rules and the Ingress gatway. This way,
+the infrastructure configuration is entirely detached from the microservices.
 
 When deploying $\mu$App from scratch, a three step process must be completed.
 First, the underlying infrastructure needs to be set up. This includes all
@@ -156,10 +155,10 @@ make sure that all configurations of a step are fully applied before starting
 the next step.
 
 Due to the file structure of the application's manifest files, it is not
-possible to apply all manifests of one stage. Thus when mapping the deployment
+possible to apply all manifests of one stage. Thus, when mapping the deployment
 steps to the manifest files, in stage one, the files marked with a
-\inlineDiamond{} are applied. The database manifests files marked with
-\inlineRectangle{} are then applied. They create the services' databases.
+\inlineDiamond{} are applied. Then, the database manifests files marked with
+\inlineRectangle{} are applied. They create the services' databases.
 Lastly, the files marked with \inlineTriangle{} are applied. After this step is
 completed, $\mu$App is fully deployed from scratch. All markings mentioned in
 this section refer to figure~\ref{fig:manifests_folder_naive}.
@@ -172,7 +171,7 @@ traceability, these issues are labelled $I_1$ to $I_n$. The issues include:
 \begin{itemize}
   \item \textit{$I_1$}: A \ac{CI} process is only started when changes are
     merged from the independent \texttt{feature} branches to the
-    \texttt{master} branch. Thus the rule that software should be built every
+    \texttt{master} branch. Thus, the rule that software should be built every
     time a new change is present in the \ac{VCS} is not met.
   \item \textit{$I_2$}: When deploying $\mu$App from scratch, the deployment is
     comprised of three steps that need to be executed by hand.
@@ -215,23 +214,23 @@ To get started, issue $I_6$ does not only relate to continuously deployed
 microservices but rather to any service that is deployed to a Kubernetes
 cluster. As pointed out in chapter~\ref{sub:Kubernetes} it is in the service's
 nature which are executed on Kubernetes to be constantly created, killed and
-moved between hosts. Thus any service that wants to withstand such harsh
-conditions has to be resilient when dealing with dropping connections. This is
+moved between hosts. Thus, any service that wants to withstand such harsh
+conditions has to be resilient when dealing with dropped connections. This is
 not only limited to database connections. However databases can be used
 representationally for this issue.
 
 Issue $I_6$ can be solved on two layers. Either Kubernetes deals with a
 service's connection or the service itself takes on this task. To decide which
 layer fits the situation at hand best, it has to be distinguished between
-applications which enter a state they can not recover from when their
+applications which enter a state they cannot recover from when their
 connection to a database is dropped and applications which can recover from
-such a state. In cases where the application can not recover itself from such a
+such a state. In cases where the application cannot recover itself from such a
 state, it either has to be customized to be able recover itself or Kubernetes
-is forced to deal with the situation. In case the application can not adapt
+is forced to deal with the situation. In case the application cannot adapt
 such functionality, a Kubernetes liveness probe can be used to determine
 whether the application is still running functionally. The liveness probe
-executes a command inside the application's container, \ac{HTTP} request or
-\ac{TCP} call. If the probe reports that the service is not alive any more,
+executes a command inside the application's container, a \ac{HTTP} request or
+\ac{TCP} call. If the probe reports that the service is not alive anymore,
 Kubernetes automatically kills the application's container and restarts it.
 This way, the application does not have to deal with such situations itself and
 behaviour that leads the application to crash can be intercepted without the
@@ -271,19 +270,19 @@ would be built and deployed. This however conflicts with the \ac{CI} guidelines
 as outlined by chapter~\ref{ssub:Continuous_Integration}. To build all branches
 of a project, the same pipeline definition file can be used. The trigger
 definition as shown in in listing~\ref{listing:master_trigger} has to be
-dropped. When dropped, Azure DevOps builds all changes across all branches of a
-imply dropping the trigger definition would however create a new problem. Due
+dropped. When dropped, Azure DevOps builds all changes across all branches.
+Simply dropping the trigger definition would however create a new problem. Due
 to the fact that the pipeline was previously only run when stable changes were
-pushed to the master branch, all changes would be automatically deployed. By
-just dropping the trigger definition all changes from all branches would be
-built, tested, packed into a Docker image and pushed to a central container
-image repository. However a pipeline that is being triggered from changes in a
-branch other than the \texttt{master} branch should only be built and tested
-thus only undergoing the pipeline's \ac{CI} part. To implement such a
-behaviour, pipeline conditions can be used. Conditions can be applied to both
-jobs and stages. As $\mu$App's pipeline is made up of two stages, the first
+pushed to the \texttt{master} branch, all changes would be automatically
+deployed. By just dropping the trigger definition all changes from all branches
+would be built, tested, packed into a Docker image and pushed to a central
+container image repository. However a pipeline that is being triggered from
+changes in a branch other than the \texttt{master} branch should only be built
+and tested thus only undergoing the pipeline's \ac{CI} part. To implement such
+a behaviour, pipeline conditions can be used. Conditions can be applied to both
+Jobs and Stages. As $\mu$App's pipeline is made up of two Stages, the first
 building and testing the application and the second deploying it to Kubernetes,
-only the second stage has to protected by a condition.
+only the second Stage has to protected by a condition.
 
 \begin{listing}[H]
   \begin{minted}{YAML}
@@ -296,23 +295,24 @@ stages:
   jobs:
     - ...
   \end{minted}
-  \caption{A Microsoft Azure DevOps pipeline stage being protected by a
+  \caption[A Microsoft Azure DevOps pipeline Stage being protected by a
+  condition.]{A Microsoft Azure DevOps pipeline Stage being protected by a
   condition (condition taken from \autocite{MicrosoftConditions2019}).}%
   \label{listing:pipeline_condition}
 \end{listing}
 
 Listing~\ref{listing:pipeline_condition} displays how a condition can be set
-for a stage that handles the deployment of $\mu$App. If no condition is set for
-a stage, Azure DevOps automatically applies the \texttt{succeeded()}
-expression. Thus, by default to execute a stage, the previous stage had to be
-successful. The \texttt{and} expression in line five of
-listing~\ref{listing:pipeline_condition} only return \texttt{true} if both its
-parameters return \texttt{true} individually. Thus, the \texttt{Deploy} stage
-is only computed if the previous stage performed successfully and the build is
-triggered by a change in the \texttt{master} branch. Hence, the same Azure
-DevOps pipeline can be used for both releasing stable as well as building and
-testing branches that are under active development. This concludes the solution
-of issue $I_1$.
+for a Stage that handles the deployment of $\mu$App. If no condition is set for
+a Stage, Azure DevOps automatically applies the \texttt{succeeded()}
+expression \autocite{MicrosoftConditions2019}. Thus, by default to execute a
+Stage, the previous Stage had to be successful. The \texttt{and} expression in
+line five of listing~\ref{listing:pipeline_condition} only return \texttt{true}
+if both its parameters return \texttt{true} individually. Thus, the
+\texttt{Deploy} Stage is only computed if the previous Stage performed
+successfully and the build is triggered by a change in the \texttt{master}
+branch. Hence, the same Azure DevOps pipeline can be used for both releasing
+stable branches as well as building and testing branches that are under active
+development. This concludes the solution of issue $I_1$.
 
 Up next, issue $I_4$ can be partially answered using the same technique already
 presented as the solution to issue $I_6$. A microservice that depends on a
@@ -341,7 +341,7 @@ Figure~\ref{subfig:database_connection_probe} shows how an application can
 handle a failed database connection using Kubernete's liveness probe. When
 starting the service, it tries to establish a connection to its external
 database component. If this fails, the application crashes and enters a state
-from which it can not recover without Kubernete's help. Kubernetes detects the
+from which it cannot recover without Kubernete's help. Kubernetes detects the
 service's state and restarts its container. If a database is available on the
 service's second start up, its launch can be considered successful. This cycle
 is repeated as long as the external database component is not ready to receive
@@ -356,7 +356,7 @@ again. This cycle is repeated until a successful connection can be established.
 
 Using one of these two approaches, issue $I_4$ can be considered solved.
 
-Next, the issues $I_2$, $_3$ and $I_5$ can be dealt with collectively. Even if
+Next, the issues $I_2$, $I_3$ and $I_5$ can be dealt with collectively. Even if
 their nature appears to be quite different, a well though \textit{Kubernetes
 manifest management} concept helps to solve them. The upcoming section will try
 to formulate such a concept that defines in \textit{which place} and
@@ -365,10 +365,10 @@ concept will outline how these manifests are rolled out continuously and from
 scratch. To understand the idea behind the concept, the basic knowledge of Helm
 as outlined in chapter~\ref{sub:Helm} is required.
 
-To recap, each component of $\mu$App is stored in a distinct tac{VCS}
-repository. Nonetheless, The Kubernetes manifest needed to deploy $\mu$App are
-managed in a completely different repository called \texttt{architecture}. As a
-result, two separate lifecycle management processes are required to manage the
+To recap, each component of $\mu$App is stored in a distinct {VCS} repository.
+Nonetheless, The Kubernetes manifest needed to deploy $\mu$App are managed in a
+completely different repository called \texttt{architecture}. As a result, two
+separate lifecycle management processes are required to manage the
 application's code and its manifest files. To overcome this, the services'
 Kubernetes manifests are moved from the \texttt{architecture} repository to
 their respective service's code repository. Hence, the two management processes
@@ -426,10 +426,10 @@ automatically set up whenever the onboarding backend is deployed by Helm. If
 Helm detects that the database is already deployed to Kubernetes, it will only
 apply changes that might have been made to the database's configuration. If the
 database was not already deployed, Helm would create a new MongoDB installation
-in the Kubernetes cluster. Therefore issue $I_3$ can be considered solved as
+in the Kubernetes cluster. Therefore, issue $I_3$ can be considered solved as
 well. The deployment process of a service and its external dependencies, e.g.\
 a database, is no longer decoupled.  For this purpose the onboarding backend
-also creates a \texttt{charts} directory which stores the service's packed
+also creates a \texttt{charts} directory which stores the service's packaged
 dependencies. This directory however is not listed in
 figure~\ref{fig:helmification_process} because it does not need to exist in the
 \ac{VCS}. The folder is only created on the machine deploying the microservice
@@ -438,9 +438,9 @@ once the installation process is triggered.
 So far this approach already solves issue $I_5$. Managing a microservice's code
 and its deployment information is no longer decoupled. This comprises a partial
 manifest management concept answering the questions \textit{where} and in
-\textit{which format} manifests are stored. Though it is now possible to deploy
-each of $\mu$App's microservices using the respective Helm chart, the process
-requires a number of manual inputs. Continuously releasing helmified
+\textit{which format} manifests are stored. Even though it is now possible to
+deploy each of $\mu$App's microservices using the respective Helm chart, the
+process requires a number of manual inputs. Continuously releasing helmified
 microservices is only limitedly possible. To enable a fully automatic and
 continuous release process for helmified microservices, these problems have to
 be addressed:
@@ -454,17 +454,17 @@ be addressed:
     complete microservice architecture at once.
   \item Each time the microservice's code is updated, the \texttt{appVersion}
     property inside the service's \texttt{Chart.yaml} has to be updated to
-    reflect the builds current version. So far this is a manual process. At the
-    same time the chart's \texttt{version} property has to be bumped so that a
-    chart's version (e.g.\ 1.2.1) never points to more than one app version
-    (e.g.\ 3.4.1 and 3.4.2).
+    reflect the build's current version. So far this is a manual process. At
+    the same time, the chart's \texttt{version} property has to be bumped so
+    that a chart's version (e.g.\ 1.2.1) never points to more than one app
+    version (e.g.\ 3.4.1 and 3.4.2).
 \end{itemize}
 
 Rather than just storing the Helm charts inside the service's repository, a
 built version of the chart should be saved to some chart repository. The
 \texttt{mongodb-replicaset } chart referenced in
 listing~\ref{listing:onboarding_backend_requirements} e.g.\ is hosted as part
-of Helm's official and publicly accessible \texttt{stable} repository. However
+of Helm's official and publicly accessible \texttt{stable} repository. However,
 not every chart should be accessible to the general public.  With $\mu$App the
 architecture is comprised of a set of internal services which deployment
 information should not be publicly accessible. In such cases, a private
@@ -474,10 +474,10 @@ In general, a chart repository is a simple webserver which serves an
 \texttt{index.yaml} file that is fetched and parsed by a Helm client. The file
 holds references to all charts hosted by the repository including their name,
 version number and packaged chart file. One solution implementing such a
-functionality is called \texttt{ChartMuseum}. Not only does ChartMuseum manage
+functionality is called \textit{ChartMuseum}. Not only does ChartMuseum manage
 and store charts, it also includes a \ac{REST} \ac{API} which allows to add new
 charts, update existing ones and deletes old ones. For the purpose of hosting
-$\mu$App's microservice charts, an instance of CartMuseum is deployed to
+$\mu$App's microservice charts, an instance of ChartMuseum is deployed to
 Kubernetes and made accessible from outside Kubernetes. Additionally,
 ChartMuseum allows to set an authentication method for both fetching charts as
 well as publishing them. This feature is also enabled for this instance of
@@ -523,14 +523,14 @@ DevOps is used as a reference for a \ac{CI} solution in the upcoming examples.
         *\textbf{service-name}*-1.0.0+$(Build.BuildNumber).tgz" \
         https://domain.local/internal/chartmuseum/api/charts
   \end{minted}
-  \caption{An Azure DevOps job which installs the Helm client, sets the
+  \caption{An Azure DevOps Job which installs the Helm client, sets the
   service's container image to the one produced by the build, packages the
   chart and pushes the chart to a ChartMuseum instance.}%
   \label{listing:azure_devops_build_chart_job}
 \end{listing}
 
 To continuously produce an updated Helm chart when (code) changes are pushed to
-a service's repository, the Helm client has to be installed first (line 4-6,
+a service's repository, the Helm client has to be installed first (line 4-6 of
 listing~\ref{listing:azure_devops_build_chart_job}). As already pointed out,
 container images produced by the \ac{CI} system are tagged with the current
 build number. Each version of a service's Helm chart should always point
@@ -628,7 +628,7 @@ but also holds all infrastructure configurations that cannot be distinctively
 assigned to one service. Figure~\ref{fig:master_chart} shows a visual
 representation of the master chart and its connections to all of $\mu$App's
 dependencies. For reference, all of $\mu$App's microservices will be referred
-to as \textit{components} and \texttt{component charts} from here on. During
+to as \textit{components} and \textit{component charts} from here on. During
 the build process of a component, not only is its code tested, built, packaged
 into a container image and a component chart is generated but in addition the
 master chart is updated. After the update, the master chart no longer refers to
@@ -643,7 +643,7 @@ is stored and managed in a separate \ac{VCS} repository called
 \texttt{deployment}. In general, the master chart is a Helm chart like any
 other. Helm requires charts to be named the same as the directory in which they
 are stored in. Hence, as with the component charts, the master chart lays in a
-sub-directory which is in this case called \texttt{u-app}. The master chart
+sub-directory which in this case is called \texttt{u-app}. The master chart
 holds a requirements file which looks like
 listing~\ref{listing:master_chart_requirements}.
 
@@ -668,13 +668,13 @@ dependencies:
   \label{listing:master_chart_requirements}
 \end{listing}
 
-In addition to the job that builds a component's chart as shown in
-listing~\ref{listing:azure_devops_build_chart_job} a new job is added to a
-service's build pipeline. Due to its size, this job is only shown in appendix
+In addition to the Job that builds a component's chart as shown in
+listing~\ref{listing:azure_devops_build_chart_job} a new Job is added to a
+service's build pipeline. Due to its size, this Job is only shown in appendix
 listing~\ref{listing:azure_devops_build_master_chart_job}. In line 4-14 of the
-listing the job's environment is prepared. The Helm client is installed, the
+listing the Job's environment is prepared. The Helm client is installed, the
 folder structure is set up and the \texttt{yq} utility is fetched from GitHub.
-\texttt{yq} can among other things read YAML files, modify their content and
+\texttt{yq} can, among other things, read YAML files, modify their content and
 output the modified content \autocite{Farahyq2017}. Next, the
 \texttt{deployment} repository is cloned into the newly created folder
 structure (line 16-18). The \texttt{yq} utility is now accessible inside the
@@ -684,7 +684,7 @@ files are accessible at \texttt{master\textunderscore chart/deployment/u-app}.
 Coming up next in line 20-26 of
 listing~\ref{listing:azure_devops_build_master_chart_job}, the \texttt{yq}
 utility is used to read the master chart's requirements file and replace the
-chart version of the newly built component chart. In this case, the job updates
+chart version of the newly built component chart. In this case, the Job updates
 the version of the frontend as defined in line 3 of
 listing~\ref{listing:master_chart_requirements}. A three step swap is used here
 because \texttt{yq} is not capable of writing its output in the same file it
@@ -697,29 +697,29 @@ procedure is then used in line 26-40 to bump the master chart's
 
 To have a persistent state from which the whole architecture of $\mu$App can be
 deployed at any time, the changes to the Helm files of the master chart are
-registered with the \ac{VCS} and then pushed the \ac{VCS}'s server (line
+registered with the \ac{VCS} and then pushed to the \ac{VCS}'s server (line
 42-50). In addition, like with all component charts, it is the goal to have the
 master chart stored on a chart repository for easy access. This way, it is
 possible to install $\mu$App's complete architecture by just typing
 \texttt{helm install repository/u-app}. Therefore, the internal ChartMuseum
 instance is added to the build pipeline's local Helm client (line 52-55) and
 the master chart is packaged (line 57-63). As with the component charts, the
-charts \texttt{version} and \texttt{appVersion} property are bumped. At last,
+chart's \texttt{version} and \texttt{appVersion} property are bumped. At last,
 the packaged master chart is published to the internal ChartMuseum instance in
 line 65-69 of listing~\ref{listing:azure_devops_build_master_chart_job}.
 
 Now every time that one of $\mu$App's components is built, both the component's
 chart as well as the master chart is updated automatically. In doing so, the
-master chart always stores the deployment information of the $\mu$App's
-complete architecture. Thus, to continuously deploy a new version of a
-component, a Helm client only has to upgrade the deployed master chart to the
-newest version. With all three steps of $\mu$App's infrastructure installation
-being automated, issue $I_2$ can finally be considered solved and with that a
-self-contained continuous deployment concept for microservices is constituted.
-For future reference, the concept is titled \ac{CIST}\footnote{The name was
-coined in collaboration with my dear colleague Lennart Purucker. It is inspired
-by \textit{cists} which, according to the Oxford University Press, are boxes
-that were used in ancient Greece to store sacred utensils
+master chart always stores the deployment information of $\mu$App's complete
+architecture. Thus, to continuously deploy a new version of a component, a Helm
+client only has to upgrade the deployed master chart to the newest version.
+With all three steps of $\mu$App's infrastructure installation being automated,
+issue $I_2$ can finally be considered solved and with that a self-contained
+continuous deployment concept for microservices is constituted.  For future
+reference, the concept is titled \acf{CIST}\footnote{The name was coined in
+  collaboration with my dear colleague Lennart Purucker. It is inspired by
+  \textit{cists} which, according to the Oxford University Press, are boxes
+  that were used in ancient Greece to store sacred utensils
 \autocite{Presscist}.}.
 
 \subsection{Evaluating the \acf{CIST} Deployment Concept}%
@@ -751,11 +751,11 @@ architectural flavours like the monolithic one. Though as the development of
 \ac{CIST} is tailored to the deployment of microservice architectures, it
 consciously fits $R_1$.
 
-\ac{CIST} was developed with with automation in mind. However, \ac{CI} was not
-only an important influence in developing the deployment model. Without the
-workflow automation provided by \ac{CI} systems, \ac{CIST} would not be a
-usable in practise because too much manual work would be required. Thus $R_2$
-can also be considered fulfilled.
+\ac{CIST} was developed with automation in mind. However, \ac{CI} was not only
+an important influence in developing the deployment model. Without the workflow
+automation provided by \ac{CI} systems, \ac{CIST} would not be a usable in
+practise because too much manual work would be required. Thus, $R_2$ can also be
+considered fulfilled.
 
 In contrast to \ac{CI} systems, \ac{CIST} is not specifically designed to be
 used with a \ac{CD} solution. It only describes how the deployment
@@ -777,7 +777,8 @@ application's deployment workflow, rollbacks in case of a faulty application
 state are possible. In addition, the whole chart creation process is automated
 using a \ac{CI} system which further fastens the development cycle. The
 \ac{CIST} deployment model not only fastens the development cycle but with the
-introduction of Helm provides additional fail-safes.
+introduction of Helm provides additional fail-safes. With that $R_4$ is also
+satisfied.
 
 \subsection{Theoretical Findings}%
 \label{sub:Theoretical_Findings}
@@ -845,7 +846,7 @@ creation of a new version of the master chart.
 The newly created component chart can be installed separately by fetching it
 from the chart repository. To install the entire microservice architecture, the
 master chart can be fetched and installed using a Helm client. This can either
-be done by hand or using an continuous roll out with the help of \ac{CD}
+be done by hand or using an continuous roll out with the help of a \ac{CD}
 solution.
 
 \subsection{Economic Benefits of the \acf{CIST} Deployment Concept}%
@@ -861,9 +862,9 @@ to reduce time that would be spend on manually stitching together their
 microservice architecture's services. With \ac{CIST}, the architecture only has
 to be defined once. Every time a component is updated, the component chart and
 master chart are continuously versioned. Thus, the changes of a build are
-clearly traceable though no time has to be wasted on manually setting a new
-version number. Additionally, the deployment concept not only supports but also
-promotes automation. Hence, further manual operations when deploying an
+clearly traceable even though no time has to be wasted on manually setting a
+new version number. Additionally, the deployment concept not only supports but
+also promotes automation. Hence, further manual operations when deploying an
 architecture are superfluous with the help of \ac{CI}/\ac{CD} systems.
 
 Although the explicit economic benefits can be measured in a specialised study,

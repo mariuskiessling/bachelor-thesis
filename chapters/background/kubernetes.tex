@@ -100,7 +100,7 @@ Simply using the Kubernetes concept of volumes however does pose two significant
   \item The volume is bound to the Pods lifecycle. This means that whenever a
     Pod is deleted or dies due to a problem or scaling, the volume needs
     to be recreated during the Pod's next startup. This also means that volumes
-    can not be defined without first defining a Pod.
+    cannot be defined without first defining a Pod.
 \end{itemize}
 
 \paragraph{Persistent Volumes, Persistent Volume Claims and Storage Classes}%
@@ -158,7 +158,7 @@ create new ones by using the storage classes' provisioner.
 Pods, as they were introduced in section ~\ref{par:Pods} of this chapter,
 are fully unmanaged. The downside to this is that whenever a node dies, all
 Pods running on this node also die without getting redeployed on a healthy
-node. Additionally, unmanaged Pods can not be scaled automatically by
+node. Additionally, unmanaged Pods cannot be scaled automatically by
 Kubernetes. It is also not possible to schedule unmanaged Pods to run
 periodically \autocite[Ch. 4]{LuksaKubernetesAction2017}. Kubernetes solves
 these issues by introducing a new concept: controllers. Controllers are
@@ -203,7 +203,7 @@ using the master/slave paradigm, can be hosted using Kubernetes. In the
 master/slave paradigm, the master nodes are responsible for managing the
 database's data. The slaves then replicate the data and can be used for i.e.\
 reliably reading data and balancing the reading load. Yet, this scenario brings
-up three problems that can not be easily solved with a ReplicaSet or
+up three problems that cannot be easily solved with a ReplicaSet or
 deployment. The problems are named $P_x$ for future reference.
 
 \begin{itemize}
